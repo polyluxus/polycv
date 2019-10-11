@@ -163,10 +163,10 @@
 \providecommand\address{}
 \providecommand\street{}
 \providecommand\location{}
-\renewcommand{\polycvaddress}{\polycvstreet\\\polycvlocation}
 \renewcommand{\address}[1]{\renewcommand{\polycvaddress}{#1}}
 \renewcommand{\street}[1]{\renewcommand{\polycvstreet}{#1}}
 \renewcommand{\location}[1]{\renewcommand{\polycvlocation}{#1}}
+\renewcommand{\polycvaddress}{\polycvstreet\\\polycvlocation}
 \providecommand{\polycvlineaddress}{\polycvitemline{\faMapMarker}{\polycvaddress}}
 
 \providecommand\polycvemail{}
@@ -369,6 +369,72 @@
     nohead,nofoot}%
   \polycvheader{}{}
   \polycvfooter{}
+}
+
+%%%%%
+%
+%  Define the letter environment
+%
+
+\newcommand{\polycv@letter@from}[3][\polycv@headerheight]{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node [rectangle, %
+           fill           = headerfg, %
+           anchor         = north, %
+           minimum width  = \paperwidth, %
+           minimum height = #1-1ex%
+          ] (headerbox) at (current page.north){};
+    \node [rectangle, %
+           fill           = headerbg, %
+           anchor         = north, %
+           minimum width  = \paperwidth, %
+           minimum height = 1ex%
+          ] (headerline) at (headerbox.south){};
+    \node [anchor = east, %
+           text width = 5cm, %
+           xshift     = -2\polycv@margins
+          ] (polycv-letter-address) at (headerbox.east) {%
+      \polycvheaderfont\color{headerbg}\parbox[t]{1.0\linewidth}{%
+        \raggedleft%
+        \textbf{\Large #2}\\%
+        \textit{\normalsize #3}%%
+        }%
+    };
+  \end{tikzpicture}%
+  \ignorespaces%
+}
+
+\newcommand{\polycv@letter@to}[1]{%
+  \parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}\par%
+  \vspace{1\baselineskip}%
+}
+
+\newcommand{\polycv@letter@date}{%
+  \parbox[t]{1.00\linewidth}{\raggedleft\today}\par%
+}
+
+\newcommand{\polycv@letter@subject}[1]{%
+  \parbox[t]{1.00\linewidth}{\raggedright\textbf{#1}}\par%
+}
+
+\newenvironment{polycvletter}[3][\polycvaddress]{%
+  \newgeometry{%
+    top=\polycv@topmargin,%
+    left=2\polycv@margins,%
+    right=2\polycv@margins,%
+    bottom=\polycv@bottommargin,%
+    nohead,nofoot}%
+  \polycv@letter@from{\polycvauthor}{#1}%
+  \polycv@letter@to{#3}%
+  \polycv@letter@date%
+  \polycv@letter@subject{#2}%
+}{%
+  \vspace{1\baselineskip}%
+  \raggedright%
+  \includegraphics[width=5cm]{\polycvsignatureimage}\\%
+  \polycvauthor%
+  \polycvfooter{}%
+  \restoregeometry
 }
 
 %%%%%

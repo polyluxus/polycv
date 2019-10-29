@@ -1,48 +1,70 @@
-%tex
-\ProvidesClass{polycv}[2019/09/30 v0.1 Polyluxus CV class]
 \NeedsTeXFormat{LaTeX2e}
+\ProvidesClass{polycv}[2019/10/30 v0.1 Polyluxus CV class]
 
-%%%%%
+%%%%% OPTION DEFINITIONS
 %
-%  Necessary packages before loading options
+%   Simple definitions for key-value pairs with kvoptions
+%   See J. Wright, C. Feuersänger, TUGBoat, Vol. 30 (2009), No. 1, p. 110-122
+%
+\RequirePackage{kvoptions}
+\SetupKeyvalOptions{
+  family=polycv,
+  prefix=polycv@
+}
+%
+%   Define preset margins for geometry (page setup)
+%
+\DeclareStringOption[1.0cm]{margins}
+\DeclareStringOption[3.0cm]{headerheight}
+\DeclareStringOption[0.5cm]{footerheight}
+\DeclareStringOption[5.0cm]{sidebarwidth}
+\DeclareStringOption[2.7cm]{hintcol}
+\DeclareStringOption[0.2cm]{hintcolsep}
+\DeclareStringOption[0.8cm]{iconspace}
+%
+%   Draft mode
+% 
+\DeclareBoolOption{draft}
+\DeclareComplementaryOption{final}{draft}
+%
+%   Define Biblatex Mode
+%
+\DeclareBoolOption{biblatex}
+%
+%   Option to sign the CV
+%
+\DeclareBoolOption{signcv}
+%
+%   Warn about options which will not be used/ passed on because of potential clashes
+%
+\DeclareVoidOption{twocolumn}{%
+  \ClassError{polycv}{Incompatible because of special page setup.}}
+\DeclareVoidOption{titlepage}{%
+  \ClassWarning{polycv}{Incompatible with a title page.}}
+%
+%   Pass all other options to article
+%
+\DeclareDefaultOption{%
+  \PassOptionsToClass{\CurrentOptionKey}{article}}
+%
+%   Process these options
+%   
+\ProcessKeyvalOptions{polycv}
+%
+%   Inherit standard class
+%
+\LoadClass{article}
+%
+%%%%%
+
+%%%%% PREREQUISITES
+%
+%  Necessary packages 
 %
 %  Package etoolbox is necessary for additional hooks like \AtEndPreamble
 \RequirePackage{etoolbox}
 %  Package calc is necessary to do mathematics with lengths
 \RequirePackage{calc}
-%
-%%%%%
-
-%%%%%
-%
-%  Options will be defined here (later)
-%
-
-\DeclareOption{draft}{%
-  \def\polycv@draft{}%
-  \PassOptionsToClass{draft}{article}%
-}
-\DeclareOption{biblatex}{%
-  \AtEndPreamble{%
-    \setlength{\biblabelsep}{\polycv@hintcolsep}%
-    \DeclareFieldFormat{labelnumberwidth}{\makebox[\polycv@hintcol][r]{[#1]}}%
-  }%
-}
-\DeclareOption{signcv}{%
-  \AfterEndPreamble{\polycvsignature{\polycvsignatureimage}}%
-}
-\DeclareOption*{%
-  \PassOptionsToClass{\CurrentOption}{article}%
-}
-\ProcessOptions\relax
-\LoadClass{article}
-%
-%%%%%
-
-%%%%%
-%
-%  Necessary packages
-%
 %  Provide Hyperlinks in templates
 \RequirePackage{hyperref}
 %  Color definitions
@@ -63,46 +85,82 @@
 %
 %%%%%
 
+%%%%% COLORS
+%
 %  Set some default colours
-%  (Need new and better names)
+%  (ToDo: Need new and better names)
 \colorlet{headerbg}{MidnightBlue}
 \colorlet{headerfg}{white}
 \colorlet{sectioncolor}{headerbg}
 \colorlet{textcolor}{headerbg!20!black}
 \colorlet{highlight}{Maroon}
+\colorlet{polycvsidebackground}{white!00}
+%
+%%%%%
 
+%%%%% MACROS
+%
+%  Emulate and extend draft mode
+\ifpolycv@draft%
+  % Issue information for log
+  \ClassInfo{polycv}{Option 'draft' is enabled}
+  % Set the overfull boxes identifier 
+  % [How to test whether report has been called with “draft” option](https://tex.stackexchange.com/a/240128/33413)
+  \setlength\overfullrule{1em}
+  % Make the page visible
+  \PassOptionsToPackage{showframe}{geometry}
+  % Make the tikz boxes visible
+  \colorlet{polycvsidebackground}{headerbg!20}%
+\fi
+
+%  Make biblatex use the same width as the date column
+\ifpolycv@biblatex%
+  \ClassInfo{polycv}{Option 'biblatex' is enabled}
+  \AtEndPreamble{%
+    \setlength{\biblabelsep}{\polycvhintcolsep}%
+    \DeclareFieldFormat{labelnumberwidth}{\makebox[\polycvhintcol][r]{[#1]}}%
+  }%
+\fi
+
+%  Sign the CV
+\ifpolycv@signcv%
+  \ClassInfo{polycv}{Option 'signcv' enabled; CV will be signed.}
+  \AfterEndPreamble{\polycvsignature{\polycvsignatureimage}}%
+\fi
+
+%%%%% New lengths needs rewrite?
 % Define some lengths (and defaults) for the layout
-\newlength{\polycv@headerheight}
-\setlength{\polycv@headerheight}{3cm}
-\newlength{\polycv@footerheight}
-\setlength{\polycv@footerheight}{0.5cm}
-\newlength{\polycv@margins}
-\setlength{\polycv@margins}{1cm}
-\newlength{\polycv@sidebarwidth}
-\setlength{\polycv@sidebarwidth}{5cm}
-\newlength{\polycv@hintcol}
-\setlength{\polycv@hintcol}{2.7cm}
-\newlength{\polycv@hintcolsep}
-\setlength{\polycv@hintcolsep}{0.2cm}
-\newlength{\polycv@iconspace}
-\setlength{\polycv@iconspace}{0.8cm}
+\newlength{\polycvheaderheight}
+\setlength{\polycvheaderheight}{\polycv@headerheight}
+\newlength{\polycvfooterheight}
+\setlength{\polycvfooterheight}{\polycv@footerheight}
+\newlength{\polycvmargins}
+\setlength{\polycvmargins}{\polycv@margins}
+\newlength{\polycvsidebarwidth}
+\setlength{\polycvsidebarwidth}{\polycv@sidebarwidth}
+\newlength{\polycvhintcol}
+\setlength{\polycvhintcol}{\polycv@hintcol}
+\newlength{\polycvhintcolsep}
+\setlength{\polycvhintcolsep}{\polycv@hintcolsep}
+\newlength{\polycviconspace}
+\setlength{\polycviconspace}{\polycv@iconspace}
 
 % Commands to alter the lengths
-\newcommand{\polycvheaderheight}[1]{\setlength{\polycv@headerheight}{#1}}
-\newcommand{\polycvfooterheight}[1]{\setlength{\polycv@footerheight}{#1}}
-\newcommand{\polycvmargins}[1]{\setlength{\polycv@margins}{#1}}
-\newcommand{\polycvhintcolumnwidth}[1]{\setlength{\polycv@hintcol}{#1}}
-\newcommand{\polycvhintcolumnsep}[1]{\setlength{\polycv@hintcolsep}{#1}}
-\newcommand{\polycviconspace}[1]{\setlength{\polycv@iconspace}{#1}}
+\newcommand{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
+\newcommand{\setpolycvfooterheight}[1]{\setlength{\polycvfooterheight}{#1}}
+\newcommand{\setpolycvmargins}[1]{\setlength{\polycvmargins}{#1}}
+\newcommand{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
+\newcommand{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
+\newcommand{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
 
 % additional lengths computed automatically
-\newlength{\polycv@leftmargin}
-\newlength{\polycv@topmargin}
-\newlength{\polycv@bottommargin}
+\newlength{\polycvleftmargin}
+\newlength{\polycvtopmargin}
+\newlength{\polycvbottommargin}
 \AtEndPreamble{%
-  \setlength{\polycv@leftmargin}{\polycv@sidebarwidth+2\polycv@margins}
-  \setlength{\polycv@topmargin}{\polycv@headerheight+\polycv@margins}
-  \setlength{\polycv@bottommargin}{\polycv@footerheight+\polycv@margins}
+  \setlength{\polycvleftmargin}{\polycvsidebarwidth+2\polycvmargins}
+  \setlength{\polycvtopmargin}{\polycvheaderheight+\polycvmargins}
+  \setlength{\polycvbottommargin}{\polycvfooterheight+\polycvmargins}
 }
 
 % Define how the progressbar should look like
@@ -130,12 +188,12 @@
 
 %  Define standard raggedness
 \providecommand\polycv@entry@ragged{}
-\newcommand{\polycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
-\newcommand{\polycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
+\newcommand{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
+\newcommand{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
 %  Define default alignment for the signature (may be used differently in CV and Letter)
 \providecommand\polycv@signature@alignment{right}
-\newcommand{\polycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
-\newcommand{\polycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
+\newcommand{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
+\newcommand{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
 
 %%%%%
 %
@@ -153,7 +211,7 @@
 \providecommand\position{}
 \renewcommand{\position}[1]{\renewcommand{\polycvposition}{#1}}
 
-\providecommand\polycvitemline[3][\polycv@iconspace]{%
+\providecommand\polycvitemline[3][\polycviconspace]{%
   \parbox[t]{#1}{\centering#2}%
   \parbox[t]{\linewidth-#1}{#3}\par\vspace{0.3\baselineskip}}
 
@@ -205,19 +263,19 @@
   \parbox[b]{1\linewidth}{%
     \color{sectioncolor}%
     \Large%
-    \rule{\polycv@hintcol}{1ex}\hspace{\polycv@hintcolsep}\polycvheaderfont%
-    \parbox{1.0\linewidth-\polycv@hintcol-\polycv@hintcolsep}{#1}% 
+    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}\polycvheaderfont%
+    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
   }\par\vspace{0.5\baselineskip}}
 
 \renewcommand{\subsection}[1]{%
   \parbox[b]{1\linewidth}{%
     \color{sectioncolor}%
-    \hspace{\polycv@hintcol}\hspace{\polycv@hintcolsep}\polycvheaderfont%
-    \parbox{1.0\linewidth-\polycv@hintcol-\polycv@hintcolsep}{#1}% 
+    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}\polycvheaderfont%
+    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
   }\par\vspace{0.3\baselineskip}}
 
 %  Fancy header box
-\newcommand{\polycvheader}[3][\polycv@headerheight]{%
+\newcommand{\polycvheader}[3][\polycvheaderheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
            fill           = headerbg, %
@@ -236,7 +294,7 @@
 }
 
 %  Fancy footer box
-\newcommand{\polycvfooter}[2][\polycv@footerheight]{%
+\newcommand{\polycvfooter}[2][\polycvfooterheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
            fill           = headerbg, %
@@ -256,7 +314,7 @@
 }
 
 %internal use
-\providecommand\polycv@sidebar@skill[3][\polycv@hintcolsep]{%
+\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
   \parbox{1.0\linewidth}{%
     \hspace{#1}%
     \parbox[b]{2\linewidth/3-4#1}{#2}%
@@ -275,16 +333,11 @@
   \newcommand{\polycvlanguage}[2]{\polycv@sidebar@skill{##1}{##2}}%
   \let\polycvskill\savepolycvskill%
   \newcommand{\polycvskill}[2]{\polycv@sidebar@skill{##1}{##2}}%
-  \ifdefined\polycv@draft%
-    \colorlet{polycvsidebackground}{sectioncolor!20}%
-  \else%
-    \colorlet{polycvsidebackground}{white!00}%
-  \fi%
   \begin{tikzpicture}[remember picture, overlay]
     \node [anchor = north west, %
-           text width = \polycv@sidebarwidth, %
-           xshift = \polycv@margins, %
-           yshift = -\polycv@headerheight-\polycv@margins,
+           text width = \polycvsidebarwidth, %
+           xshift = \polycvmargins, %
+           yshift = -\polycvheaderheight-\polycvmargins,
            fill = polycvsidebackground %DRAFT
           ] (polycvsidebarbox) at (current page.north west) \bgroup
 }{%
@@ -297,20 +350,15 @@
 }
 
 %  Fancy signature box
-\newcommand{\polycvsignature}[2][\polycv@sidebarwidth]{%
-  \ifdefined\polycv@draft%
-    \colorlet{polycvsidebackground}{sectioncolor!20}%
-  \else%
-    \colorlet{polycvsidebackground}{white!00}%
-  \fi%
+\newcommand{\polycvsignature}[2][\polycvsidebarwidth]{%
   \begin{tikzpicture}[remember picture, overlay]
     \node [rectangle, 
            anchor = south west, %
            text width = #1, %
            align = \polycv@signature@alignment, %
            minimum height = 0.75#1, %
-           yshift = \polycv@bottommargin, %
-           xshift = \polycv@margins,
+           yshift = \polycvbottommargin, %
+           xshift = \polycvmargins,
            fill = polycvsidebackground %DRAFT
           ] (polycvsignaturebox) at (current page.south west) {%
       \includegraphics[width=#1]{#2}\\
@@ -324,11 +372,11 @@
 %  Usage:
 %    \polycvline[width]{hint}{description}
 \providecommand\polycvline{}
-\renewcommand{\polycvline}[3][\polycv@hintcol]{%
+\renewcommand{\polycvline}[3][\polycvhintcol]{%
   \par%
   \parbox[t]{#1}{\strut\raggedleft #2}%
-  \hspace{\polycv@hintcolsep}%
-  \parbox[t]{\linewidth-\polycv@hintcolsep-#1}{\strut\polycv@entry@ragged #3}%
+  \hspace{\polycvhintcolsep}%
+  \parbox[t]{\linewidth-\polycvhintcolsep-#1}{\strut\polycv@entry@ragged #3}%
   \par\vspace{0.2\baselineskip}%
 }
 
@@ -337,7 +385,7 @@
 %    \polycventry[width]{time}{degree}{institute}{where}{opt: grade}{opt: comment    }
 %    \polycventry[width]{time}{title }{employer }{where}{opt: .....}{opt: description}
 \providecommand\polycventry{}
-\renewcommand{\polycventry}[7][\polycv@hintcol]{%
+\renewcommand{\polycventry}[7][\polycvhintcol]{%
 \polycvline[#1]{#2}{%
 \textbf{#3}, \textit{#4}, #5%
 \if\relax\detokenize{#6}\relax
@@ -353,7 +401,7 @@
 }
 
 \providecommand\polycvskill[2]{%
-  \polycvline[\polycv@hintcol]{\progressbar[width=0.5\linewidth]{#2}}{#1}}
+  \polycvline[\polycvhintcol]{\progressbar[width=0.5\linewidth]{#2}}{#1}}
 
 \providecommand\polycvlanguage[2]{%
   \polycvskill{#1}{#2}}
@@ -362,10 +410,10 @@
 \providecommand\polycvafterfirstpage{}
 \renewcommand{\polycvafterfirstpage}{%
   \newgeometry{%
-    top=\polycv@topmargin,%
-    left=2\polycv@margins,%
-    right=2\polycv@margins,%
-    bottom=\polycv@bottommargin,%
+    top=\polycvtopmargin,%
+    left=2\polycvmargins,%
+    right=2\polycvmargins,%
+    bottom=\polycvbottommargin,%
     nohead,nofoot}%
   \polycvheader{}{}
   \polycvfooter{}
@@ -376,7 +424,7 @@
 %  Define the letter environment
 %
 
-\newcommand{\polycv@letter@from}[3][\polycv@headerheight]{%
+\newcommand{\polycv@letter@from}[3][\polycvheaderheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
            fill           = headerfg, %
@@ -392,7 +440,7 @@
           ] (headerline) at (headerbox.south){};
     \node [anchor = east, %
            text width = 5cm, %
-           xshift     = -2\polycv@margins
+           xshift     = -2\polycvmargins
           ] (polycv-letter-address) at (headerbox.east) {%
       \polycvheaderfont\color{headerbg}\parbox[t]{1.0\linewidth}{%
         \raggedleft%
@@ -419,10 +467,10 @@
 
 \newenvironment{polycvletter}[3][\polycvaddress]{%
   \newgeometry{%
-    top=\polycv@topmargin,%
-    left=2\polycv@margins,%
-    right=2\polycv@margins,%
-    bottom=\polycv@bottommargin,%
+    top=\polycvtopmargin,%
+    left=2\polycvmargins,%
+    right=2\polycvmargins,%
+    bottom=\polycvbottommargin,%
     nohead,nofoot}%
   \polycv@letter@from{\polycvauthor}{#1}%
   \polycv@letter@to{#3}%
@@ -441,15 +489,13 @@
 %
 %  Set the page and start
 %
-\ifdefined\polycv@draft
-  \geometry{showframe}
-\fi
-\AtEndPreamble{\geometry{%
-  left=\polycv@leftmargin,
-  top=\polycv@topmargin,
-  right=\polycv@margins,
-  bottom=\polycv@bottommargin,
-  nohead,nofoot}
+\AtEndPreamble{%
+  \geometry{%
+    left=\polycvleftmargin,
+    top=\polycvtopmargin,
+    right=\polycvmargins,
+    bottom=\polycvbottommargin,
+    nohead,nofoot}
 }
 
 \AfterEndPreamble{\polycvheader{\polycvauthor}{\polycvposition}}

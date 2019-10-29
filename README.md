@@ -4,12 +4,19 @@
 
 I previously used the package [koma-moderncvclassic](https://ctan.org/pkg/koma-moderncvclassic)
 to prepare my CV, and I was actually quite satisfied with the look of it.
-In a way this class borrows some design elemnts from it.
+In a way this class borrows some design elements from it.
 However, I noticed it was not using a lot of space, 
 which got especially problematic when inserting a picture.
 
 I looked through various templates and classes online
-(**insert a list here**), but couldn't find anything that was exactly to my linking.
+([limecv](https://github.com/opieters/limecv),
+[simple academic resume](https://github.com/latex-ninja/simple-academic-resume),
+[Deedy Resume](https://github.com/deedy/Deedy-Resume),
+[Fancy CV by Adrien Friggeri](https://www.sharelatex.com/templates/cv-or-resume/fancy-cv),
+[the Overleaf CV Gallery](https://www.overleaf.com/gallery/tagged/cv),
+TeX Stack Exchange [LaTeX template for resume/curriculum vitae](https://tex.stackexchange.com/q/80/33413),
+... , there are possibly some I forgot), 
+but couldn't find anything that was exactly to my linking.
 So I decided to write a class for myself, not just only for my CV,
 but also for the training in writing such classes (or packages).
 
@@ -28,10 +35,8 @@ some of it is implemented in a rather hacky way,
 and I would like to clean that up.  
 There also is no documentation whatsoever of it at the moment.
 
-Here is one example of what I have achievd so far. 
-You will surely notice some of the dessign elements from the list above.
+Here is one example of what I have achieved so far. 
+You will surely notice some of the design elements from the list above.
 
-<img src="examples/two-page-letter/main.page-1.png" alt-="CV" width="100">
-<img src="examples/two-page-letter/main.page-2.png" alt-="CV (cont.)" width="100">
-<img src="examples/two-page-letter/main.page-3.png" alt-="Cover Letter" width="100">
+<img src="examples/two-page-letter/main.page-1.png" alt-="CV" width="200"> <img src="examples/two-page-letter/main.page-2.png" alt-="CV (cont.)" width="200"> <img src="examples/two-page-letter/main.page-3.png" alt-="Cover Letter" width="200">
 

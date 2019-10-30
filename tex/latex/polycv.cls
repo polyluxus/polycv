@@ -22,6 +22,14 @@
 \DeclareStringOption[0.2cm]{hintcolsep}
 \DeclareStringOption[0.8cm]{iconspace}
 %
+%   Define the colors for the highlights
+%
+\DeclareStringOption[blue]{primary}
+\DeclareStringOption[white]{secondary}
+\DeclareStringOption[orange]{highlight}
+\DeclareStringOption[black]{shade}
+\DeclareStringOption[10]{mixing}
+%
 %   Draft mode
 % 
 \DeclareBoolOption{draft}
@@ -30,6 +38,10 @@
 %   Define Biblatex Mode
 %
 \DeclareBoolOption{biblatex}
+%
+%   Option to pass to xcolor
+%
+\DeclareStringOption[dvipsnames]{xcolor}
 %
 %   Option to sign the CV
 %
@@ -68,7 +80,8 @@
 %  Provide Hyperlinks in templates
 \RequirePackage{hyperref}
 %  Color definitions
-\RequirePackage[dvipsnames]{xcolor}
+\PassOptionsToPackage{\polycv@xcolor,hyperref}{xcolor}
+\RequirePackage{xcolor}
 %  Use tikz for headerbox, etc. (must be loaded after xcolor)
 \RequirePackage{tikz}
 %  Graphics
@@ -88,13 +101,23 @@
 %%%%% COLORS
 %
 %  Set some default colours
-%  (ToDo: Need new and better names)
-\colorlet{headerbg}{MidnightBlue}
-\colorlet{headerfg}{white}
-\colorlet{sectioncolor}{headerbg}
-\colorlet{textcolor}{headerbg!20!black}
-\colorlet{highlight}{Maroon}
-\colorlet{polycvsidebackground}{white!00}
+%
+\newcommand*{\setpolycvprimary}[1]{\renewcommand*{\polycv@primary}{#1}}
+\newcommand*{\setpolycvsecondary}[1]{\renewcommand*{\polycv@secondary}{#1}}
+\newcommand*{\setpolycvhighlight}[1]{\renewcommand*{\polycv@highlight}{#1}}
+\newcommand*{\setpolycvshade}[1]{\renewcommand*{\polycv@shade}{#1}}
+\AtEndPreamble{%
+  \colorlet{polycvpagecolor}{\polycv@secondary}
+  \colorlet{polycvheaderbackground}{\polycv@primary}
+  \colorlet{polycvheadertext}{\polycv@secondary}
+  \colorlet{polycvsectioncolor}{\polycv@primary}
+  \colorlet{polycvtextcolor}{\polycv@primary!\polycv@mixing!\polycv@shade}
+  \colorlet{polycvhighlight}{\polycv@highlight}
+  \colorlet{polycvsidebarbackground}{\polycv@secondary}
+  \colorlet{polycvprogressbarfilled}{\polycv@primary}
+  \colorlet{polycvprogressbarempty}{\polycv@primary!10!\polycv@secondary}
+}
+\AfterPreamble{\color{polycvtextcolor}\pagecolor{polycvpagecolor}}
 %
 %%%%%
 
@@ -109,8 +132,10 @@
   \setlength\overfullrule{1em}
   % Make the page visible
   \PassOptionsToPackage{showframe}{geometry}
-  % Make the tikz boxes visible
-  \colorlet{polycvsidebackground}{headerbg!20}%
+  \AtEndPreamble{%
+    % Make the tikz boxes visible in draft mode
+    \colorlet{polycvsidebarbackground}{\polycv@primary!20!\polycv@secondary}%
+  }
 \fi
 
 %  Make biblatex use the same width as the date column
@@ -146,12 +171,12 @@
 \setlength{\polycviconspace}{\polycv@iconspace}
 
 % Commands to alter the lengths
-\newcommand{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
-\newcommand{\setpolycvfooterheight}[1]{\setlength{\polycvfooterheight}{#1}}
-\newcommand{\setpolycvmargins}[1]{\setlength{\polycvmargins}{#1}}
-\newcommand{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
-\newcommand{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
-\newcommand{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
+\newcommand*{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
+\newcommand*{\setpolycvfooterheight}[1]{\setlength{\polycvfooterheight}{#1}}
+\newcommand*{\setpolycvmargins}[1]{\setlength{\polycvmargins}{#1}}
+\newcommand*{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
+\newcommand*{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
+\newcommand*{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
 
 % additional lengths computed automatically
 \newlength{\polycvleftmargin}
@@ -166,9 +191,9 @@
 % Define how the progressbar should look like
 \progressbarchange{%
   heightr=1,%
-  filledcolor=sectioncolor,%
-  emptycolor=sectioncolor!10,%
-  linecolor=sectioncolor,%
+  filledcolor=polycvprogressbarfilled,%
+  emptycolor=polycvprogressbarempty,%
+  linecolor=polycvtextcolor,%
   roundnessr=0,%
   borderwidth=0pt,%
   tickswidth=0pt,%
@@ -188,12 +213,12 @@
 
 %  Define standard raggedness
 \providecommand\polycv@entry@ragged{}
-\newcommand{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
-\newcommand{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
+\newcommand*{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
+\newcommand*{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
 %  Define default alignment for the signature (may be used differently in CV and Letter)
 \providecommand\polycv@signature@alignment{right}
-\newcommand{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
-\newcommand{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
+\newcommand*{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
+\newcommand*{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
 
 %%%%%
 %
@@ -202,13 +227,13 @@
 
 %  Variables which make setting the template easier
 %  (author and title already exist)%
-\providecommand\polycvauthor{}
+\providecommand*\polycvauthor{}
 \renewcommand{\polycvauthor}{\@author}
 \providecommand\polycvtitle{}
 \renewcommand{\polycvtitle}{\@title}
 
-\providecommand\polycvposition{}
-\providecommand\position{}
+\providecommand*\polycvposition{}
+\providecommand*\position{}
 \renewcommand{\position}[1]{\renewcommand{\polycvposition}{#1}}
 
 \providecommand\polycvitemline[3][\polycviconspace]{%
@@ -227,29 +252,29 @@
 \renewcommand{\polycvaddress}{\polycvstreet\\\polycvlocation}
 \providecommand{\polycvlineaddress}{\polycvitemline{\faMapMarker}{\polycvaddress}}
 
-\providecommand\polycvemail{}
-\providecommand\email{}
+\providecommand*\polycvemail{}
+\providecommand*\email{}
 \renewcommand{\email}[1]{\renewcommand{\polycvemail}{\href{mailto:#1}{#1}}}
 \providecommand{\polycvlineemail}{\polycvitemline{\faEnvelope}{\polycvemail}}
 
-\providecommand\polycvphone{}
-\providecommand\phone{}
+\providecommand*\polycvphone{}
+\providecommand*\phone{}
 \renewcommand{\phone}[1]{\renewcommand{\polycvphone}{#1}}
 \providecommand{\polycvlinephone}{\polycvitemline{\faPhone}{\polycvphone}}
 
-\providecommand\polycvmobile{}
-\providecommand\mobile{}
+\providecommand*\polycvmobile{}
+\providecommand*\mobile{}
 \renewcommand{\mobile}[1]{\renewcommand{\polycvmobile}{#1}}
 \providecommand{\polycvlinemobile}{\polycvitemline{\faMobile}{\polycvmobile}}
 
-\providecommand\polycvgithub{}
-\providecommand\github{}
+\providecommand*\polycvgithub{}
+\providecommand*\github{}
 \renewcommand{\github}[1]{\renewcommand{\polycvgithub}{\href{https://github.com/#1}{github.com/#1}}}
 \providecommand{\polycvlinegithub}{\polycvitemline{\faGithub}{\polycvgithub}}
 
-\providecommand\polycvorcidicon{\raisebox{-0.2em}{\includegraphics[height=1.0em]{orcidicon}}}
-\providecommand\polycvorcid{}
-\providecommand\orcid{}
+\providecommand*\polycvorcidicon{\raisebox{-0.2em}{\includegraphics[height=1.0em]{orcidicon}}}
+\providecommand*\polycvorcid{}
+\providecommand*\orcid{}
 \renewcommand{\orcid}[1]{\renewcommand{\polycvorcid}{\href{http://orcid.org/#1}{orcid.org/#1}}}
 \providecommand{\polycvlineorcid}{\polycvitemline{\polycvorcidicon}{\polycvorcid}}
 
@@ -261,7 +286,7 @@
 %
 \renewcommand{\section}[1]{%
   \parbox[b]{1\linewidth}{%
-    \color{sectioncolor}%
+    \color{polycvsectioncolor}%
     \Large%
     \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}\polycvheaderfont%
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
@@ -269,7 +294,7 @@
 
 \renewcommand{\subsection}[1]{%
   \parbox[b]{1\linewidth}{%
-    \color{sectioncolor}%
+    \color{polycvsectioncolor}%
     \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}\polycvheaderfont%
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
   }\par\vspace{0.3\baselineskip}}
@@ -278,16 +303,16 @@
 \newcommand{\polycvheader}[3][\polycvheaderheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
-           fill           = headerbg, %
+           fill           = polycvheaderbackground, %
            anchor         = north, %
            minimum width  = \paperwidth, %
            minimum height = #1%
           ] (headerbox) at (current page.north){};
     \node [anchor = mid] (cv-name) at (headerbox) {%
-      \Huge\polycvheaderfont\color{headerfg}\textbf{#2}%
+      \Huge\polycvheaderfont\color{polycvheadertext}\textbf{#2}%
     };
     \node [anchor = north] at (cv-name.south) {%
-      \Large\polycvheaderfont\color{headerfg} #3%
+      \Large\polycvheaderfont\color{polycvheadertext} #3%
     };
   \end{tikzpicture}%
   \ignorespaces%
@@ -297,13 +322,13 @@
 \newcommand{\polycvfooter}[2][\polycvfooterheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
-           fill           = headerbg, %
+           fill           = polycvheaderbackground, %
            anchor         = south, %
            minimum width  = \paperwidth, %
            minimum height = #1%
           ] (footerbox) at (current page.south){};
     \node [anchor = center] (pagenumber) at (footerbox) {%
-      \polycvheaderfont\color{headerfg}%
+      \polycvheaderfont\color{polycvheadertext}%
       \if\relax\detokenize{#2}\relax
       \else
       - #2 -
@@ -327,7 +352,7 @@
   \let\section\savesection%
   \newcommand{\section}[1]{%
   \parbox[b]{1\linewidth}{%
-    \color{sectioncolor}\large\polycvheaderfont{##1}% 
+    \color{polycvsectioncolor}\large\polycvheaderfont{##1}% 
   }\par\vspace{0.5\baselineskip}}%
   \let\polycvlanguage\savepolycvlanguage%
   \newcommand{\polycvlanguage}[2]{\polycv@sidebar@skill{##1}{##2}}%
@@ -338,7 +363,7 @@
            text width = \polycvsidebarwidth, %
            xshift = \polycvmargins, %
            yshift = -\polycvheaderheight-\polycvmargins,
-           fill = polycvsidebackground %DRAFT
+           fill = polycvsidebarbackground %DRAFT
           ] (polycvsidebarbox) at (current page.north west) \bgroup
 }{%
     \egroup;%
@@ -359,7 +384,7 @@
            minimum height = 0.75#1, %
            yshift = \polycvbottommargin, %
            xshift = \polycvmargins,
-           fill = polycvsidebackground %DRAFT
+           fill = polycvsidebarbackground %DRAFT
           ] (polycvsignaturebox) at (current page.south west) {%
       \includegraphics[width=#1]{#2}\\
       \polycvauthor%
@@ -427,13 +452,13 @@
 \newcommand{\polycv@letter@from}[3][\polycvheaderheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
-           fill           = headerfg, %
+           fill           = polycvheadertext, %
            anchor         = north, %
            minimum width  = \paperwidth, %
            minimum height = #1-1ex%
           ] (headerbox) at (current page.north){};
     \node [rectangle, %
-           fill           = headerbg, %
+           fill           = polycvheaderbackground, %
            anchor         = north, %
            minimum width  = \paperwidth, %
            minimum height = 1ex%
@@ -442,7 +467,7 @@
            text width = 5cm, %
            xshift     = -2\polycvmargins
           ] (polycv-letter-address) at (headerbox.east) {%
-      \polycvheaderfont\color{headerbg}\parbox[t]{1.0\linewidth}{%
+      \polycvheaderfont\color{polycvheaderbackground}\parbox[t]{1.0\linewidth}{%
         \raggedleft%
         \textbf{\Large #2}\\%
         \textit{\normalsize #3}%%

@@ -1,0 +1,168 @@
+\documentclass[
+% draft,
+  xcolor=dvipsnames,
+  biblatex,
+  signcv=false,
+  14pt,a4paper
+]{polycv}
+
+\usepackage{mwe}          % Only for this example
+\usepackage{filecontents} % Only for this example
+\errorcontextlines=20
+
+% Fonts declaration 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{libertine}
+
+% bibliography
+\usepackage[backend=biber,%
+            style=numeric-comp,
+            style=chem-angew,
+            subentry=true,
+            sorting=ydnt,% sorted by year, descending
+]{biblatex}
+\begin{filecontents}{\jobname.bib}
+@BOOK{example-book,
+  author    = {Example Author},
+  title     = {Example Book Title},
+  publisher = {Example Publisher},
+  year      = {2019},
+}
+
+@ARTICLE{example-article,
+  author = {Example Author},
+  title = {Example Title},
+  journal = {J. Examples},
+  year = {2019},
+  volume = {0},
+  pages = {1227},
+}
+
+@Thesis{example-thesis,
+  author    = {Example Author},
+  title     = {Example Thesis Title},
+  school    = {University of Examples},
+  year      = {2019},
+  type      = {PhD-Thesis},
+  address   = {Example Town},
+}
+
+@CONFERENCE{example-talk,
+  author    = {Example Author},
+  title     = {Example Thesis Title},
+  booktitle = {Book of Abstracts, 1st Annual Example Meeting},
+  year = {2019},
+}
+
+\end{filecontents}
+\addbibresource{\jobname.bib}
+
+\usepackage[english]{babel}
+\usepackage{multicol}
+
+% Start customisation for CV
+
+% Create custom color:
+\definecolor{myprimary}{RGB}{255, 221, 0}
+\definecolor{mysecondary}{RGB}{221, 0, 255}
+\setpolycvprimary{myprimary}
+\setpolycvsecondary{mysecondary}
+\setpolycvshade{myprimary}
+
+% Customize lengths for polycv:
+% \setpolycvheaderheight{5cm}  % Default: 4.0 cm
+% \setpolycvfooterheight{2cm}  % Default: 0.5 cm
+% \setpolycvmargins{0.8cm}     % Default: 1.0 cm
+\setpolycvhintcolumnwidth{3cm} % Default: 2.7 cm
+% \setpolycvhintcolumnsep{1cm} % Default: 0.2 cm
+\setpolycviconspace{0.6cm}     % Default: 0.8 cm
+% \setpolycventryraggedright   % Default: justified
+
+% Fill some content
+\title{Curriculum Vitae}
+\author{Example Author}
+\position{Title / Position}
+\street{Street 123}
+\location{Town, Country}
+\email{me@mail.com}
+\phone{+1 234 56 78 900}
+\mobile{+1 234 56 78 999}
+\orcid{0000-0001-0002-0003}
+\github{ex-ample}
+\signatureimage{example-image-16x9}
+
+\begin{document}
+% Cite everything first. This works because the bibliography settings (above) sort chronologic.
+\nocite{*}%
+% Define what goes into the sidebar
+\begin{polycvsidebar}
+\small
+
+\includegraphics[width=1.0\linewidth]{example-image-1x1}\\[2ex]
+
+\section{Personal Details}
+% Universally usable line:
+\polycvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
+\polycvlineaddress
+\polycvlineemail
+\polycvlinephone
+\polycvlinemobile
+\polycvlineorcid
+\polycvlinegithub
+\null
+
+\section{Languages}
+\polycvlanguage{English (native)}{1}
+\polycvlanguage{Leetspeak (B2)}{0.7}
+
+\section{Skills}
+\polycvskill{\LaTeX}{0.8}
+\polycvskill{Reading}{0.9}
+\polycvskill{Writing}{0.7}
+\polycvskill{Calculating}{0.3}
+\polycvskill{Gaming}{0.95}
+
+\end{polycvsidebar}%
+\section{Experience}
+%\cventry{years}{degree/jobtitle}{institution/employer}{localization}{optional: grade/...}{optional: comment/job description}
+\polycventry{2018 - 2019}
+{Writer}
+{Example Publisher}
+{Example Place}
+{}
+{First reading things, and then writing about those things.}
+
+\polycventry{2017 - 2018}
+{Reader}
+{Example Company}
+{Example Place}
+{}
+{Reading things.}
+
+\section{Education}
+\polycventry{2010 - 2017}
+{Student}
+{Example School}
+{Example Place}
+{Grade: excellent}
+{Learning how to read and write.}
+
+\section{Languages}
+\polycvlanguage{English (native)}{1}
+\polycvlanguage{Leetspeak (B2)}{0.7}
+
+\section{Skills}
+\begin{multicols}{2}
+\polycvskill{\LaTeX}{0.8}
+\polycvskill{Reading}{0.9}
+\polycvskill{Writing}{0.7}
+\polycvskill{Calculating}{0.3}
+\polycvskill{Gaming}{0.95}
+\end{multicols}
+
+%\polycvafterfirstpage
+\defbibheading{bibliography}[Publications and Talks]{\section{#1}}
+\printbibliography
+\end{document}
+

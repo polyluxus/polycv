@@ -47,6 +47,10 @@
 %
 \DeclareBoolOption{signcv}
 %
+%   Option to set the indentation in the letter
+%
+\DeclareStringOption[1em]{letterindent}
+%
 %   Warn about options which will not be used/ passed on because of potential clashes
 %
 \DeclareVoidOption{twocolumn}{%
@@ -169,6 +173,8 @@
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
+\newlength{\polycvletterindent}
+\setlength{\polycvletterindent}{\polycv@letterindent}
 
 % Commands to alter the lengths
 \newcommand*{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
@@ -497,6 +503,7 @@
     right=2\polycvmargins,%
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
+  \setlength{\parindent}{\polycvletterindent}%
   \polycv@letter@from{\polycvauthor}{#1}%
   \polycv@letter@to{#3}%
   \polycv@letter@date%
@@ -509,6 +516,11 @@
   \polycvfooter{}%
   \restoregeometry
 }
+
+\providecommand\opening{}
+\renewcommand{\opening}[1]{\noindent{}#1\par}
+\providecommand\closing{}
+\renewcommand{\closing}[1]{\noindent{}#1\par}
 
 %%%%%
 %

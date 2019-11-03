@@ -484,16 +484,16 @@
 }
 
 \newcommand{\polycv@letter@to}[1]{%
-  \parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}\par%
+  \noindent\parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}\par%
   \vspace{1\baselineskip}%
 }
 
 \newcommand{\polycv@letter@date}{%
-  \parbox[t]{1.00\linewidth}{\raggedleft\today}\par%
+  \noindent\parbox[t]{1.00\linewidth}{\raggedleft\today}\par%
 }
 
 \newcommand{\polycv@letter@subject}[1]{%
-  \parbox[t]{1.00\linewidth}{\raggedright\textbf{#1}}\par%
+  \noindent\parbox[t]{1.00\linewidth}{\raggedright\textbf{#1}}\par%
 }
 
 \newenvironment{polycvletter}[3][\polycvaddress]{%
@@ -503,11 +503,11 @@
     right=2\polycvmargins,%
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
-  \setlength{\parindent}{\polycvletterindent}%
   \polycv@letter@from{\polycvauthor}{#1}%
   \polycv@letter@to{#3}%
   \polycv@letter@date%
   \polycv@letter@subject{#2}%
+  \setlength{\parindent}{\polycvletterindent}%
 }{%
   \vspace{1\baselineskip}%
   \raggedright%

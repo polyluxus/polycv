@@ -118,7 +118,12 @@
 \newcommand*{\setpolycvprimary}[1]{\renewcommand*{\polycv@primary}{#1}}
 \newcommand*{\setpolycvsecondary}[1]{\renewcommand*{\polycv@secondary}{#1}}
 \newcommand*{\setpolycvhighlight}[1]{\renewcommand*{\polycv@highlight}{#1}}
+%  Disable changing colors for body
 \newcommand*{\setpolycvshade}[1]{\renewcommand*{\polycv@shade}{#1}}
+\@onlypreamble\setpolycvprimary
+\@onlypreamble\setpolycvsecondary
+\@onlypreamble\setpolycvhighlight
+\@onlypreamble\setpolycvshade
 \AtEndPreamble{%
   \colorlet{polycvpagecolor}{\polycv@secondary}
   \colorlet{polycvheaderbackground}{\polycv@primary}
@@ -191,6 +196,13 @@
 \newcommand*{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
 \newcommand*{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
 \newcommand*{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
+% Disable for body
+\@onlypreamble\setpolycvheaderheight
+\@onlypreamble\setpolycvfooterheight
+\@onlypreamble\setpolycvmargins
+\@onlypreamble\setpolycvhintcolumnwidth
+\@onlypreamble\setpolycvhintcolumnsep
+\@onlypreamble\setpolycviconspace
 
 % Additional lengths computed automatically
 %
@@ -222,20 +234,27 @@
 
 %  Define different fonts
 %
-\providecommand\polycvheaderfont{}
-\renewcommand{\polycvheaderfont}{\sffamily\bfseries}
+\providecommand\polycv@headerfont{}
+\renewcommand{\polycv@headerfont}{\sffamily\bfseries}
+\providecommand\setpolycvheaderfont{}
+\renewcommand*{\setpolycvheaderfont}{\renewcommand*{\polycv@headerfont}{#1}}
+\@onlypreamble\setpolycvheaderfont
 
 %  Define standard raggedness
 %
 \providecommand\polycv@entry@ragged{}
 \newcommand*{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
 \newcommand*{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
+\@onlypreamble\setpolycventryraggedright
+\@onlypreamble\setpolycventryjustify
 
 %  Define default alignment for the signature (may be used differently in CV and Letter)
 %
 \providecommand\polycv@signature@alignment{right}
 \newcommand*{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
 \newcommand*{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
+\@onlypreamble\setpolycvsignatureright
+\@onlypreamble\setpolycvsignatureright
 
 %%%%%
 %
@@ -252,6 +271,8 @@
 \providecommand*\polycvposition{}
 \providecommand*\position{}
 \renewcommand{\position}[1]{\renewcommand{\polycvposition}{#1}}
+% Dissable this command because it is needed before the header
+\@onlypreamble\position
 
 \providecommand\polycvitemline[3][\polycviconspace]{%
   \parbox[t]{#1}{\centering#2}%
@@ -305,14 +326,14 @@
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}%
     \Large%
-    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}\polycvheaderfont%
+    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}\polycv@headerfont%
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
   }\par\vspace{0.5\baselineskip}}
 
 \renewcommand{\subsection}[1]{%
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}%
-    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}\polycvheaderfont%
+    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}\polycv@headerfont%
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
   }\par\vspace{0.3\baselineskip}}
 
@@ -327,10 +348,10 @@
            minimum height = #1%
           ] (headerbox) at (current page.north){};
     \node [anchor = mid] (cv-name) at (headerbox) {%
-      \Huge\polycvheaderfont\color{polycvheadertext}\textbf{#2}%
+      \Huge\polycv@headerfont\color{polycvheadertext}\textbf{#2}%
     };
     \node [anchor = north] at (cv-name.south) {%
-      \Large\polycvheaderfont\color{polycvheadertext} #3%
+      \Large\polycv@headerfont\color{polycvheadertext} #3%
     };
   \end{tikzpicture}%
   \ignorespaces%
@@ -347,7 +368,7 @@
            minimum height = #1%
           ] (footerbox) at (current page.south){};
     \node [anchor = center] (pagenumber) at (footerbox) {%
-      \polycvheaderfont\color{polycvheadertext}%
+      \polycv@headerfont\color{polycvheadertext}%
       \if\relax\detokenize{#2}\relax
       \else
       - #2 -
@@ -393,7 +414,7 @@
   \let\section\savesection%
   \newcommand{\section}[1]{%
   \parbox[b]{1\linewidth}{%
-    \color{polycvsectioncolor}\large\polycvheaderfont{##1}% 
+    \color{polycvsectioncolor}\large\polycv@headerfont{##1}% 
   }\par\vspace{0.5\baselineskip}}%
   \let\polycvlanguage\savepolycvlanguage%
   \newcommand{\polycvlanguage}[2]{\polycv@sidebar@skill{##1}{##2}}%
@@ -520,7 +541,7 @@
            text width = 5cm, %
            xshift     = -2\polycvmargins
           ] (polycv-letter-address) at (headerbox.east) {%
-      \polycvheaderfont\color{polycvheaderbackground}\parbox[t]{1.0\linewidth}{%
+      \polycv@headerfont\color{polycvheaderbackground}\parbox[t]{1.0\linewidth}{%
         \raggedleft%
         \textbf{\Large #2}\\%
         \textit{\normalsize #3}%%

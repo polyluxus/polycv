@@ -1,5 +1,7 @@
 \documentclass[
 % draft,
+  xcolor=dvipsnames,
+  primary=Blue,
   biblatex,
   signcv,
   14pt,a4paper
@@ -85,6 +87,7 @@
 \signatureimage{example-image-16x9}
 
 \begin{document}
+\begin{polycvfirstpage}
 % Cite everything first. This works because the bibliography settings (above) sort chronologic.
 \nocite{*}%
 % Define what goes into the sidebar
@@ -153,15 +156,17 @@
 \polycvskill{Gaming}{0.95}
 \end{multicols}
 
-\polycvafterfirstpage
+\end{polycvfirstpage}
+\begin{polycvpage}
 \defbibheading{bibliography}[Publications and Talks]{\section{#1}}
 \printbibliography
-
+\end{polycvpage}
 \begin{polycvletter}[\polycvaddress\\\polycvmobile\\\polycvemail]{subject}{Company\newline Address}
-Dear Example,
+  \opening{Dear Example,}
 
-\blindtext[1-3]
+  \blindtext[1-3]
 
+  \closing{Sincerely,}
 
 \end{polycvletter}
 \end{document}

@@ -1,8 +1,7 @@
 \documentclass[
 % draft,
   xcolor=dvipsnames,
-  primary=Emerald,
-  secondary=Goldenrod!10,
+  primary=Fuchsia,
   biblatex,
   signcv,
   14pt,a4paper
@@ -88,6 +87,13 @@
 \signatureimage{example-image-16x9}
 
 \begin{document}
+\begin{polycvletter}[\polycvaddress\\\polycvmobile\\\polycvemail]{subject}{Company\newline Address}
+  \opening{Dear Example,}
+
+  \blindtext[1-3]
+
+  \closing{Sincerely,}
+\end{polycvletter}
 \begin{polycvfirstpage}
   % Cite everything first. This works because the bibliography settings (above) sort chronologic.
   \nocite{*}%
@@ -159,12 +165,5 @@
   \defbibheading{bibliography}[Publications and Talks]{\section{#1}}
   \printbibliography
 \end{polycvfirstpage}
-\begin{polycvletter}[\polycvaddress\\\polycvmobile\\\polycvemail]{subject}{Company\newline Address}
-  \opening{Dear Example,}
-
-  \blindtext[1-3]
-
-  \closing{Sincerely,}
-\end{polycvletter}
 \end{document}
 

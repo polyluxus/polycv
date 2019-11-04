@@ -237,7 +237,7 @@
 \providecommand\polycv@headerfont{}
 \renewcommand{\polycv@headerfont}{\sffamily\bfseries}
 \providecommand\setpolycvheaderfont{}
-\renewcommand*{\setpolycvheaderfont}{\renewcommand*{\polycv@headerfont}{#1}}
+\renewcommand*{\setpolycvheaderfont}[1]{\renewcommand*{\polycv@headerfont}{#1}}
 \@onlypreamble\setpolycvheaderfont
 
 %  Define standard raggedness

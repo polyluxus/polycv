@@ -96,6 +96,18 @@
 \RequirePackage{geometry}
 %  Progressbar for languages/skills (should be replaced with tikz code)
 \RequirePackage{progressbar}
+%  Use fancy symbols
+\usepackage{fontawesome}
+%  Include a pdf (for appendix)
+\usepackage{pdfpages}
+%
+%%%%%
+
+%%%%% GLOBAL CHANGES
+%
+% Remove pagenumbers
+%
+\pagestyle{empty}
 %
 %%%%%
 
@@ -122,7 +134,7 @@
 %
 %%%%%
 
-%%%%% MACROS
+%%%%% OPTION MACROS
 %
 %  Emulate and extend draft mode
 \ifpolycv@draft%
@@ -147,9 +159,13 @@
     \DeclareFieldFormat{labelnumberwidth}{\makebox[\polycvhintcol][r]{[#1]}}%
   }%
 \fi
+%
+%%%%%
 
-%%%%% New lengths needs rewrite?
+%%%%% LENGTHS
+%
 % Define some lengths (and defaults) for the layout
+%
 \newlength{\polycvheaderheight}
 \setlength{\polycvheaderheight}{\polycv@headerheight}
 \newlength{\polycvfooterheight}
@@ -168,6 +184,7 @@
 \setlength{\polycvletterindent}{\polycv@letterindent}
 
 % Commands to alter the lengths
+%
 \newcommand*{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
 \newcommand*{\setpolycvfooterheight}[1]{\setlength{\polycvfooterheight}{#1}}
 \newcommand*{\setpolycvmargins}[1]{\setlength{\polycvmargins}{#1}}
@@ -175,7 +192,8 @@
 \newcommand*{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
 \newcommand*{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
 
-% additional lengths computed automatically
+% Additional lengths computed automatically
+%
 \newlength{\polycvleftmargin}
 \newlength{\polycvtopmargin}
 \newlength{\polycvbottommargin}
@@ -184,8 +202,13 @@
   \setlength{\polycvtopmargin}{\polycvheaderheight+\polycvmargins}
   \setlength{\polycvbottommargin}{\polycvfooterheight+\polycvmargins}
 }
+%
+%%%%%
 
+%%%%% STYLES
+%
 % Define how the progressbar should look like
+%
 \progressbarchange{%
   heightr=1,%
   filledcolor=polycvprogressbarfilled,%
@@ -197,22 +220,19 @@
   ticksheight=0pt%
 }
 
-% Remove pagenumbers
-\pagestyle{empty}
-
-%  Use fancy symbols
-%
-\usepackage{fontawesome}
-
 %  Define different fonts
+%
 \providecommand\polycvheaderfont{}
 \renewcommand{\polycvheaderfont}{\sffamily\bfseries}
 
 %  Define standard raggedness
+%
 \providecommand\polycv@entry@ragged{}
 \newcommand*{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
 \newcommand*{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
+
 %  Define default alignment for the signature (may be used differently in CV and Letter)
+%
 \providecommand\polycv@signature@alignment{right}
 \newcommand*{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
 \newcommand*{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
@@ -560,3 +580,13 @@
   \restoregeometry
 }
 
+%%%%% APPENDIX
+%
+%  Command to include pdf (for certificates)
+%
+\providecommand*\polycvappendix{}
+\renewcommand*{\polycvappendix}[2][pages={1-}]{%
+  \nopagecolor%
+  \includepdf[#1]{#2}}
+%
+%%%%%

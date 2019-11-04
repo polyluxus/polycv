@@ -92,13 +92,10 @@
 \RequirePackage{graphicx}
 %  Better Spacing
 \RequirePackage[indent=0pt]{parskip}
-%  Relative font sizes
-\RequirePackage{relsize}
 %  Page Layout
 \RequirePackage{geometry}
 %  Progressbar for languages/skills (should be replaced with tikz code)
-\RequirePackage[%
-]{progressbar}
+\RequirePackage{progressbar}
 %
 %%%%%
 
@@ -149,12 +146,6 @@
     \setlength{\biblabelsep}{\polycvhintcolsep}%
     \DeclareFieldFormat{labelnumberwidth}{\makebox[\polycvhintcol][r]{[#1]}}%
   }%
-\fi
-
-%  Sign the CV
-\ifpolycv@signcv%
-  \ClassInfo{polycv}{Option 'signcv' enabled; CV will be signed.}
-  \AfterEndPreamble{\polycvsignature{\polycvsignatureimage}}%
 \fi
 
 %%%%% New lengths needs rewrite?
@@ -305,8 +296,9 @@
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
   }\par\vspace{0.3\baselineskip}}
 
-%  Fancy header box
-\newcommand{\polycvheader}[3][\polycvheaderheight]{%
+%  Fancy header box (internal use only)
+%
+\newcommand{\polycv@header}[3][\polycvheaderheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
            fill           = polycvheaderbackground, %
@@ -324,8 +316,9 @@
   \ignorespaces%
 }
 
-%  Fancy footer box
-\newcommand{\polycvfooter}[2][\polycvfooterheight]{%
+%  Fancy footer box (internal use only)
+%
+\newcommand{\polycv@footer}[2][\polycvfooterheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
            fill           = polycvheaderbackground, %
@@ -344,7 +337,28 @@
   \ignorespaces%
 }
 
-%internal use
+%  Fancy signature box (for internal use only)
+%
+\newcommand{\polycv@signature}[2][\polycvsidebarwidth]{%
+  \begin{tikzpicture}[remember picture, overlay]
+    \node [rectangle, 
+           anchor = south west, %
+           text width = #1, %
+           align = \polycv@signature@alignment, %
+           minimum height = 0.75#1, %
+           yshift = \polycvbottommargin, %
+           xshift = \polycvmargins,
+           fill = polycvsidebarbackground %DRAFT
+          ] (polycvsignaturebox) at (current page.south west) {%
+      \includegraphics[width=#1]{#2}\\
+      \polycvauthor%
+    };
+  \end{tikzpicture}%
+  \ignorespaces%
+}
+
+%  Provide template for sidebar (for internal use only)
+%
 \providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
   \parbox{1.0\linewidth}{%
     \hspace{#1}%
@@ -353,7 +367,8 @@
     \parbox[b]{\linewidth/3}{\flushright\progressbar[width=\linewidth]{#3}}\par\vspace{0.2\baselineskip}}
 }
 
-%  Fancy sidebar box
+%  Define environment for fancy sidebar box
+%
 \newenvironment{polycvsidebar}{%
   \let\section\savesection%
   \newcommand{\section}[1]{%
@@ -377,29 +392,17 @@
   \let\savesection\section%
   \let\savepolycvlanguage\polycvlanguage%
   \let\savepolycvlanguage\polycvskill%
+  %  Sign the CV
+  \ifpolycv@signcv%
+    \ClassInfo{polycv}{Option 'signcv' enabled; CV will be signed.}
+    \polycv@signature{\polycvsignatureimage}%
+  \fi%
   \ignorespaces%
 }
 
-%  Fancy signature box
-\newcommand{\polycvsignature}[2][\polycvsidebarwidth]{%
-  \begin{tikzpicture}[remember picture, overlay]
-    \node [rectangle, 
-           anchor = south west, %
-           text width = #1, %
-           align = \polycv@signature@alignment, %
-           minimum height = 0.75#1, %
-           yshift = \polycvbottommargin, %
-           xshift = \polycvmargins,
-           fill = polycvsidebarbackground %DRAFT
-          ] (polycvsignaturebox) at (current page.south west) {%
-      \includegraphics[width=#1]{#2}\\
-      \polycvauthor%
-    };
-  \end{tikzpicture}%
-  \ignorespaces%
-}
-
-%  Define entries
+%  Define commands for entries into the CV
+%
+%  One line entry
 %  Usage:
 %    \polycvline[width]{hint}{description}
 \providecommand\polycvline{}
@@ -411,6 +414,7 @@
   \par\vspace{0.2\baselineskip}%
 }
 
+%  Block entry
 %  Usage (example):
 %    \polycventry[width]{WHEN}{WHAT  }{WHO      }{WHERE}{OPTIONAL  }{OPTIONAL        }
 %    \polycventry[width]{time}{degree}{institute}{where}{opt: grade}{opt: comment    }
@@ -431,30 +435,53 @@
 }
 }
 
+%  Progressbar entries
 \providecommand\polycvskill[2]{%
   \polycvline[\polycvhintcol]{\progressbar[width=0.5\linewidth]{#2}}{#1}}
 
 \providecommand\polycvlanguage[2]{%
   \polycvskill{#1}{#2}}
 
-%  Change the geometry of the second page (large left column not necessary)
-\providecommand\polycvafterfirstpage{}
-\renewcommand{\polycvafterfirstpage}{%
+%  Define environment for the first page
+%
+\newenvironment{polycvfirstpage}{%
+  \newgeometry{%
+    left=\polycvleftmargin,
+    top=\polycvtopmargin,
+    right=\polycvmargins,
+    bottom=\polycvbottommargin,
+    nohead,nofoot}%
+  \polycv@header{\polycvauthor}{\polycvposition}%
+  \polycv@footer{}%
+}{%
+  \restoregeometry%
+  \ignorespaces%
+}
+
+%  Define environment for a 'regular' page
+%  (This may cause problems, when the content is overflowing.)
+%
+\newenvironment{polycvpage}{%
   \newgeometry{%
     top=\polycvtopmargin,%
     left=2\polycvmargins,%
     right=2\polycvmargins,%
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
-  \polycvheader{}{}
-  \polycvfooter{}
+  \polycv@header{}{}%
+  \polycv@footer{}%
+}{%
+  \restoregeometry%
+  \ignorespaces%
 }
 
-%%%%%
+%%%%% LETTER 
 %
-%  Define the letter environment
+%  Define commands for the letter environment
 %
 
+%  New header to include address
+%
 \newcommand{\polycv@letter@from}[3][\polycvheaderheight]{%
   \begin{tikzpicture}[remember picture,overlay]
     \node [rectangle, %
@@ -483,19 +510,35 @@
   \ignorespaces%
 }
 
+%  Recipient address
+%
 \newcommand{\polycv@letter@to}[1]{%
   \noindent\parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}\par%
   \vspace{1\baselineskip}%
 }
 
+%  Date format and definition
+%
 \newcommand{\polycv@letter@date}{%
   \noindent\parbox[t]{1.00\linewidth}{\raggedleft\today}\par%
 }
 
+%  Subject format and definition
+%
 \newcommand{\polycv@letter@subject}[1]{%
   \noindent\parbox[t]{1.00\linewidth}{\raggedright\textbf{#1}}\par%
 }
 
+%  Opening and closing remarks
+%
+\providecommand\opening{}
+\renewcommand{\opening}[1]{\noindent{}#1\par}
+\providecommand\closing{}
+\renewcommand{\closing}[1]{\noindent{}#1\par}
+
+%  Set up the environment
+%  (This will also cause problems for sufficiently long letters.)
+%
 \newenvironment{polycvletter}[3][\polycvaddress]{%
   \newgeometry{%
     top=\polycvtopmargin,%
@@ -513,28 +556,7 @@
   \raggedright%
   \includegraphics[width=5cm]{\polycvsignatureimage}\\%
   \polycvauthor%
-  \polycvfooter{}%
+  \polycv@footer{}%
   \restoregeometry
 }
-
-\providecommand\opening{}
-\renewcommand{\opening}[1]{\noindent{}#1\par}
-\providecommand\closing{}
-\renewcommand{\closing}[1]{\noindent{}#1\par}
-
-%%%%%
-%
-%  Set the page and start
-%
-\AtEndPreamble{%
-  \geometry{%
-    left=\polycvleftmargin,
-    top=\polycvtopmargin,
-    right=\polycvmargins,
-    bottom=\polycvbottommargin,
-    nohead,nofoot}
-}
-
-\AfterEndPreamble{\polycvheader{\polycvauthor}{\polycvposition}}
-\AfterEndPreamble{\polycvfooter{}}
 

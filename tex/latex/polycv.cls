@@ -577,6 +577,19 @@
 \providecommand\closing{}
 \renewcommand{\closing}[1]{\noindent{}#1\par}
 
+%  Postscript
+%
+\newcommand{\polycv@letter@psmark}{P.S.~}
+\providecommand\polycv@letter@ps{}%
+\providecommand\setpsmark{}
+\renewcommand*{\setpsmark}[1]{\renewcommand{\polycv@letter@psmark}{#1}}
+\providecommand\ps{}
+\renewcommand{\ps}[1]{%
+  \renewcommand{\polycv@letter@ps}{%
+    \noindent\footnotesize\polycv@letter@psmark#1\par%
+  }%
+}%
+
 %  Set up the environment
 %  (This will also cause problems for sufficiently long letters.)
 %
@@ -593,10 +606,14 @@
   \polycv@letter@subject{#2}%
   \setlength{\parindent}{\polycvletterindent}%
 }{%
-  \vspace{1\baselineskip}%
-  \raggedright%
-  \includegraphics[width=5cm]{\polycvsignatureimage}\\%
-  \polycvauthor%
+  \vspace{0.5\baselineskip}%
+  %\raggedright%
+  \noindent\includegraphics[width=5cm]{\polycvsignatureimage}\\%
+  \noindent\polycvauthor\par%
+  \if\relax\detokenize{\polycv@letter@ps}\relax
+  \else
+  \polycv@letter@ps\par%
+  \fi
   \polycv@footer{}%
   \restoregeometry
 }

@@ -40,3 +40,8 @@ You will surely notice some of the design elements from the list above.
 
 <img src="examples/two-page-letter/main.page-1.png" alt-="CV" width="200"> <img src="examples/two-page-letter/main.page-2.png" alt-="CV (cont.)" width="200"> <img src="examples/two-page-letter/main.page-3.png" alt-="Cover Letter" width="200">
 
+In lieu of documentation at this point, if you want to use the class, 
+head over to the [examples](./examples) directory and try to understand these.
+If anything is unclear, needs improvement, is missing,
+please submit an [issue](https://github.com/polyluxus/polycv/issues).
+Thank you.

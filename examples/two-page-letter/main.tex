@@ -87,10 +87,11 @@
 \signatureimage{example-image-16x9}
 
 \begin{document}
+%Open the front page environment
 \begin{polycvfirstpage}
 % Cite everything first. This works because the bibliography settings (above) sort chronologic.
 \nocite{*}%
-% Define what goes into the sidebar
+% Define what goes into the sidebar (This should be done first.)
 \begin{polycvsidebar}
 \small
 
@@ -119,6 +120,7 @@
 \polycvskill{Gaming}{0.95}
 
 \end{polycvsidebar}%
+% First page content goes here
 \section{Experience}
 %\cventry{years}{degree/jobtitle}{institution/employer}{localization}{optional: grade/...}{optional: comment/job description}
 \polycventry{2018 - 2019}
@@ -156,11 +158,20 @@
 \polycvskill{Gaming}{0.95}
 \end{multicols}
 
+\section{More Skills}
+% generic line \polycvline{<hintcol>}{<description>}
+% levels with boxes \polycvlevelssquared[<width>]{<num>} or \polycvlevelscircled[<width>]{<num>}
+\polycvline{\polycvlevelssquared[0.7\linewidth]{4}}{Reading emails}
+\polycvline{\polycvlevelscircled[0.7\linewidth]{3}}{Writing emails}
+% close the first page
 \end{polycvfirstpage}
+% open the second page (changes margin, repeatable)
 \begin{polycvpage}
 \defbibheading{bibliography}[Publications and Talks]{\section{#1}}
 \printbibliography
+% close the page
 \end{polycvpage}
+% open the environment for the cover letter (this can be done first, too)
 \begin{polycvletter}[\polycvaddress\\\polycvmobile\\\polycvemail]{Subject}{Company\newline Address}
   \opening{Dear Example,}
 

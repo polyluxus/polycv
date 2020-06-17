@@ -400,14 +400,14 @@
 %
 \newcommand{\polycv@square@nofill}[1][\polycvprogressbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarempty] (0,0) rectangle (1,1); % 
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1); % 
+    \filldraw[polycvprogressbarempty] (0,0) rectangle (1,1);% 
+    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
 
 \newcommand{\polycv@square@filled}[1][\polycvprogressbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarfilled] (0,0) rectangle (1,1); % 
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1); % 
+    \filldraw[polycvprogressbarfilled] (0,0) rectangle (1,1);% 
+    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
 
 \newcommand{\polycv@circle@nofill}[1][\polycvprogressbarheight]{%
@@ -420,8 +420,7 @@
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogressbarfilled] (0.5,0.5) circle [radius=0.5];% 
     \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
-  \end{tikzpicture}
-}
+  \end{tikzpicture}}
 
 %  Define helper function to repeat symbols
 %
@@ -457,7 +456,7 @@
       \else
         \polycv@repeating[\level]{\symbol@filled}%
         \hfill%
-        \null\polycv@repeating[\elevel]{\symbol@nofill}%
+        \polycv@repeating[\elevel]{\symbol@nofill}%
       \fi%
     \fi%
   }%

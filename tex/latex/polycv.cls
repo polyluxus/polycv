@@ -21,6 +21,11 @@
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
 \DeclareStringOption[0.8cm]{iconspace}
+\DeclareStringOption[1.5ex]{progressbarheight}
+%
+%   Define number of boxes for the levels command
+%
+\DeclareStringOption[5]{progressbarunits}
 %
 %   Define the colors for the highlights
 %
@@ -94,8 +99,6 @@
 \RequirePackage[indent=0pt]{parskip}
 %  Page Layout
 \RequirePackage{geometry}
-%  Progressbar for languages/skills (should be replaced with tikz code)
-\RequirePackage{progressbar}
 %  Use fancy symbols
 \usepackage{fontawesome}
 %  Include a pdf (for appendix)
@@ -118,8 +121,8 @@
 \newcommand*{\setpolycvprimary}[1]{\renewcommand*{\polycv@primary}{#1}}
 \newcommand*{\setpolycvsecondary}[1]{\renewcommand*{\polycv@secondary}{#1}}
 \newcommand*{\setpolycvhighlight}[1]{\renewcommand*{\polycv@highlight}{#1}}
-%  Disable changing colors for body
 \newcommand*{\setpolycvshade}[1]{\renewcommand*{\polycv@shade}{#1}}
+%  Disable changing colors for body
 \@onlypreamble\setpolycvprimary
 \@onlypreamble\setpolycvsecondary
 \@onlypreamble\setpolycvhighlight
@@ -185,6 +188,8 @@
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
+\newlength{\polycvprogressbarheight}
+\setlength{\polycvprogressbarheight}{\polycv@progressbarheight}
 \newlength{\polycvletterindent}
 \setlength{\polycvletterindent}{\polycv@letterindent}
 
@@ -196,6 +201,7 @@
 \newcommand*{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
 \newcommand*{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
 \newcommand*{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
+\newcommand*{\setpolycvprogressbarheight}[1]{\setlength{\polycvprogressbarheight}{#1}}
 % Disable for body
 \@onlypreamble\setpolycvheaderheight
 \@onlypreamble\setpolycvfooterheight
@@ -203,6 +209,7 @@
 \@onlypreamble\setpolycvhintcolumnwidth
 \@onlypreamble\setpolycvhintcolumnsep
 \@onlypreamble\setpolycviconspace
+\@onlypreamble\setpolycvprogressbarheight
 
 % Additional lengths computed automatically
 %
@@ -219,19 +226,6 @@
 
 %%%%% STYLES
 %
-% Define how the progressbar should look like
-%
-\progressbarchange{%
-  heightr=1,%
-  filledcolor=polycvprogressbarfilled,%
-  emptycolor=polycvprogressbarempty,%
-  linecolor=polycvtextcolor,%
-  roundnessr=0,%
-  borderwidth=0pt,%
-  tickswidth=0pt,%
-  ticksheight=0pt%
-}
-
 %  Define different fonts
 %
 \providecommand\polycv@headerfont{}
@@ -260,6 +254,10 @@
 %
 %  Define special commands and environments
 %
+
+%  Control the number of items for the levells bar
+\newcommand*{\setpolycvprogressbarunits}[1]{\renewcommand*{\polycv@progressbarunits}{#1}}
+\@onlypreamble\setpolycvprogressbarunits
 
 %  Variables which make setting the template easier
 %  (author and title already exist)%
@@ -398,6 +396,92 @@
   \ignorespaces%
 }
 
+%  Define circle and square symbols
+%
+\newcommand{\polycv@square@nofill}[1][\polycvprogressbarheight]{%
+  \begin{tikzpicture}[x=#1, y=#1]%
+    \filldraw[polycvprogressbarempty] (0,0) rectangle (1,1); % 
+    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1); % 
+  \end{tikzpicture}}
+
+\newcommand{\polycv@square@filled}[1][\polycvprogressbarheight]{%
+  \begin{tikzpicture}[x=#1, y=#1]%
+    \filldraw[polycvprogressbarfilled] (0,0) rectangle (1,1); % 
+    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1); % 
+  \end{tikzpicture}}
+
+\newcommand{\polycv@circle@nofill}[1][\polycvprogressbarheight]{%
+  \begin{tikzpicture}[x=#1, y=#1]%
+    \filldraw[polycvprogressbarempty] (0.5,0.5) circle [radius=0.5];% 
+    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
+  \end{tikzpicture}}
+
+\newcommand{\polycv@circle@filled}[1][\polycvprogressbarheight]{%
+  \begin{tikzpicture}[x=#1, y=#1]%
+    \filldraw[polycvprogressbarfilled] (0.5,0.5) circle [radius=0.5];% 
+    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
+  \end{tikzpicture}
+}
+
+%  Define helper function to repeat symbols
+%
+\newcommand{\polycv@repeating}[2][5]{%
+  \ifnum#1 > 0%
+    \newcount\rep%
+    \rep0%
+    \loop\ifnum\rep < \number\numexpr#1-1\relax%
+      #2\hfill%
+      \advance\rep by 1% 
+    \repeat%
+    #2%
+  \fi%
+}
+
+%  Define helper function for the level bar
+%
+\newcommand{\polycv@level@bar}[4][\polycvhintcol]{%
+  \newcount\total@units%
+  \total@units\polycv@progressbarunits%
+  \newcount\level%
+  \ifnum#2 < \total@units \level#2 \else \level\total@units \fi%
+  \newcount\elevel%
+  \elevel\numexpr\total@units-\level\relax%
+  \def\symbol@filled{#3}%
+  \def\symbol@nofill{#4}%
+  \parbox{#1}{%
+    \ifnum\level = 0%
+      \polycv@repeating[\total@units]{\symbol@nofill}%
+    \else 
+      \ifnum\level = \total@units%
+        \polycv@repeating[\total@units]{\symbol@filled}%
+      \else
+        \polycv@repeating[\level]{\symbol@filled}%
+        \hfill%
+        \null\polycv@repeating[\elevel]{\symbol@nofill}%
+      \fi%
+    \fi%
+  }%
+}
+
+%  Define interfaces to the level bar
+%
+\newcommand{\polycvlevelssquared}[2][\polycvhintcol]{%
+  \polycv@level@bar[#1]{#2}{\polycv@square@filled}{\polycv@square@nofill}%
+}
+\newcommand{\polycvlevelscircled}[2][\polycvhintcol]{%
+  \polycv@level@bar[#1]{#2}{\polycv@circle@filled}{\polycv@circle@nofill}%
+}
+
+%  Define progressbar
+%  
+\newcommand{\polycvprogressbar}[2][\polycvhintcol]{
+  \begin{tikzpicture}[x=#1, y=\polycvprogressbarheight]%
+    \filldraw[polycvprogressbarfilled] (0, 0) rectangle (#2, 1) ;
+    \filldraw[polycvprogressbarempty] (#2, 0) rectangle (1, 1);
+    \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;
+  \end{tikzpicture}%
+}
+
 %  Provide template for sidebar (for internal use only)
 %
 \providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
@@ -405,7 +489,7 @@
     \hspace{#1}%
     \parbox[b]{2\linewidth/3-4#1}{#2}%
     \hspace{#1}%
-    \parbox[b]{\linewidth/3}{\flushright\progressbar[width=\linewidth]{#3}}\par\vspace{0.2\baselineskip}}
+    \parbox[b]{\linewidth/3}{\flushright\polycvprogressbar{#3}}\par\vspace{0.2\baselineskip}}
 }
 
 %  Define environment for fancy sidebar box
@@ -478,7 +562,7 @@
 
 %  Progressbar entries
 \providecommand\polycvskill[2]{%
-  \polycvline[\polycvhintcol]{\progressbar[width=0.5\linewidth]{#2}}{#1}}
+  \polycvline[\polycvhintcol]{\polycvprogressbar[0.5\linewidth]{#2}}{#1}}
 
 \providecommand\polycvlanguage[2]{%
   \polycvskill{#1}{#2}}

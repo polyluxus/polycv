@@ -108,10 +108,152 @@
 %
 % \section{Introduction}
 %
-% Put text here.
+% I previously used the package
+% \href{https://ctan.org/pkg/koma-moderncvclassic}{koma-moderncvclassic}
+% to prepare my CV, and I was actually quite satisfied with the look of
+% it. In a way this class borrows some design elements from it. However, I
+% noticed it was not using a lot of space, which got especially
+% problematic when inserting a picture.
+% 
+% I looked through various templates and classes online (%
+% \href{https://github.com/opieters/limecv}{limecv},
+% \href{https://github.com/latex-ninja/simple-academic-resume}{simple academic resume},
+% \href{https://github.com/deedy/Deedy-Resume}{DeedyResume},
+% \href{https://www.sharelatex.com/templates/cv-or-resume/fancy-cv}{FancyCV by Adrien Friggeri},
+% \href{https://www.overleaf.com/gallery/tagged/cv}{the Overleaf CVGallery}, 
+% TeX Stack Exchange \href{https://tex.stackexchange.com/q/80/33413}{%
+%   LaTeX template for resume/curriculum vitae}, \ldots{} , there are possibly some I forgot),
+% but couldn't find anything that was exactly to my linking. So I decided
+% to write a class for myself, not just only for my CV, but also for the
+% training in writing such classes (or packages).
+% 
+% The main goal was to structure the information in a way that, if
+% condensed enough, it would fit on one page; but additional pages could
+% be added when the need arose, e.g.~a long publication list, or many
+% stations along the way.
+% 
+% Additionally I liked the idea of having a cover letter template, which
+% resembles most of the elements of the CV.
+% 
+% 
+% The source code is available at \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub},
+% where there are also a few example uses of this class.
+% If anything is unclear, needs improvement, is missing please submit an issue there
+% (\href{https://github.com/polyluxus/polycv/issues}{GitHub issues}). Thank you.
+% 
+% \section{Installation}
+% 
+% This work consists of the files \texttt{polycv.dtx} and \texttt{polycv.ins}
+% and the derived filebase \texttt{polycv.cls}, which should be copied to a location
+% where latex will look for it.
+%
+% The source code is hosted at \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub},
+% where there are also the derived class and documentation files available.
+% 
+% \subsection{Prerequisites}
+% In order for this class to function properly, the following packages must be installed:
+% \begin{itemize}
+%   \item The package \lstinline`etoolbox` provides additional hooks necessary for
+%     the setup within the source class.
+%   \item The \lstinline`calc` package allows to derive some lengths from others.
+%   \item The \lstinline`hyperref` package provides clickable cross-references,
+%     e.g. to references to the bibliography, or websites.
+%   \item Colorsupport comesss from \lstinline`xcolor`.
+%   \item Most off the graphical elements within this class are produced with \lstinline`tikz`,
+%     such as the header and footer boxes, and the progressbar.
+%   \item To include a signature and profile pictures, \lstinline`graphicx` is lloaded.
+%   \item For most of the document the indentation is disabled with the \lstinline`parskip` package.
+%   \item The page layout is produced with the \lstinline`geometry` package.
+%   \item The \lstinline`fontawesome` is needed for icons, e.g. \faGithub, in the side bar.
+%   \item To include other reference letters as pdfs, \lstinline`pdfpages` is also loaded.
+% \end{itemize}
 %
 % \section{Usage}
 %
+% \subsection{Class Options}
+% This class is build on top of the standard article class. 
+% It therefore inherits most options from that class. 
+% Some are incompatible with the design of this class and have been disabled.
+% Other options allow for customisation of the used templates.
+% In this section they will be briefly described, along with commands that can be 
+% used to set the values in the preamble.
+% 
+% \subsubsection{Page Layout}
+%
+% The general page layout will be accomplished by the \texttt{geopetry} package. 
+% Depending on the environment currently in use, a few internal lengths are defined and used.
+% Most of these can only be set via the class options, or within the preamble.
+% 
+% \DescribeOption{margins}
+% \DescribeDefault{1.0 cm}
+% The length of \texttt{margin} is the baselength of most surrounding space. 
+% It is used additionally to the header and footer lengths.
+% This setting also controls the space between the side bar and the main body on the first page 
+% of the CV environment.
+% \DescribeMacro{\setpolycvmargins} 
+% The command \cs{setpolycvmargins}\marg{length} is only available in the preable and can 
+% be used to set the margin length after loading the class.
+% 
+% \DescribeOption{headerheight}
+% \DescribeDefault{3.0cm}
+% \DescribeOption{footerheight}
+% \DescribeDefault{0.5cm}
+% The options \texttt{headerheight} and \texttt{footerheight} control the height of the
+% boxes for the header and the footer, respectively.
+% These lengths affect the whole document and can therfore only be set when loading the
+% class or within the preamble.
+% The will be the same for each of the environments used.
+% \DescribeMacro{\setpolycvheaderheight}
+% \DescribeMacro{\setpolycvfooterheight}
+% Instead of choosing the key/value option at loadtime, the commands
+% \cs{setpolycvheaderheight}\marg{length} and 
+% \cs{setpolycvfooterheight}\marg{length} can be issued to manipulate these values.
+%
+% \DescribeOption{sidebarwidth}
+% \DescribeDefault{5.0cm}
+% \DescribeOption{hintcol}
+% \DescribeDefault{2.7cm}
+% \DescribeOption{hintcolsep}
+% \DescribeDefault{0.2cm}
+% \DescribeOption{iconspace}
+% \DescribeDefault{0.8cm}
+% \DescribeOption{letterindent} 
+% \DescribeDefault{1em}
+% 
+% \subsubsection{Colours}
+% \DescribeOption{xcolor}\DescribeDefault{dvipsnames}
+% \DescribeOption{primary}\DescribeDefault{blue}
+% \DescribeOption{secondary} \DescribeDefault{white}
+% \DescribeOption{shade} \DescribeDefault{black}
+% \DescribeOption{mixing} \DescribeDefault{10}
+
+% \DescribeOption{highlight} \DescribeDefault{orange} \margintag{unused}
+% 
+% \subsubsection{Progress and Level Bar Options}
+% 
+% \DescribeOption{progressbarheight}
+% \DescribeDefault{1.5 ex}
+% \DescribeOption{progressbarunits}
+% \DescribeDefault{5}
+
+% \subsubsection{}
+% \DescribeOption{draft, final}
+% \DescribeOption{biblatex} off
+% \DescribeOption{signcv} off
+
+% \subsubsection{iVoid Options}
+% \watchout
+% \DescribeOption{twocolumn}
+% This option is incompatible with the class.
+% \watchout
+% \DescribeOption{titlepage}
+% This option is incompatible with the class.
+% 
+% \subsection{The CV Environments}
+% 
+% \subsection{The Cover Letter Environment}
+% 
+% \subsection{Including external \PDF as Appendix}
 % Put text here.
 %
 %
@@ -127,13 +269,8 @@
 % \DescribeMacro{\setpolycvshade}
 %
 %
-% \DescribeMacro{\setpolycvheaderheight}
 %
 %
-% \DescribeMacro{\setpolycvfooterheight}
-%
-%
-% \DescribeMacro{\setpolycvmargins}
 %
 %
 % \DescribeMacro{\setpolycvhintcolumnwidth}

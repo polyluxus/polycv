@@ -845,83 +845,61 @@
 %
 % \subsubsection{Fonts and Styles}
 %
-%  Define different fonts
 %
 %
 % \begin{macro}{\polycv@headerfont}
+% \begin{macro}{\setpolycvheaderfont}
+% Define the font family for the header and make it bold (by default) and store
+% it in a variable. Provide access to this cariable via a set command.
 %    \begin{macrocode}
 \providecommand\polycv@headerfont{}
 \renewcommand{\polycv@headerfont}{\sffamily\bfseries}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\setpolycvheaderfont}
-%    \begin{macrocode}
 \providecommand\setpolycvheaderfont{}
 \renewcommand*{\setpolycvheaderfont}[1]{\renewcommand*{\polycv@headerfont}{#1}}
 \@onlypreamble\setpolycvheaderfont
 %    \end{macrocode}
 % \end{macro}
+% \end{macro}
 %
 %
-%  Define standard raggedness
 %
 % \begin{macro}{\polycv@entry@ragged}
+% \begin{macro}{\setpolycventryraggedright}
+% \begin{macro}{\setpolycventryjustify}
+% Provide a variable to store how the output is set, i.e. the standard raggedness.
+% Provide commands to change the raggedness of the output. 
+% These need to be set in the preamble, so they are disabled for the body.
 %    \begin{macrocode}
 \providecommand\polycv@entry@ragged{}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\setpolycventryraggedright}
-%    \begin{macrocode}
 \newcommand*{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\setpolycventryjustify}
-%    \begin{macrocode}
 \newcommand*{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
-%    \end{macrocode}
-% \end{macro}
-%
-%    \begin{macrocode}
 \@onlypreamble\setpolycventryraggedright
 \@onlypreamble\setpolycventryjustify
 %    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \end{macro}
 %
-%  Define default alignment for the signature (may be used differently in CV and Letter)
 %
 % \begin{macro}{\polycv@signature@alignment}
+% \begin{macro}{\setpolycvsignatureright}
+% \begin{macro}{\setpolycvsignatureleft}
+% Define the alignment for the signature, which is stored in a variable.
+%  Provide commands to change it, and disable them for the body.
 %    \begin{macrocode}
 \providecommand\polycv@signature@alignment{right}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\setpolycvsignatureright}
-%    \begin{macrocode}
 \newcommand*{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
-%    \end{macrocode}
-% \end{macro}
-%
-%
-% \begin{macro}{\setpolycvsignatureleft}
-%    \begin{macrocode}
 \newcommand*{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
+\@onlypreamble\setpolycvsignatureright
+\@onlypreamble\setpolycvsignatureright
 %    \end{macrocode}
 % \end{macro}
-%
-%    \begin{macrocode}
-\@onlypreamble\setpolycvsignatureright
-\@onlypreamble\setpolycvsignatureright
-%    \end{macrocode}
+% \end{macro}
+% \end{macro}
 %
 % \subsection{Macros and Environments}
 %
-% Define special commands and environments
+% Define special commands and environment.s
 %
 % \begin{macro}{\setpolycvprogressbarunits}
 % Control the number of items for the levels bar.

@@ -91,6 +91,10 @@
 % \GetFileInfo{polycv.dtx}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
+% \DoNotIndex{\#,\$,\%,\&,\@,\\,\{,\},\^,\_,\~,\ }
+% \DoNotIndex{\@ne}
+% \DoNotIndex{\advance,\begingroup,\catcode,\closein}
+% \DoNotIndex{\closeout,\day,\def,\edef,\else,\empty,\endgroup}
 %
 % \providecommand*{\url}{\texttt}
 % \title{The \textsf{polycv} class}
@@ -135,11 +139,17 @@
 % Additionally I liked the idea of having a cover letter template, which
 % resembles most of the elements of the CV.
 % 
-% 
 % The source code is available at \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub},
 % where there are also a few example uses of this class.
 % If anything is unclear, needs improvement, is missing please submit an issue there
 % (\href{https://github.com/polyluxus/polycv/issues}{GitHub issues}). Thank you.
+%
+% \subsubsection{Contributing}
+%
+% If you find this class useful and would like to contribute, you can submit a pull request to
+% the development branch of the \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub repository}.
+% Please note that the they will be squashed into one commit before mergeing them into the main 
+% branch of the repository.
 % 
 % \section{Installation}
 % 
@@ -211,43 +221,118 @@
 %
 % \DescribeOption{sidebarwidth}
 % \DescribeDefault{5.0cm}
+% On the left side of first page of the CV a box is created, the side bar, which may hold 
+% personal information, a picture, skills, languages, hobbies, etc..
+% The width of this box is controlled with the option \texttt{sidebarwidth}.
+% This must be defined before the sidebar is attempted to be set.
+% \watchout
+% \DescribeMacro{\setpolycvsidebarwidth}
+% There is currently no command analogous to the other lengths to set this in the preable,
+% it must be defined via the options.
+% 
+% \DescribeOption{iconspace}
+% \DescribeDefault{0.8cm}
+% Closely related is the option \texttt{iconspace}, which defines the width that is reserved
+% for the icon in a line in the side bar environment.
+% \DescribeMacro{\setpolycviconspace}
+% It can also be set via \cs{setpolycviconspace}\marg{length} in the preamble.
+%
 % \DescribeOption{hintcol}
 % \DescribeDefault{2.7cm}
 % \DescribeOption{hintcolsep}
 % \DescribeDefault{0.2cm}
-% \DescribeOption{iconspace}
-% \DescribeDefault{0.8cm}
+% In the main body, each entry will consist of two parts: 
+% First, a small column for a keyword, date, bar, which is called hint in this documentation.
+% The width of this column can be adjusted with the option \texttt{hintcol}.
+% Second, a column for the description of this hint. This is just a parbox, and depends on the 
+% command used. The width will be automaticall calculated from the available space.
+% These two columns are separated by a space.
+% The width of which can be set via the option \texttt{hintcolsep}.
+% \DescribeMacro{\setpolycvhintcolumnwidth}
+% \DescribeMacro{\setpolycvhintcolumnsep}
+% Alternatively they can be set in the preamble via \cs{setpolycvhintcolumnwidth}\marg{length} and
+% via \cs{setpolycvhintcolumnsep}\marg{length}, respectively.
+%
 % \DescribeOption{letterindent} 
 % \DescribeDefault{1em}
+% In the letter environment the indentation of the first line of a paragraph can be adjusted
+% with the \texttt{letterindent} option.
+% This is another length that can (currently) only be controlled with passing the option to the class.
 % 
-% \subsubsection{Colours}
+% \subsubsection{Colors}
 % \DescribeOption{xcolor}\DescribeDefault{dvipsnames}
+% The class loads the \texttt{xcolor} package and passes by default the option \texttt{dvipsnames} to it.
+% This can be changed by using the \texttt{xcolor} option to pass other parameters to this package.
+% It is loaded internally before the \texttt{tikz} package to avoid option conflicts.
+% 
 % \DescribeOption{primary}\DescribeDefault{blue}
-% \DescribeOption{secondary} \DescribeDefault{white}
+% The main colour of the CV is called \texttt{primary} and can be set via this option.
+% It is used for all parts that will be highlighted, such as the header bar and the section headings.
 % \DescribeOption{shade} \DescribeDefault{black}
 % \DescribeOption{mixing} \DescribeDefault{10}
-
-% \DescribeOption{highlight} \DescribeDefault{orange} \margintag{unused}
+% The textcolor is a composit color from the primary color and the \texttt{shade} color. 
+% By default this is defined as black, so the text will appear darker.
+% The amount of primary color mixed in depends on the a factor which can be set via the \texttt{mixing} option.
 % 
+% \DescribeOption{secondary} \DescribeDefault{white}
+% The \texttt{secondary} color specifies the background color and is white by default.
+%
+% \margintag{unused}
+% \DescribeOption{highlight} \DescribeDefault{orange} 
+% One last color is defined to highlight items. 
+% It can be set via the \texttt{highlight} option.
+% This option currently has little effect as the color itself is not used within the template.
+% 
+% \DescribeMacro{\setpolycvprimary}
+% \DescribeMacro{\setpolycvsecondary}
+% \DescribeMacro{\setpolycvhighlight}
+% \DescribeMacro{\setpolycvshade}
+% To allow for custom colors to be specified, all colors ca also be specified via 
+% \cs{setpolycv...}\marg{color} commands.
+% Note that the mixing parameter must be set via the options and jhas no special macro.
+%
 % \subsubsection{Progress and Level Bar Options}
 % 
 % \DescribeOption{progressbarheight}
 % \DescribeDefault{1.5 ex}
+% Skills can be displayd as an CV entry and accompanied with a progress bar or a
+% level (bar) indicator. The width of this bar is by default either determined by the
+% environment in which it is used, or the width of the hint column.
+% The height of the bar can be controlled with the \texttt{progressbarheight} option.
 % \DescribeOption{progressbarunits}
 % \DescribeDefault{5}
-
-% \subsubsection{}
+% The level bar is devided into boxes or cicles. The number of these items can be set
+% via \texttt{progressbarunits} and defaults to five.
+% 
+% \subsubsection{Miscellaneous Options}
 % \DescribeOption{draft, final}
-% \DescribeOption{biblatex} off
-% \DescribeOption{signcv} off
-
-% \subsubsection{iVoid Options}
-% \watchout
+% The class also extends the \texttt{draft} option of the standard article class.
+% The otherwise invisible boxes, e.g. for the side bar, will be lightly shaded, so that they are visible.
+% The complementary option is \texttt{final}. 
+% Note that if the final option is found, the draft option will have no effect and will be ignored.
+% 
+% \DescribeOption{biblatex} 
+% The \texttt{biblatex} option will inject some code into a bibliography environemnt, so that the alingment
+% of the hint column will be better. It is turned off by default.
+% If the biblatex package is not loaded (this class will not take care of this), it might lead to problems.
+% 
+% \DescribeOption{signcv} 
+% In some countries it is customary to sign the CV.
+% The option \texttt{signcv} can be used to enable this behavior.
+% If it is enabled, a box with a signature will be placed in the lower left corner of the first page,
+% below the sidebar contents. The box width is also controlled with the sidebar width option.
+% An image with the signature is necessary (see below).
+%
+% \subsubsection{Void Article Options}
 % \DescribeOption{twocolumn}
-% This option is incompatible with the class.
 % \watchout
+% Since every page has a specific layout passing the \texttt{twocolumn} option to the inherited
+% article class will lead to problems. Therefore it has been disabled. 
+%
 % \DescribeOption{titlepage}
-% This option is incompatible with the class.
+%\watchout
+% For the same reason as above, creating a title page doesn't make sense and will clash with other
+% settings of this class. Therefore the \texttt{titlepage} option has also been disabled.
 % 
 % \subsection{The CV Environments}
 % 
@@ -257,29 +342,12 @@
 % Put text here.
 %
 %
-% \DescribeMacro{\setpolycvprimary}
-%
-%
-% \DescribeMacro{\setpolycvsecondary}
-%
-%
-% \DescribeMacro{\setpolycvhighlight}
-%
-%
-% \DescribeMacro{\setpolycvshade}
 %
 %
 %
 %
 %
 %
-% \DescribeMacro{\setpolycvhintcolumnwidth}
-%
-%
-% \DescribeMacro{\setpolycvhintcolumnsep}
-%
-%
-% \DescribeMacro{\setpolycviconspace}
 %
 %
 % \DescribeMacro{\setpolycvprogressbarheight}
@@ -509,7 +577,7 @@
 %
 % \DescribeMacro{\polycvappendix}
 %
-
+%
 %
 % \StopEventually{}
 %
@@ -845,8 +913,6 @@
 %
 % \subsubsection{Fonts and Styles}
 %
-%
-%
 % \begin{macro}{\polycv@headerfont}
 % \begin{macro}{\setpolycvheaderfont}
 % Define the font family for the header and make it bold (by default) and store
@@ -860,8 +926,6 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-%
-%
 %
 % \begin{macro}{\polycv@entry@ragged}
 % \begin{macro}{\setpolycventryraggedright}
@@ -879,7 +943,6 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycv@signature@alignment}
 % \begin{macro}{\setpolycvsignatureright}
@@ -926,7 +989,6 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvposition}
 % \begin{macro}{\position}
 % Store the position, which is used as the sub-heading in the title banner.
@@ -940,7 +1002,6 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvitemline}
 % This defines a generic line consisting of tow parboxes.
 % This command is needed for the sidebar.
@@ -952,7 +1013,6 @@
   \parbox[t]{\linewidth-#1}{#3}\par\vspace{0.3\baselineskip}}
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycvaddress}
 % \begin{macro}{\polycvstreet}
@@ -966,7 +1026,6 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{macro}{\address}
 % \begin{macro}{\street}
@@ -988,14 +1047,12 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvlineaddress}
 % Template to produce the address for the sidebar.
 %    \begin{macrocode}
 \providecommand{\polycvlineaddress}{\polycvitemline{\faMapMarker}{\polycvaddress}}
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycvemail}
 % \begin{macro}{\email}
@@ -1011,7 +1068,6 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvphone}
 % \begin{macro}{\phone}
 % \begin{macro}{\polycvlinephone}
@@ -1025,7 +1081,6 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycvmobile}
 % \begin{macro}{\mobile}
@@ -1041,7 +1096,6 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvgithub}
 % \begin{macro}{\github}
 % \begin{macro}{\polycvlinegithub}
@@ -1056,13 +1110,16 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvorcidicon}
-% This defines the orcid icon either from a file as there is no symbol available,
-% or if not found as a square of bold letters spelling orcid.
+% This defines the orcid icon either from the file \lstinline`orcidicon.pdf` if it is found by \LaTeX.
+% I am unaware of a \LaTeX package that defines this symbol.\footnote{%
+% For more details see:  
+% \textit{Is there a standard way to include ORCID in TeX / PDF?}
+% (\url{https://tex.stackexchange.com/q/275578/33413})}
+% If such a file is  not found, it will place as small square of bold letters spelling orcid.
 %    \begin{macrocode}
 \providecommand*\polycvorcidicon{}
-\IfFileExists{orcidicon}{%
+\IfFileExists{orcidicon.pdf}{%
   \renewcommand{\polycvorcidicon}{%
     \raisebox{-0.2em}{\includegraphics[height=1.0em]{orcidicon}}%
   }%
@@ -1073,7 +1130,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycvorcid}
 % \begin{macro}{\orcid}
@@ -1088,7 +1144,6 @@
 % \end{macro}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycvsignatureimage}
 % \begin{macro}{\signatureimage}
@@ -1154,7 +1209,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycv@footer}
 % The footer box will be used internally only. 
 % It is a simple box produced with tikz, which can be used to ddisplay page numbers.
@@ -1183,7 +1237,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycv@signature}
 % The signature box will be used internally only. 
@@ -1235,7 +1288,6 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycv@circle@nofill}
 % \begin{macro}{\polycv@circle@filled}
 % Analogous circle symbols.
@@ -1253,7 +1305,6 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycv@repeating}
 % This is a helper function to repeat typesetting a symbol. 
@@ -1273,7 +1324,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycv@level@bar}
 % The level bar is also a helper function, which wraps around the repeating function.
@@ -1309,7 +1359,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvlevelssquared}
 % \begin{macro}{\polycvlevelscircled}
 % Wrapper commands as user interfaces to the level bar.
@@ -1324,7 +1373,6 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycvprogressbar}
 % The progressbar is a simple tikz image consiting of three rectangles:
@@ -1360,7 +1408,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycventry}
 % The entry defines a block. It uses the command above, but fills in more details 
 % in the description parbox of the template.
@@ -1384,7 +1431,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvskill}
 % This command uses a progressbar in the hint column.
 %    \begin{macrocode}
@@ -1393,7 +1439,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycvlanguage}
 % This is basically a wrapper to the above command.
 %    \begin{macrocode}
@@ -1401,7 +1446,6 @@
   \polycvskill{#1}{#2}}
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{environment}{polycvfirstpage}
 % This environment redefines the page layout for the first page, 
@@ -1423,7 +1467,6 @@
 }
 %    \end{macrocode}
 % \end{environment}
-%
 %
 % \begin{environment}{polycvpage}
 % This environment defines the page layout for a 'regular' page.
@@ -1467,7 +1510,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{environment}{polycvsidebar}
 % This environment provides a box as a tikz picture for the sidebar.
@@ -1548,7 +1590,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycv@letter@to}
 % This defines the field of the addressee.
 %
@@ -1560,7 +1601,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycv@letter@date}
 % This defines and formates the date field.
 %
@@ -1571,7 +1611,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycv@letter@subject}
 % This defines and formates the subject field.
 %
@@ -1581,7 +1620,6 @@
 }
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\opening}
 % \begin{macro}{\closing}
@@ -1596,7 +1634,6 @@
 % \end{macro}
 % \end{macro}
 %
-%
 % \begin{macro}{\polycv@letter@psmark}
 % Define the default postscript mark.
 %
@@ -1605,7 +1642,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-%
 % \begin{macro}{\setpsmark}
 % Command to change the default postscript mark.
 %    \begin{macrocode}
@@ -1613,7 +1649,6 @@
 \renewcommand*{\setpsmark}[1]{\renewcommand{\polycv@letter@psmark}{#1}}
 %    \end{macrocode}
 % \end{macro}
-%
 %
 % \begin{macro}{\polycv@letter@ps}
 % \begin{macro}{\ps}
@@ -1629,7 +1664,6 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-%
 %
 % \begin{environment}{polycvletter}
 % Here the actual letter environment is defined. 

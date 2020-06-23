@@ -178,8 +178,53 @@
 %   \item To include other reference letters as pdfs, \lstinline`pdfpages` is also loaded.
 % \end{itemize}
 %
+% \clearpage
 % \section{Usage}
 %
+% You can load the class in the same way you would load any other class.
+% The following listing defines a skeleton document containing a elements of the class.
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\documentclass[<options>]{polycv}
+  %
+  % packages, 
+  % define personal information,
+  % define colours, page layout, etc.
+  %
+\begin{document}
+  \begin{polycvfirstpage}
+    \begin{polycvsidebar}
+      %
+      % Contents of the side bar box
+      % (personal information image, etc.)
+      %
+    \end{polycvsidebar}
+    %
+    % Body of the first page
+    %
+  \end{polycvfirstpage}
+  \begin{polycvpage}
+    %
+    % Body of additional pages
+    %
+  \end{polycvpage}
+  \begin{polycvletter}[<Author Address>]{<Subject>}{<Recipient Address>}
+    % Letter content
+    \opening{Dear Example,}
+    %
+    % Text
+    %
+    \closing{Sincerely,}
+    \ps{more text}
+  \end{polycvletter}
+  \polycvappendix{<filename>}
+\end{document}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 % \subsection{Class Options}
 % This class is build on top of the standard article class. 
 % It therefore inherits most options from that class. 
@@ -188,7 +233,7 @@
 % In this section they will be briefly described, along with commands that can be 
 % used to set the values in the preamble.
 % 
-% \subsubsection{Page Layout}
+% \subsubsection{Page Layout}\label{sec:page-layout}
 %
 % The general page layout will be accomplished by the \texttt{geopetry} package. 
 % Depending on the environment currently in use, a few internal lengths are defined and used.
@@ -335,14 +380,12 @@
 % settings of this class. Therefore the \texttt{titlepage} option has also been disabled.
 % 
 % \subsection{The CV Environments}
+% \DescribeEnv{polycvfirstpage}
+%
+%
+% \DescribeEnv{polycvpage}
 % 
-% \subsection{The Cover Letter Environment}
 % 
-% \subsection{Including external \PDF as Appendix}
-% Put text here.
-%
-%
-%
 %
 %
 %
@@ -539,45 +582,93 @@
 % \DescribeMacro{\polycvlanguage}
 %
 %
-% \DescribeEnv{polycvfirstpage}
 %
 %
-% \DescribeEnv{polycvpage}
-%
-%
-% \DescribeMacro{\opening}
-%
-%
-% \DescribeMacro{\opening}
-%
-%
-% \DescribeMacro{\closing}
-%
-%
-% \DescribeMacro{\closing}
-%
-%
-% \DescribeMacro{\setpsmark}
-%
-%
-% \DescribeMacro{\setpsmark}
-%
-%
-% \DescribeMacro{\ps}
-%
-%
-% \DescribeMacro{\ps}
-%
-%
+% \subsection{The Cover Letter Environment}
 % \DescribeEnv{polycvletter}
+% The letter environment takes one optional and two mandatory arguments:
+% The optional argument is the author's address, which, if unspecified, will
+% be constructed from variables set in the preamble.
+% The first mandatory argument is the subject line, while the second is
+% the recipient's address.
 %
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+  \begin{polycvletter}[<Author Address>]{<Subject>}{<Recipient Address>}
+    %
+    % Letter content
+    %
+  \end{polycvletter}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 %
-% \DescribeMacro{\polycvappendix}
+% At the end of the environment the signature, a file name provided in the preample
+% with \lstinline`\signatureimage{<image>}`, along with the author name will be set..
 %
+% \DescribeMacro{\opening}
+% \DescribeMacro{\closing}
+% The letter environment uses indentation specified with the \lstinline`letterindent` 
+% option (\ref{sec:page-layout}). This looks odd for the opening and closing statement, 
+% therefore a wrapper is provided that turns of the indentation. They each take one 
+% argument, like  \lstinline`\opening`\marg{statement}.
+% These commands will be set in place, i.e. you could include text before and after them.
 %
-% \DescribeMacro{\polycvappendix}
+% \DescribeMacro{\ps}
+% Occasionally you would like to inlcude a postscript note. 
+% The contents of such a note can be stored with \lstinline`\ps`\marg{note} and will be
+% produced below the signature of the letter.
+% The fontsize is also smaller than the one of the text.
+% This command can only be used once; a later occurrence will overwrite a previous one.
 %
+% \DescribeMacro{\setpsmark} \DescribeDefault{P.S.\~}
+% How the postscript is introduced can be changed with \lstinline`\setpsmark`\marg{psmark}.
 %
+% The following is a minimal working example for a letter created with the polycv class.
+%
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\documentclass[primary=black,14pt,a4paper]{polycv}
+\usepackage{mwe} % for this example
+\title{Curriculum Vitae}
+\author{Example Author}
+\signatureimage{example-image-16x9}
+
+\begin{document}
+\begin{polycvletter}
+  [Address line 1\\ Address line 2]
+  {Subject line}
+  {Company\\ Address line 1\\ Address line 2}
+  \opening{Dear Example,}
+
+  \blindtext[1-3]
+
+  \closing{Sincerely,}
+  \ps{\blindtext[1]}
+\end{polycvletter}
+\end{document}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
+%
+% \subsection{Including external \PDF{} as Appendix}
+%
+% \DescribeMacro{\polycvappendix} \DescribeDefault{pages=\{1-\}}
+% It is occasionally necessary to include certificates, letters of recommendation, 
+% or other external sources into an application. 
+% This class provides a wrapper to the \cs{includepdf} command from \lstinline`pdfpages`.
+% The difference to the original command is that before including the document, 
+% the wrapper unsets the page color. This is necesssaary, (even if it is defined as white.
+% You can include pages from a \PDF{} document to use it as appendix with the command
+% \cs{polycvappendix}\oarg{kwargs}\marg{filename}, where the optional argument accepts
+% arguments like \lstinline`pages=1-3` or \lstinline`angle=90`.
+% See the \href{https://ctan.org/pkg/pdfpages}{Documentation of the \lstinline`pdfpages` package}.
 %
 % \StopEventually{}
 %
@@ -1581,7 +1672,7 @@
       \polycv@headerfont\color{polycvheaderbackground}\parbox[t]{1.0\linewidth}{%
         \raggedleft%
         \textbf{\Large #2}\\%
-        \textit{\normalsize #3}%%
+        \textit{\normalsize #3}%
         }%
     };%
   \end{tikzpicture}%

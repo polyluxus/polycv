@@ -48,12 +48,14 @@
   basicstyle=\footnotesize\ttfamily,%
   keywordstyle=\bfseries,%
   breaklines=true,%
-  morekeywords={part,chapter,subsection,subsubsection,paragraph,subparagraph}%
+  morekeywords={part,chapter,subsection,subsubsection,paragraph,subparagraph},%
+  escapeinside={(*@}{@*)}%
 }
 \lstset{style=mytex}
 \usepackage{fontawesome}
 \usepackage{hyperref}
 \newcommand\mybackslash{\char`\\}
+\newcommand\myarg[1]{\(\langle\)\textit{#1}\(\rangle\)}
 \usepackage{dtxdescribe}
 
 \EnableCrossrefs
@@ -344,6 +346,8 @@
 % level (bar) indicator. The width of this bar is by default either determined by the
 % environment in which it is used, or the width of the hint column.
 % The height of the bar can be controlled with the \texttt{progressbarheight} option.
+% \DescribeMacro{\setpolycvprogressbarheight}
+% It can also be set via \lstinline`\setpolycvprogressbarheight`\marg{length}.
 % \DescribeOption{progressbarunits}
 % \DescribeDefault{5}
 % The level bar is devided into boxes or cicles. The number of these items can be set
@@ -379,8 +383,147 @@
 % For the same reason as above, creating a title page doesn't make sense and will clash with other
 % settings of this class. Therefore the \texttt{titlepage} option has also been disabled.
 % 
+%
+% \subsection{Commands to Store and Access Information}
+% Personal information can be stored in variables so that they become accessible to the defined templates. 
+%
+% \DescribeMacro{\author}
+% \DescribeMacro{\polycvauthor}
+% The \lstinline`\author`\marg{author name} command remains unchanged and cannot be used outside of the preamble.
+% The contents of that field is copied to the \lstinline`\polycvauthor` variable and is accessible 
+% throughout the document that way.
+%
+% \DescribeMacro{\title}
+% \DescribeMacro{\polycvtitle}
+% Similarly to the above, the \lstinline`\title`\marg{title} remains unchanged, with the same limitations applied.
+% The contents can be accessed with the \lstinline`\polycvtitle` command.
+% There is currently no template using this command, but it is recommended to set it to somethin like
+% \emph{Curriculum Vitae} for the \PDF{} fields that might use it.
+%
+% \DescribeMacro{\position}
+% \DescribeMacro{\polycvposition}
+% The \lstinline`\position`\marg{position} macro is defined in a similar way to the above commands.
+% The \lstinline`\polycvposition` macro can be used to access the content. 
+% It is used in the header box and can be set to contain, as the name suggest, the title of the current position.
+% A common usage might also be a one line description of one's profession.
+%
+% \DescribeMacro{\address}
+% \DescribeMacro{\polycvaddress}
+% The address can either be specified by the direct invocation of \lstinline`\address`\marg{address} and
+% is accessible via the \lstinline`\polycvaddress` macro.
+% It is used in the address template (see sectin~\ref{sec:templates-special}), 
+% as well as the header of the letter (see section~\ref{sec:letter-env}).
+% \DescribeMacro{\street}
+% \DescribeMacro{\location}
+% Alternatively it the macros \lstinline`\street`\marg{street} and \lstinline`\location`\marg{location} can be used
+% to set the values separately. The \lstinline`\polycvaddress` will then be contructed from these two values.
+% \DescribeMacro{\polycvstreet}
+% \DescribeMacro{\polycvlocation}
+% If set, they can be printed with the corresponding \lstinline`\polycvstreet` and \lstinline`\polycvlocation` macros.
+% \watchout
+% If the address is set directly the other values remain unchanged. 
+% It is therefore also possible to extend the functionality in the follwoing way:
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\street{123, Example Road}
+\location{New Town}
+\address{The Old Shack\\\polycvstreet\\\polcvlocation}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
+%
+% \DescribeMacro{\email}
+% \DescribeMacro{\polycvemail}
+% The command \lstinline`\email`\marg{email} will wrap the input in a hyperlink, which can
+% be accessed through the \lstinline`\polycvemail` command.
+%
+% \DescribeMacro{\phone}
+% \DescribeMacro{\mobile}
+% \DescribeMacro{\polycvphone}
+% \DescribeMacro{\polycvmobile}
+% Telephone numbers can be stored with \lstinline`\phone`\marg{number} and \lstinline`\mobile`\marg{number}
+% and accessed with the adjacent commands \lstinline`\polycvphone` and \lstinline`\polycvmobile`.
+% Currently the template only provides templates for these two telephone numbers.
+%
+% \DescribeMacro{\github}
+% \DescribeMacro{\polycvgithub}
+% The macro \lstinline`\github`\marg{username} provides a convenient way to display the GitHub username,
+% while also wrapping it into a hyperlink to the associated profile.
+%
+% \DescribeMacro{\orcid}
+% \DescribeMacro{\polycvorcid}
+% Likewise for an ORCID account, the \lstinline`\orcid`\marg{ID number} will wrap the displayed ID 
+% into a hyperlink to the respective profile.
+%
+% \DescribeMacro{\signatureimage}
+% \DescribeMacro{\polycvsignatureimage}
+% In order to sign the CV and the cover letter, a file name must be provided with the macro
+% \lstinline`\signatureimage`\marg{filename}. 
+% This file name is stored in \lstinline`\polycvsignatureimage` and is passed to the command 
+% \lstinline`includegraphics` in the corresponding templates.
+% \watchout
+% For the cover letter it is necessary to set this filename, otherwise it will (currently) lead to an error.
+%
+% \subsection{Templates}
+% \label{sec:templates}
+% 
+% \subsubsection{General Templates for the CV}
+% \label{sec:templates-general}
+% \DescribeMacro{\polycvline}
+% \DescribeMacro{\polycvitemline}
+%
+%
+% \DescribeMacro{\section}
+% \DescribeMacro{\subsection}
+%
+%
+% \DescribeMacro{\polycvlevelssquared}
+%
+%
+% \DescribeMacro{\polycvlevelscircled}
+%
+%
+% \DescribeMacro{\polycvprogressbar}
+%
+%
+%
+%
+%
+%
+% \DescribeMacro{\polycventry}
+%
+%
+% \DescribeMacro{\polycvskill}
+%
+%
+% \DescribeMacro{\polycvlanguage}
+%
+% 
+% \subsubsection{Special Templates for the CV}
+% \label{sec:templates-special}
+%
+% \DescribeMacro{\polycvlineaddress}
+% \DescribeMacro{\polycvlineemail}
+% \DescribeMacro{\polycvlinephone}
+% \DescribeMacro{\polycvlinemobile}
+% \DescribeMacro{\polycvlinegithub}
+%
+% \DescribeMacro{\polycvorcidicon}
+% The command \lstinline`\polycvorcidicon` expands to the filename \lstinline`orcidicon.pdf`
+% when looking for the icon to insert.
+% \DescribeMacro{\polycvlineorcid}
+%
+%
 % \subsection{The CV Environments}
+% \label{sec:cv-env}
+% 
 % \DescribeEnv{polycvfirstpage}
+%
+%
+% \DescribeEnv{polycvsidebar}
 %
 %
 % \DescribeEnv{polycvpage}
@@ -393,7 +536,6 @@
 %
 %
 %
-% \DescribeMacro{\setpolycvprogressbarheight}
 %
 %
 % \DescribeMacro{\setpolycvheaderfont}
@@ -417,174 +559,11 @@
 % \DescribeMacro{\setpolycvprogressbarunits}
 %
 %
-% \DescribeMacro{\polycvauthor}
-%
-%
-% \DescribeMacro{\polycvauthor}
-%
-%
-% \DescribeMacro{\polycvtitle}
-%
-%
-% \DescribeMacro{\polycvtitle}
-%
-%
-% \DescribeMacro{\polycvposition}
-%
-%
-% \DescribeMacro{\position}
-%
-%
-% \DescribeMacro{\position}
-%
-%
-% \DescribeMacro{\polycvitemline}
-%
-%
-% \DescribeMacro{\polycvaddress}
-%
-%
-% \DescribeMacro{\polycvstreet}
-%
-%
-% \DescribeMacro{\polycvlocation}
-%
-%
-% \DescribeMacro{\address}
-%
-%
-% \DescribeMacro{\street}
-%
-%
-% \DescribeMacro{\location}
-%
-%
-% \DescribeMacro{\address}
-%
-%
-% \DescribeMacro{\street}
-%
-%
-% \DescribeMacro{\location}
-%
-%
-% \DescribeMacro{\polycvaddress}
-%
-%
-% \DescribeMacro{\polycvlineaddress}
-%
-%
-% \DescribeMacro{\polycvemail}
-%
-%
-% \DescribeMacro{\email}
-%
-%
-% \DescribeMacro{\email}
-%
-%
-% \DescribeMacro{\polycvlineemail}
-%
-%
-% \DescribeMacro{\polycvphone}
-%
-%
-% \DescribeMacro{\phone}
-%
-%
-% \DescribeMacro{\phone}
-%
-%
-% \DescribeMacro{\polycvlinephone}
-%
-%
-% \DescribeMacro{\polycvmobile}
-%
-%
-% \DescribeMacro{\mobile}
-%
-%
-% \DescribeMacro{\mobile}
-%
-%
-% \DescribeMacro{\polycvlinemobile}
-%
-%
-% \DescribeMacro{\polycvgithub}
-%
-%
-% \DescribeMacro{\github}
-%
-%
-% \DescribeMacro{\github}
-%
-%
-% \DescribeMacro{\polycvlinegithub}
-%
-%
-% \DescribeMacro{\polycvorcidicon}
-%
-%
-% \DescribeMacro{\polycvorcid}
-%
-%
-% \DescribeMacro{\orcid}
-%
-%
-% \DescribeMacro{\orcid}
-%
-%
-% \DescribeMacro{\polycvlineorcid}
-%
-%
-% \DescribeMacro{\polycvsignatureimage}
-%
-%
-% \DescribeMacro{\signatureimage}
-%
-%
-% \DescribeMacro{\signatureimage}
-%
-%
-% \DescribeMacro{\section}
-%
-%
-% \DescribeMacro{\subsection}
-%
-%
-% \DescribeMacro{\polycvlevelssquared}
-%
-%
-% \DescribeMacro{\polycvlevelscircled}
-%
-%
-% \DescribeMacro{\polycvprogressbar}
-%
-%
-% \DescribeEnv{polycvsidebar}
-%
-%
-% \DescribeMacro{\polycvline}
-%
-%
-% \DescribeMacro{\polycvline}
-%
-%
-% \DescribeMacro{\polycventry}
-%
-%
-% \DescribeMacro{\polycventry}
-%
-%
-% \DescribeMacro{\polycvskill}
-%
-%
-% \DescribeMacro{\polycvlanguage}
-%
 %
 %
 %
 % \subsection{The Cover Letter Environment}
+% \label{sec:letter-env}
 % \DescribeEnv{polycvletter}
 % The letter environment takes one optional and two mandatory arguments:
 % The optional argument is the author's address, which, if unspecified, will
@@ -596,7 +575,8 @@
 %<*example>
 % \fi
 \begin{lstlisting}
-  \begin{polycvletter}[<Author Address>]{<Subject>}{<Recipient Address>}
+  \begin{polycvletter}
+    [(*@\myarg{Author Address}@*)]{(*@\myarg{Subject line}@*)}{(*@\myarg{Recipient Address}@*)}
     %
     % Letter content
     %
@@ -612,7 +592,7 @@
 % \DescribeMacro{\opening}
 % \DescribeMacro{\closing}
 % The letter environment uses indentation specified with the \lstinline`letterindent` 
-% option (\ref{sec:page-layout}). This looks odd for the opening and closing statement, 
+% option (see section \ref{sec:page-layout}). This looks odd for the opening and closing statement, 
 % therefore a wrapper is provided that turns of the indentation. They each take one 
 % argument, like  \lstinline`\opening`\marg{statement}.
 % These commands will be set in place, i.e. you could include text before and after them.
@@ -1094,8 +1074,8 @@
 % \end{macro}
 %
 % \begin{macro}{\polycvitemline}
-% This defines a generic line consisting of tow parboxes.
-% This command is needed for the sidebar.
+% This defines a generic line consisting of two parboxes.
+% This command is primarily needed for the sidebar, but it could be used somewhere else.
 % The left parbox is used as a hint column and contains an icon,
 % the right the value of a variable.
 %    \begin{macrocode}

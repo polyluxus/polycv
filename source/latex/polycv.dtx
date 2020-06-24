@@ -469,28 +469,55 @@
 %
 % \subsection{Templates}
 % \label{sec:templates}
+% The templates that are provided with this class should make typesetting the contents of the resumee
+% easier as they provide predefined spacing and markup.
 % 
 % \subsubsection{General Templates for the CV}
 % \label{sec:templates-general}
-% \DescribeMacro{\polycvline}
-% \DescribeMacro{\polycvitemline}
-%
 %
 % \DescribeMacro{\section}
 % \DescribeMacro{\subsection}
+% The \lstinline`\section`\marg{text} and \lstinline`\subsection`\marg{text} commands are redefined 
+% to have no numbers.
+% For the former there will be a bar the length of the hint column, while for the latter there is jsut 
+% the same amount of space.
+% Both commands will use the primary color and the predefined header fonts.
 %
+% \DescribeMacro{\polycvline}
+% The \lstinline`\polycvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry line in the CV
+% into two parts: a hint column with the reset hint, which can also be set with the optional argument,
+% and a description box spanning the remaining width of the line.
+% It can be used to set any type of centent as a line in the CV.
 %
-% \DescribeMacro{\polycvlevelssquared}
-%
-%
-% \DescribeMacro{\polycvlevelscircled}
-%
+% \DescribeMacro{\polycvitemline}
+% The \lstinline`\polycvitemline`\oarg{width}\marg{icon}\marg{description} is similarly constructed as 
+% the above command.
+% The general difference is that the hint coulmn is replaced with an icon column.
+% If the optional \myarg{length} parameter is not given, it falls back to the definition from the preamle.
+% The line itself is defined consisting of two parboxes, spanning the whole width that is available.
+% This command is primarily intended for the sidebar, but it could be used somewhere else.
+% It is also used for the specialised templates (see section~\ref{sec:templates-special}).
 %
 % \DescribeMacro{\polycvprogressbar}
+% The \lstinline`\polycvprogressbar`\oarg{width}\marg{level fraction} typesets a progress bar.
+% The height of this bar is defined via the class options or in the preamble.
+% The width of the bar can be set via the optional parameter \myarg{length}, however,
+% in most use cases it will be automatically calculated depending on where it is used.
+% The mandatory argument \myarg{level fraction} should be a number between 0 and 1.
+% There are some special templates, which use this command (see section~\ref{sec:templates-special}).
 %
-%
-%
-%
+% \DescribeMacro{\polycvlevelssquared}
+% \DescribeMacro{\polycvlevelscircled}
+% The macros \lstinline`\polycvlevelssquared`\oarg{width}\marg{level} and 
+% \lstinline`\polycvlevelscircled`\oarg{width} \marg{level} are also progress indicators, 
+% which use squares or circles, respectively.
+% The number of items is set via the class options or in the preamble.
+% The mandatory argument \myarg{level} should be a number within 0 and the set limit.
+% The width can be given as the optional argument \myarg{width} and defaults to the width of the hint column.
+% There are currently no templates that use these commands.
+% 
+% \subsubsection{Special Templates for the CV}
+% \label{sec:templates-special}
 %
 %
 % \DescribeMacro{\polycventry}
@@ -501,9 +528,6 @@
 %
 % \DescribeMacro{\polycvlanguage}
 %
-% 
-% \subsubsection{Special Templates for the CV}
-% \label{sec:templates-special}
 %
 % \DescribeMacro{\polycvlineaddress}
 % \DescribeMacro{\polycvlineemail}
@@ -1231,7 +1255,7 @@
 %
 % \begin{macro}{\section}
 % \begin{macro}{\subsection}
-% The section and sub-section commands are redefined to have no numbers.
+% The section and subsection commands are redefined to have no numbers.
 % Instead there will be a bar the length of the hint column, and they will use the primary color.
 %
 %    \begin{macrocode}

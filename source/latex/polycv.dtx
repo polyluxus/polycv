@@ -383,6 +383,27 @@
 % For the same reason as above, creating a title page doesn't make sense and will clash with other
 % settings of this class. Therefore the \texttt{titlepage} option has also been disabled.
 % 
+% \section{Changing Fonts and Text Alignment}
+% \DescribeMacro{\setpolycvheaderfont} \DescribeDefault{\mybackslash{}sffamily\mybackslash{}bfseries}
+% By default the font used for the header is made bold and serifs are turned off.
+% In order to change that layout, the command \lstinline`\setpolycvheaderfont`\marg{font specification}
+% can be used. this command should be used in the preamble.
+%
+% \DescribeMacro{\setpolycventryraggedright}
+% \DescribeMacro{\setpolycventryjustify}
+% The default layout of an entry in the CV is justified. 
+% This can be changed with \lstinline`\setpolycventryraggedright` to flush the contents to the left
+% and leave the right side ragged. 
+% For symmetry the command \lstinline`\setpolycventryjustify` can be used.
+% Both commands will set the internal variable used in the templates at the end of the preamble,
+% so they can only be used there.
+%
+% \DescribeMacro{\setpolycvsignatureright}
+% \DescribeMacro{\setpolycvsignatureleft}
+% The commands \lstinline`\setpolycvsignatureright` and \lstinline`\setpolycvsignatureleft` determine
+% whether the name below a signature field is right or left aligned.
+% This does not affect where the field itself is placed.
+% These commands can also only be used in the preamble.
 %
 % \subsection{Commands to Store and Access Information}
 % Personal information can be stored in variables so that they become accessible to the defined templates. 
@@ -521,71 +542,158 @@
 %
 %
 % \DescribeMacro{\polycventry}
-%
+% The \lstinline`\polycventry` macro is a more specialised template of the \lstinline`\polycvline` macro.
+% It requires six mandatory arguments, which of course can be empty. 
+% It is intended to be used in the following form:\\
+% \lstinline`\polycventry`\oarg{width}\marg{when}\marg{what}\marg{who}\marg{where}\marg{opt.}\marg{descr.}.\\
+% The entry spans the whole available width, the optional \myarg{width} controls the hint column.
+% The first argument \myarg{when} contains the hint, which can be a date for example.
+% The second argument \myarg{what} will be set in bold font and usually contains the title of the position,
+% or a short job description. This is followed by a comma.
+% The third argument \myarg{who} is set in italic font and usually contains the name of the employer,
+% which is again followed by a comma.
+% The fourth argument \myarg{where}  may contain the location of this job and it is set in normal font style.
+% If the fifth argument \myarg{opt.} contains something, it is set in the same style as the preceding element, 
+% separated by a comma from it. This could be used to specify a grade in the education section for example. 
+% If this argument is empty, the comma is skipped. The line will then be terminated by a full stop.
+% The sixth argument \myarg{descr.} can also be empty. 
+% If it contains text, it will be set on a new line and can be used as a more detailed description of the entry.
+% The font size is reduced to small for this paragraph.
 %
 % \DescribeMacro{\polycvskill}
-%
+% The \lstinline`\polycvskill`\marg{description}\marg{level} is a template using \lstinline`\polycvline`, 
+% defining a progress bar to \myarg{level} and a \myarg{description}.
+% If it is used in the main document part, the progress bar will be set into the hint column, and will 
+% take half of its width and is flushed to the right.
+% The description is flushed to the left in the main column.
+% If it is used in the side bar, the description will start the line, followed by the progress bar.
+% The progress bar will then use a third of the whole line, and the description the rest exclluding son separator space.
 %
 % \DescribeMacro{\polycvlanguage}
-%
+% The \lstinline`\polycvlanguage`\marg{language}\marg{level} is a wrapper to the above command.
+% This was introduced, to allow for the possibility of customisation.
+% For example, it could be redefined to use a different indicator. \watchout[numeric format]
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\renewcommand\polycvlanguage[2]{%
+    \polycvline{\polycvlevelssquared{#2}}{#1}}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 %
 % \DescribeMacro{\polycvlineaddress}
 % \DescribeMacro{\polycvlineemail}
 % \DescribeMacro{\polycvlinephone}
 % \DescribeMacro{\polycvlinemobile}
-% \DescribeMacro{\polycvlinegithub}
+% The  special versions of the \lstinline`\polycvitemline` macro have a preset icon to it.
+% The address (\faMapMarker), email (\faEnvelope), phone (\faPhone), and mobile (\faMobile) templates
+% are predefined. 
+% These macros are primarily intended for the side bar environment.
+% They may be used in the main part, too, but they could look somewhat odd.
+% Other lines  can be added with the generic command.
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\polycvitemline{\faTerminal}{bash, zsh, fish}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 %
 % \DescribeMacro{\polycvorcidicon}
-% The command \lstinline`\polycvorcidicon` expands to the filename \lstinline`orcidicon.pdf`
-% when looking for the icon to insert.
-% \DescribeMacro{\polycvlineorcid}
+% Since there is no \LaTeX{} package available that includes an Orcid icon, 
+% it must be provided with an external file. 
+% The command \lstinline`\polycvorcidicon` will look for a file with the name \lstinline`orcidicon.pdf`
+% and include this as a graphic. 
+% If such a file is not found, it will use a palceholder icon made of the letters.
 %
+% \DescribeMacro{\polycvlineorcid}
+% \DescribeMacro{\polycvlinegithub}
+% The orcid and GitHub macros will use their respective icons, similar to the above.
+% The contents of the variables defined in the preamble will go into the description column.
 %
 % \subsection{The CV Environments}
 % \label{sec:cv-env}
-% 
 % \DescribeEnv{polycvfirstpage}
-%
+% The class comes with two environments to set the CV contents.
+% The first page is special since it also contains a side bar with additional infomation.
+% The environment itself sets up the geometry of the page, and the header box including the
+% name and position.
+% It will allso set up the footer box to close the page.
+% It should be used to set a single page only.
 %
 % \DescribeEnv{polycvsidebar}
+% The side bar is part of the first page environment and should be issued inside it.
+% It will produce a box with the specified content on the left side of the page. 
+% The main templates of this class will have different definintions inside this environment.
 %
+% The following code block contains an exemplary usage of the two environments.
 %
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\begin{polycvfirstpage}
+  \begin{polycvsidebar}
+  \includegraphics[width=1.0\linewidth]{example-image-1x1}\\[2ex]
+  
+  \section{Personal Details}
+  \polycvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
+  \polycvlineaddress
+  \polycvlineemail
+  
+  \section{Languages}
+  \polycvlanguage{English (native)}{1}
+  
+  % etc.
+  \end{polycvsidebar}%
+  \section{Experience}
+  \polycventry{years}
+    {jobtitle}{employer}{place}
+    {optional: ...}
+    {optional: job description}
+
+  \section{Skills}
+  \polycvskill{\LaTeX}{0.8}
+  
+  % etc.
+\end{polycvfirstpage}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
+% 
 % \DescribeEnv{polycvpage}
+% The generic CV page environment is similar to the firstpage environment, 
+% but it doesn't include space for the ssside bar.
+% The margins aare adjusted to fill the whole available width.
+% It is useful to typeset a second (or backside) page of the CV.
+% The header box of this page will be of the same size as for the first page, but remain empty.
+%
+% The following codeblock briefly summarises an exaamplle usage:
+%
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\begin{polycvpage}
+  \section{Education}
+  \polycventry{years}
+    {degree}{institution}{place}
+    {optional: grade/...}
+    {optional: comment/ description}
+
+  % etc.
+\end{polycvpage}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
 % 
-% 
-%
-%
-%
-%
-%
-%
-%
-%
-%
-% \DescribeMacro{\setpolycvheaderfont}
-%
-%
-% \DescribeMacro{\setpolycvheaderfont}
-%
-%
-% \DescribeMacro{\setpolycventryraggedright}
-%
-%
-% \DescribeMacro{\setpolycventryjustify}
-%
-%
-% \DescribeMacro{\setpolycvsignatureright}
-%
-%
-% \DescribeMacro{\setpolycvsignatureleft}
-%
-%
-% \DescribeMacro{\setpolycvprogressbarunits}
-%
-%
-%
-%
-%
 % \subsection{The Cover Letter Environment}
 % \label{sec:letter-env}
 % \DescribeEnv{polycvletter}

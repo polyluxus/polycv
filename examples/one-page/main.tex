@@ -1,9 +1,4 @@
-\documentclass[
-% draft,
-  biblatex,
-  signcv,
-  14pt,a4paper
-]{polycv}
+\documentclass[biblatex, signcv, 14pt, a4paper]{polycv}
 
 \usepackage{mwe}          % Only for this example
 \usepackage{filecontents} % Only for this example
@@ -14,13 +9,16 @@
 \usepackage[utf8]{inputenc}
 \usepackage{libertine}
 
-% bibliography
-\usepackage[backend=biber,%
-            style=numeric-comp,
-            style=chem-angew,
-            subentry=true,
-            sorting=ydnt,% sorted by year, descending
+% Bibliography setup
+\usepackage[
+  backend=biber,%
+  style=numeric-comp,
+  style=chem-angew,
+  subentry=true,
+  sorting=ydnt,% sorted by year, descending
 ]{biblatex}
+
+% Create a dummy bibliography
 \begin{filecontents}{\jobname.bib}
 @BOOK{example-book,
   author    = {Example Author},
@@ -53,25 +51,27 @@
   booktitle = {Book of Abstracts, 1st Annual Example Meeting},
   year = {2019},
 }
-
 \end{filecontents}
+% Use above bibliograaphy
 \addbibresource{\jobname.bib}
 
+% Language settings
 \usepackage[english]{babel}
+
+% Helpful for the skills section
 \usepackage{multicol}
 
-% Start customisation for CV
+% Custom setup for the CV
 
-% Customize lengths for polycv:
-% \setpolycvheaderheight{5cm}  % Default: 4.0 cm
-% \setpolycvfooterheight{2cm}  % Default: 0.5 cm
-% \setpolycvmargins{0.8cm}     % Default: 1.0 cm
 \setpolycvhintcolumnwidth{3cm} % Default: 2.7 cm
-% \setpolycvhintcolumnsep{1cm} % Default: 0.2 cm
 \setpolycviconspace{0.6cm}     % Default: 0.8 cm
-% \setpolycventryraggedright   % Default: justified
 
-% Fill some content
+% Redifine language command to use squares, not the progress bar
+% Needs change in the command
+\renewcommand\polycvlanguage[2]{%
+  \polycvline{\polycvlevelssquared[0.7\linewidth]{#2}}{#1}}
+
+% Fill some contents variables
 \title{Curriculum Vitae}
 \author{Example Author}
 \position{Title / Position}
@@ -90,8 +90,6 @@
   \nocite{*}%
   % Define what goes into the sidebar
   \begin{polycvsidebar}
-  %\small
-  
   \includegraphics[width=1.0\linewidth]{example-image-1x1}\\[2ex]
   
   \section{Personal Details}
@@ -103,11 +101,8 @@
   \polycvlinemobile
   \polycvlineorcid
   \polycvlinegithub
+  \polycvitemline{\faTerminal}{bash, zsh, fish}
   \null
-  
-  \section{Languages}
-  \polycvlanguage{English (native)}{1}
-  \polycvlanguage{Leetspeak (B2)}{0.7}
   
   \section{Skills}
   \polycvskill{\LaTeX}{0.8}
@@ -142,8 +137,8 @@
   {Learning how to read and write.}
   
   \section{Languages}
-  \polycvlanguage{English (native)}{1}
-  \polycvlanguage{Leetspeak (B2)}{0.7}
+  \polycvlanguage{English (native)}{5}
+  \polycvlanguage{Leetspeak (B2)}{3}
   
   \section{Skills}
   \begin{multicols}{2}

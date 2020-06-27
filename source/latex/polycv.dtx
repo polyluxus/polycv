@@ -33,14 +33,15 @@
 %
 %<*driver>
 \documentclass{ltxdoc}
+\PassOptionsToPackage{dvipsnames}{xcolor}
+\usepackage{dtxdescribe}
+\definecolor{lightgray}{gray}{0.95}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{libertine}
 \usepackage[english]{babel}
 \usepackage{csquotes}
 \usepackage{setspace}
-\usepackage[dvipsnames]{xcolor}
-\definecolor{lightgray}{gray}{0.95}
 \usepackage{listings}
 \lstdefinestyle{mytex}{
   language=[LaTeX]TeX,%
@@ -53,12 +54,24 @@
 }
 \lstset{style=mytex}
 \usepackage{fontawesome}
-\usepackage{hyperref}
+\usepackage[%
+  pdftex, bookmarks=true, hidelinks,%
+  colorlinks, linkcolor=MidnightBlue, urlcolor=MidnightBlue,%
+  pageanchor=true, hyperindex=true,
+]{hyperref}
+\hypersetup{%
+  pdfinfo={%
+    Title={The LaTeX class PolyCV},%
+    Author={Martin C Schwarzer},%
+    Subject={A Curriculum Vitae Class},%
+    keywords={LaTeX, CV, Letter, Curriculum Vitae}}}
+
 \newcommand\mybackslash{\char`\\}
 \newcommand\myarg[1]{\(\langle\)\textit{#1}\(\rangle\)}
-\usepackage{dtxdescribe}
 
-\EnableCrossrefs
+\setcounter{IndexColumns}{2}
+
+\EnableCrossrefs % \DisableCrossrefs %
 \CodelineIndex
 \RecordChanges
 \begin{document}
@@ -92,14 +105,21 @@
 %
 % \GetFileInfo{polycv.dtx}
 %
-% \DoNotIndex{\newcommand,\newenvironment}
+% \DoNotIndex{\newcommand,\newenvironment,\def,\edef,\let}
+% \DoNotIndex{\AfterPreamble, \AtEndPreamble}
 % \DoNotIndex{\#,\$,\%,\&,\@,\\,\{,\},\^,\_,\~,\ }
-% \DoNotIndex{\@ne}
-% \DoNotIndex{\advance,\begingroup,\catcode,\closein}
-% \DoNotIndex{\closeout,\day,\def,\edef,\else,\empty,\endgroup}
+% \DoNotIndex{\@ne, \@author, \@title}
+% \DoNotIndex{\begin,\end,\bgroup,\egroup,\begingroup,\endgroup,\advance}
+% \DoNotIndex{\catcode,\closein,\closeout,\if,\else,\fi,\empty,\detokenize}
+% \DoNotIndex{\baselineskip,\linewidth,\color,\colorlet,\hfill,\href,\hspace,\loop}
+% \DoNotIndex{\bfseries,\flushright,\small,\footnotesize,\Huge,\Large,\largei,\normalsize}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo,\LoadClass}
+% \DoNotIndex{\CurrentOptionKey,\DeclareBoolOption,\DeclareComplementaryOption,%
+%   \DeclareDefaultOption,\DeclareFieldFormat,\DeclareStringOption,\DeclareVoidOption}
+% \DoNotIndex{\draw,\filldraw,\node}
 %
 % \providecommand*{\url}{\texttt}
-% \title{The \textsf{polycv} class}
+% \title{The \pkg{polycv} class}
 % \author{Martin C Schwarzer \\ \url{polyluxus@gmail.com}}
 % \date{\fileversion~from \filedate}
 %
@@ -786,6 +806,7 @@
 %
 % \clearpage
 % \interfootnotelinepenalty=10000
+%
 % \section{Implementation}
 %
 % \subsection{Option definitions}
@@ -869,9 +890,11 @@
 %
 %    \begin{macrocode}
 \DeclareVoidOption{twocolumn}{%
-  \ClassError{polycv}{Incompatible because of special page setup.}}
+  \ClassError{polycv}{%
+    Option 'twocolumn' is incompatible because of the special page setup.}}
 \DeclareVoidOption{titlepage}{%
-  \ClassWarning{polycv}{Incompatible with a title page.}}
+  \ClassWarning{polycv}{%
+    Option 'titlepage' is incompatible because of the special page setup.}}
 %    \end{macrocode}
 %
 % Pass all other options to the satndart article class.
@@ -893,6 +916,7 @@
 % Some packages are essential for this class and need to be loaded.
 %
 % \begin{itemize}
+%   \item \texttt{kvoptions} is necessary for the use of key-value-options (see above)
 %   \item \texttt{etoolbox} is necessary for additional hooks like \lstinline`\AtEndPreamble`.
 %   \item \texttt{calc} is necessary to do mathematics with lengths
 %   \item \texttt{hyperref} provides hyperlinks within the CV and letter
@@ -922,6 +946,16 @@
 %
 % \subsection{Global settings}
 %
+% Issue an informative statement that the CV is signed. (To Do.)
+%
+%    \begin{macrocode}
+  \AtEndPreamble{%
+    \ifpolycv@signcv%
+      \ClassInfo{polycv}{%
+        Option 'signcv' enabled; CV will be signed.}%
+    \fi
+    }%
+%    \end{macrocode}
 % Set the page style to remove pagenumbers.
 %
 %    \begin{macrocode}
@@ -935,28 +969,32 @@
 % \begin{macro}{\setpolycvprimary}
 % The primary color used for headers.
 %    \begin{macrocode}
-\newcommand*{\setpolycvprimary}[1]{\renewcommand*{\polycv@primary}{#1}}
+\newcommand*{\setpolycvprimary}[1]{%
+  \renewcommand*{\polycv@primary}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvsecondary}
 % The secondary color is the background color, i.e. the page color.
 %    \begin{macrocode}
-\newcommand*{\setpolycvsecondary}[1]{\renewcommand*{\polycv@secondary}{#1}}
+\newcommand*{\setpolycvsecondary}[1]%
+  {\renewcommand*{\polycv@secondary}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvhighlight}
 % If text should be highlighted another color can be set.
 %    \begin{macrocode}
-\newcommand*{\setpolycvhighlight}[1]{\renewcommand*{\polycv@highlight}{#1}}
+\newcommand*{\setpolycvhighlight}[1]%
+  {\renewcommand*{\polycv@highlight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvshade}
 % The color which is used for shading (damping) the primary color.
 %    \begin{macrocode}
-\newcommand*{\setpolycvshade}[1]{\renewcommand*{\polycv@shade}{#1}}
+\newcommand*{\setpolycvshade}[1]%
+  {\renewcommand*{\polycv@shade}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -974,13 +1012,16 @@
   \colorlet{polycvheaderbackground}{\polycv@primary}
   \colorlet{polycvheadertext}{\polycv@secondary}
   \colorlet{polycvsectioncolor}{\polycv@primary}
-  \colorlet{polycvtextcolor}{\polycv@primary!\polycv@mixing!\polycv@shade}
+  \colorlet{polycvtextcolor}{%
+    \polycv@primary!\polycv@mixing!\polycv@shade}
   \colorlet{polycvhighlight}{\polycv@highlight}
   \colorlet{polycvsidebarbackground}{\polycv@secondary}
   \colorlet{polycvprogressbarfilled}{\polycv@primary}
-  \colorlet{polycvprogressbarempty}{\polycv@primary!10!\polycv@secondary}
+  \colorlet{polycvprogressbarempty}{%
+    \polycv@primary!10!\polycv@secondary}
 }
-\AfterPreamble{\color{polycvtextcolor}\pagecolor{polycvpagecolor}}
+\AfterPreamble{%
+  \color{polycvtextcolor}\pagecolor{polycvpagecolor}}
 %    \end{macrocode}
 %
 % \subsubsection{Extending draft mode}
@@ -989,7 +1030,8 @@
 % It then sets the overfull boxes identifier.\footnote{%
 % \textit{How to test whether report has been called with “draft” option}%
 % \url{https://tex.stackexchange.com/a/240128/33413}}
-% Passes the \lstinline`showframe` option to the geometry package to make the page borders visible.
+% Passes the \lstinline`showframe` option to the geometry package to make 
+% the page borders visible.
 % It also sets the color of the side bar, to make the tikz boxes visible in draft mode.
 %    \begin{macrocode}
 \ifpolycv@draft%
@@ -997,18 +1039,21 @@
   \setlength\overfullrule{1em}
   \PassOptionsToPackage{showframe}{geometry}
   \AtEndPreamble{%
-    \colorlet{polycvsidebarbackground}{\polycv@primary!20!\polycv@secondary}%
+    \colorlet{polycvsidebarbackground}{%
+      \polycv@primary!20!\polycv@secondary}%
   }
 \fi
 %    \end{macrocode}
 % \subsubsection{Biblatex Mode}
-% In this option the biblatex package is set to use the same width as the date column for the numeration.
+% In this option the biblatex package is set to use the same width as the date column 
+% for the numeration.
 %    \begin{macrocode}
 \ifpolycv@biblatex%
   \ClassInfo{polycv}{Option 'biblatex' is enabled}
   \AtEndPreamble{%
     \setlength{\biblabelsep}{\polycvhintcolsep}%
-    \DeclareFieldFormat{labelnumberwidth}{\makebox[\polycvhintcol][r]{[#1]}}%
+    \DeclareFieldFormat{labelnumberwidth}{%
+      \makebox[\polycvhintcol][r]{[#1]}}%
   }%
 \fi
 %    \end{macrocode}
@@ -1042,49 +1087,56 @@
 % \begin{macro}{\setpolycvheaderheight}
 % Define the hight for the header box.
 %    \begin{macrocode}
-\newcommand*{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
+\newcommand*{\setpolycvheaderheight}[1]{%
+  \setlength{\polycvheaderheight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvfooterheight}
 % Define the height for the footer box.
 %    \begin{macrocode}
-\newcommand*{\setpolycvfooterheight}[1]{\setlength{\polycvfooterheight}{#1}}
+\newcommand*{\setpolycvfooterheight}[1]{%
+  \setlength{\polycvfooterheight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvmargins}
 % Define the width of the margins.
 %    \begin{macrocode}
-\newcommand*{\setpolycvmargins}[1]{\setlength{\polycvmargins}{#1}}
+\newcommand*{\setpolycvmargins}[1]{%
+  \setlength{\polycvmargins}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvhintcolumnwidth}
 % Define the hint column width (where dates and level, etc. are set).
 %    \begin{macrocode}
-\newcommand*{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
+\newcommand*{\setpolycvhintcolumnwidth}[1]{%
+  \setlength{\polycvhintcol}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvhintcolumnsep}
 % Define the space between the hint column and the description column.
 %    \begin{macrocode}
-\newcommand*{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
+\newcommand*{\setpolycvhintcolumnsep}[1]{%
+  \setlength{\polycvhintcolsep}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycviconspace}
 % Define the space reserved for the items in the sidebar box.
 %    \begin{macrocode}
-\newcommand*{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
+\newcommand*{\setpolycviconspace}[1]{%
+  \setlength{\polycviconspace}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % \begin{macro}{\setpolycvprogressbarheight}
 % Define the standard height of the progress bar. This will also apply to the levels bar.
 %    \begin{macrocode}
-\newcommand*{\setpolycvprogressbarheight}[1]{\setlength{\polycvprogressbarheight}{#1}}
+\newcommand*{\setpolycvprogressbarheight}[1]{%
+  \setlength{\polycvprogressbarheight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1108,9 +1160,12 @@
 \newlength{\polycvtopmargin}
 \newlength{\polycvbottommargin}
 \AtEndPreamble{%
-  \setlength{\polycvleftmargin}{\polycvsidebarwidth+2\polycvmargins}
-  \setlength{\polycvtopmargin}{\polycvheaderheight+\polycvmargins}
-  \setlength{\polycvbottommargin}{\polycvfooterheight+\polycvmargins}
+  \setlength{\polycvleftmargin}{%
+    \polycvsidebarwidth+2\polycvmargins}
+  \setlength{\polycvtopmargin}{%
+    \polycvheaderheight+\polycvmargins}
+  \setlength{\polycvbottommargin}{%
+    \polycvfooterheight+\polycvmargins}
 }
 %    \end{macrocode}
 %
@@ -1124,7 +1179,8 @@
 \providecommand\polycv@headerfont{}
 \renewcommand{\polycv@headerfont}{\sffamily\bfseries}
 \providecommand\setpolycvheaderfont{}
-\renewcommand*{\setpolycvheaderfont}[1]{\renewcommand*{\polycv@headerfont}{#1}}
+\renewcommand*{\setpolycvheaderfont}[1]{%
+  \renewcommand*{\polycv@headerfont}{#1}}
 \@onlypreamble\setpolycvheaderfont
 %    \end{macrocode}
 % \end{macro}
@@ -1138,8 +1194,10 @@
 % These need to be set in the preamble, so they are disabled for the body.
 %    \begin{macrocode}
 \providecommand\polycv@entry@ragged{}
-\newcommand*{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
-\newcommand*{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
+\newcommand*{\setpolycventryraggedright}{%
+  \renewcommand{\polycv@entry@ragged}{\raggedright}}
+\newcommand*{\setpolycventryjustify}{%
+  \renewcommand{\polycv@entry@ragged}{}}
 \@onlypreamble\setpolycventryraggedright
 \@onlypreamble\setpolycventryjustify
 %    \end{macrocode}
@@ -1154,8 +1212,10 @@
 %  Provide commands to change it, and disable them for the body.
 %    \begin{macrocode}
 \providecommand\polycv@signature@alignment{right}
-\newcommand*{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
-\newcommand*{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
+\newcommand*{\setpolycvsignatureright}{%
+  \renewcommand{\polycv@signature@alignment}{right}}
+\newcommand*{\setpolycvsignatureleft}{%
+  \renewcommand{\polycv@signature@alignment}{left}}
 \@onlypreamble\setpolycvsignatureright
 \@onlypreamble\setpolycvsignatureright
 %    \end{macrocode}
@@ -1170,7 +1230,8 @@
 % \begin{macro}{\setpolycvprogressbarunits}
 % Control the number of items for the levels bar.
 %    \begin{macrocode}
-\newcommand*{\setpolycvprogressbarunits}[1]{\renewcommand*{\polycv@progressbarunits}{#1}}
+\newcommand*{\setpolycvprogressbarunits}[1]{%
+  \renewcommand*{\polycv@progressbarunits}{#1}}
 \@onlypreamble\setpolycvprogressbarunits
 %    \end{macrocode}
 % \end{macro}
@@ -1199,7 +1260,8 @@
 %    \begin{macrocode}
 \providecommand*\polycvposition{}
 \providecommand*\position{}
-\renewcommand{\position}[1]{\renewcommand{\polycvposition}{#1}}
+\renewcommand{\position}[1]{%
+  \renewcommand{\polycvposition}{#1}}
 \@onlypreamble\position
 %    \end{macrocode}
 % \end{macro}
@@ -1238,9 +1300,12 @@
 \providecommand\address{}
 \providecommand\street{}
 \providecommand\location{}
-\renewcommand{\address}[1]{\renewcommand{\polycvaddress}{#1}}
-\renewcommand{\street}[1]{\renewcommand{\polycvstreet}{#1}}
-\renewcommand{\location}[1]{\renewcommand{\polycvlocation}{#1}}
+\renewcommand{\address}[1]{%
+  \renewcommand{\polycvaddress}{#1}}
+\renewcommand{\street}[1]{%
+  \renewcommand{\polycvstreet}{#1}}
+\renewcommand{\location}[1]{%
+  \renewcommand{\polycvlocation}{#1}}
 %    \end{macrocode}
 % Build the address for street and location.
 %    \begin{macrocode}
@@ -1253,7 +1318,8 @@
 % \begin{macro}{\polycvlineaddress}
 % Template to produce the address for the sidebar.
 %    \begin{macrocode}
-\providecommand{\polycvlineaddress}{\polycvitemline{\faMapMarker}{\polycvaddress}}
+\providecommand{\polycvlineaddress}{%
+  \polycvitemline{\faMapMarker}{\polycvaddress}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1264,8 +1330,10 @@
 %    \begin{macrocode}
 \providecommand*\polycvemail{}
 \providecommand*\email{}
-\renewcommand{\email}[1]{\renewcommand{\polycvemail}{\href{mailto:#1}{#1}}}
-\providecommand{\polycvlineemail}{\polycvitemline{\faEnvelope}{\polycvemail}}
+\renewcommand{\email}[1]{%
+  \renewcommand{\polycvemail}{\href{mailto:#1}{#1}}}
+\providecommand{\polycvlineemail}{%
+  \polycvitemline{\faEnvelope}{\polycvemail}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1279,7 +1347,8 @@
 \providecommand*\polycvphone{}
 \providecommand*\phone{}
 \renewcommand{\phone}[1]{\renewcommand{\polycvphone}{#1}}
-\providecommand{\polycvlinephone}{\polycvitemline{\faPhone}{\polycvphone}}
+\providecommand{\polycvlinephone}{%
+  \polycvitemline{\faPhone}{\polycvphone}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1293,7 +1362,8 @@
 \providecommand*\polycvmobile{}
 \providecommand*\mobile{}
 \renewcommand{\mobile}[1]{\renewcommand{\polycvmobile}{#1}}
-\providecommand{\polycvlinemobile}{\polycvitemline{\faMobile}{\polycvmobile}}
+\providecommand{\polycvlinemobile}{%
+  \polycvitemline{\faMobile}{\polycvmobile}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1306,15 +1376,18 @@
 %    \begin{macrocode}
 \providecommand*\polycvgithub{}
 \providecommand*\github{}
-\renewcommand{\github}[1]{\renewcommand{\polycvgithub}{\href{https://github.com/#1}{github.com/#1}}}
-\providecommand{\polycvlinegithub}{\polycvitemline{\faGithub}{\polycvgithub}}
+\renewcommand{\github}[1]{\renewcommand{\polycvgithub}{%
+  \href{https://github.com/#1}{github.com/#1}}}
+\providecommand{\polycvlinegithub}{%
+  \polycvitemline{\faGithub}{\polycvgithub}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
 % \begin{macro}{\polycvorcidicon}
-% This defines the orcid icon either from the file \lstinline`orcidicon.pdf` if it is found by \LaTeX.
+% This defines the orcid icon either from the file \lstinline`orcidicon.pdf` 
+% if it is found by \LaTeX.
 % I am unaware of a \LaTeX package that defines this symbol.\footnote{%
 % For more details see:  
 % \textit{Is there a standard way to include ORCID in TeX / PDF?}
@@ -1324,12 +1397,12 @@
 \providecommand*\polycvorcidicon{}
 \IfFileExists{orcidicon.pdf}{%
   \renewcommand{\polycvorcidicon}{%
-    \raisebox{-0.2em}{\includegraphics[height=1.0em]{orcidicon}}%
-  }%
+    \raisebox{-0.2em}{%
+      \includegraphics[height=1.0em]{orcidicon.pdf}}}%
 }{%
   \renewcommand{\polycvorcidicon}{%
-    \raisebox{-0.2em}{\resizebox{1em}{1em}{\textbf{ORCID}}}%
-  }%
+    \raisebox{-0.2em}{%
+      \resizebox{1em}{1em}{\textbf{ORCID}}}}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1341,8 +1414,10 @@
 %    \begin{macrocode}
 \providecommand*\polycvorcid{}
 \providecommand*\orcid{}
-\renewcommand{\orcid}[1]{\renewcommand{\polycvorcid}{\href{http://orcid.org/#1}{orcid.org/#1}}}
-\providecommand{\polycvlineorcid}{\polycvitemline{\polycvorcidicon}{\polycvorcid}}
+\renewcommand{\orcid}[1]{\renewcommand{\polycvorcid}{%
+  \href{http://orcid.org/#1}{orcid.org/#1}}}
+\providecommand{\polycvlineorcid}{%
+  \polycvitemline{\polycvorcidicon}{\polycvorcid}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1354,7 +1429,8 @@
 %    \begin{macrocode}
 \providecommand\polycvsignatureimage{}
 \providecommand\signatureimage{}
-\renewcommand{\signatureimage}[1]{\renewcommand{\polycvsignatureimage}{#1}}
+\renewcommand{\signatureimage}[1]{%
+  \renewcommand{\polycvsignatureimage}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1368,18 +1444,24 @@
 %
 %    \begin{macrocode}
 \renewcommand{\section}[1]{%
+  \ignorespaces%
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}%
-    \Large%
-    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}\polycv@headerfont%
-    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
-  }\par\vspace{0.5\baselineskip}}
+    \Large\polycv@headerfont%
+    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}%
+    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{%
+      #1%
+    }% 
+  }\vspace{0.5\baselineskip}}
 \renewcommand{\subsection}[1]{%
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}%
-    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}\polycv@headerfont%
-    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
-  }\par\vspace{0.3\baselineskip}}
+    \polycv@headerfont%
+    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}%
+    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{%
+      #1%
+    }% 
+  }\vspace{0.3\baselineskip}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1393,19 +1475,22 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycv@header}[3][\polycvheaderheight]{%
-  \begin{tikzpicture}[remember picture,overlay]
+  \begin{tikzpicture}[remember picture,overlay]%
     \node [rectangle, %
            fill           = polycvheaderbackground, %
            anchor         = north, %
            minimum width  = \paperwidth, %
            minimum height = #1%
-          ] (headerbox) at (current page.north){};
+          ] (headerbox) at (current page.north){};%
     \node [anchor = mid] (cv-name) at (headerbox) {%
-      \Huge\polycv@headerfont\color{polycvheadertext}\textbf{#2}%
-    };
+      \Huge\polycv@headerfont\color{polycvheadertext}\textbf{%
+        #2
+      }%
+    };%
     \node [anchor = north] at (cv-name.south) {%
-      \Large\polycv@headerfont\color{polycvheadertext} #3%
-    };
+      \Large\polycv@headerfont\color{polycvheadertext}%
+      #3%
+    };%
   \end{tikzpicture}%
   \ignorespaces%
 }
@@ -1421,20 +1506,20 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycv@footer}[2][\polycvfooterheight]{%
-  \begin{tikzpicture}[remember picture,overlay]
+  \begin{tikzpicture}[remember picture,overlay]%
     \node [rectangle, %
            fill           = polycvheaderbackground, %
            anchor         = south, %
            minimum width  = \paperwidth, %
            minimum height = #1%
-          ] (footerbox) at (current page.south){};
+          ] (footerbox) at (current page.south){};%
     \node [anchor = center] (pagenumber) at (footerbox) {%
       \polycv@headerfont\color{polycvheadertext}%
-      \if\relax\detokenize{#2}\relax
-      \else
-      - #2 -
-      \fi
-    };
+      \if\relax\detokenize{#2}\relax%
+      \else%
+      - #2 -%
+      \fi%
+    };%
   \end{tikzpicture}%
   \ignorespaces%
 }
@@ -1449,17 +1534,17 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycv@signature}[2][\polycvsidebarwidth]{%
-  \begin{tikzpicture}[remember picture, overlay]
-    \node [rectangle, 
+  \begin{tikzpicture}[remember picture, overlay]%
+    \node [rectangle, %
            anchor = south west, %
            text width = #1, %
            align = \polycv@signature@alignment, %
            minimum height = 0.75#1, %
            yshift = \polycvbottommargin, %
-           xshift = \polycvmargins,
-           fill = polycvsidebarbackground %DRAFT
-          ] (polycvsignaturebox) at (current page.south west) {%
-      \includegraphics[width=#1]{#2}\\
+           xshift = \polycvmargins, %
+           fill = polycvsidebarbackground % 
+          ] (cv-signbox) at (current page.south west) {%
+      \includegraphics[width=#1]{#2}\\%
       \polycvauthor%
     };
   \end{tikzpicture}%
@@ -1568,10 +1653,12 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycvlevelssquared}[2][\polycvhintcol]{%
-  \polycv@level@bar[#1]{#2}{\polycv@square@filled}{\polycv@square@nofill}%
+  \polycv@level@bar[#1]{#2}{%
+    \polycv@square@filled}{\polycv@square@nofill}%
 }
 \newcommand{\polycvlevelscircled}[2][\polycvhintcol]{%
-  \polycv@level@bar[#1]{#2}{\polycv@circle@filled}{\polycv@circle@nofill}%
+  \polycv@level@bar[#1]{#2}{%
+    \polycv@circle@filled}{\polycv@circle@nofill}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1583,13 +1670,14 @@
 % and an empty box encompasing all as a frame.
 %  
 %    \begin{macrocode}
-\newcommand{\polycvprogressbar}[2][\polycvhintcol]{
-  \begin{tikzpicture}[x=#1, y=\polycvprogressbarheight]%
-    \filldraw[polycvprogressbarfilled] (0, 0) rectangle (#2, 1) ;
-    \filldraw[polycvprogressbarempty] (#2, 0) rectangle (1, 1);
-    \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;
+\newcommand{\polycvprogressbar}[2][\polycvhintcol]{%
+  \hfill%
+  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogressbarheight]%
+    \filldraw[polycvprogressbarfilled] (0, 0) rectangle (#2, 1) ;%
+    \filldraw[polycvprogressbarempty] (#2, 0) rectangle (1, 1);%
+    \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
-}
+}%
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1605,7 +1693,8 @@
   \par%
   \parbox[t]{#1}{\strut\raggedleft #2}%
   \hspace{\polycvhintcolsep}%
-  \parbox[t]{\linewidth-\polycvhintcolsep-#1}{\strut\polycv@entry@ragged #3}%
+  \parbox[t]{\linewidth-\polycvhintcolsep-#1}{%
+    \strut\polycv@entry@ragged #3}%
   \par\vspace{0.2\baselineskip}%
 }
 %    \end{macrocode}
@@ -1638,7 +1727,8 @@
 % This command uses a progressbar in the hint column.
 %    \begin{macrocode}
 \providecommand\polycvskill[2]{%
-  \polycvline[\polycvhintcol]{\polycvprogressbar[0.5\linewidth]{#2}}{#1}}
+  \polycvline[\polycvhintcol]{%
+    \polycvprogressbar[0.5\linewidth]{#2}}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1706,10 +1796,11 @@
   \parbox{1.0\linewidth}{%
     \hspace{#1}%
     \parbox[b]{2\linewidth/3-4#1}{#2}%
-    \hspace{#1}%
+    \hspace{#1}\hfill%
     \parbox[b]{\linewidth/3}{%
-      \flushright\polycvprogressbar[\linewidth]{#3}}%
-    \par\vspace{0.2\baselineskip}}%
+      \polycvprogressbar[\linewidth]{#3}%
+      }%
+    \vspace{0.2\baselineskip}}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1729,16 +1820,19 @@
     \color{polycvsectioncolor}\large\polycv@headerfont{##1}% 
   }\par\vspace{0.5\baselineskip}}%
   \let\polycvlanguage\savepolycvlanguage%
-  \newcommand{\polycvlanguage}[2]{\polycv@sidebar@skill{##1}{##2}}%
+  \newcommand{\polycvlanguage}[2]{%
+    \polycv@sidebar@skill{##1}{##2}}%
   \let\polycvskill\savepolycvskill%
-  \newcommand{\polycvskill}[2]{\polycv@sidebar@skill{##1}{##2}}%
-  \begin{tikzpicture}[remember picture, overlay]
+  \newcommand{\polycvskill}[2]{%
+    \polycv@sidebar@skill{##1}{##2}}%
+  \begin{tikzpicture}[remember picture, overlay]%
     \node [anchor = north west, %
            text width = \polycvsidebarwidth, %
            xshift = \polycvmargins, %
-           yshift = -\polycvheaderheight-\polycvmargins,
-           fill = polycvsidebarbackground %DRAFT
-          ] (polycvsidebarbox) at (current page.north west) \bgroup
+           yshift = -\polycvheaderheight-\polycvmargins, %
+           fill = polycvsidebarbackground %
+          ] (polycvsidebarbox) at (current page.north west) %
+    \bgroup%
 }{%
     \egroup;%
   \end{tikzpicture}%
@@ -1746,11 +1840,10 @@
   \let\savepolycvlanguage\polycvlanguage%
   \let\savepolycvlanguage\polycvskill%
   \ifpolycv@signcv%
-    \ClassInfo{polycv}{Option 'signcv' enabled; CV will be signed.}
     \polycv@signature{\polycvsignatureimage}%
   \fi%
   \ignorespaces%
-}
+}%
 %    \end{macrocode}
 % \end{environment}
 %
@@ -1781,7 +1874,8 @@
            text width = 5cm, %
            xshift     = -2\polycvmargins
           ] (polycv-letter-address) at (headerbox.east) {%
-      \polycv@headerfont\color{polycvheaderbackground}\parbox[t]{1.0\linewidth}{%
+      \polycv@headerfont\color{polycvheaderbackground}%
+      \parbox[t]{1.0\linewidth}{%
         \raggedleft%
         \textbf{\Large #2}\\%
         \textit{\normalsize #3}%
@@ -1798,7 +1892,7 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycv@letter@to}[1]{%
-  \noindent\parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}\par%
+  \noindent\parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}%
   \vspace{1\baselineskip}%
 }
 %    \end{macrocode}
@@ -1809,7 +1903,7 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycv@letter@date}{%
-  \noindent\parbox[t]{1.00\linewidth}{\raggedleft\today}\par%
+  \noindent\parbox[t]{1.00\linewidth}{\raggedleft\today}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1819,7 +1913,8 @@
 %
 %    \begin{macrocode}
 \newcommand{\polycv@letter@subject}[1]{%
-  \noindent\parbox[t]{1.00\linewidth}{\raggedright\textbf{#1}}\par%
+  \noindent\parbox[t]{1.00\linewidth}{%
+    \raggedright\textbf{#1}}%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -1849,7 +1944,8 @@
 % Command to change the default postscript mark.
 %    \begin{macrocode}
 \providecommand\setpsmark{}
-\renewcommand*{\setpsmark}[1]{\renewcommand{\polycv@letter@psmark}{#1}}
+\renewcommand*{\setpsmark}[1]{%
+  \renewcommand{\polycv@letter@psmark}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1920,6 +2016,22 @@
 % \end{macro}
 %
 % That is it.
+% \clearpage
+%
+% \section{Building \pkg{polycv} and its Documentation}
+%
+% To compile the \pkg{polycv} package:
+% \begin{enumerate}
+%   \item \lstinline`pdflatex polycv.ins`
+% \end{enumerate}
+%
+% To compile the \pkg{polycv} documentation
+% \begin{enumerate}
+%   \item \lstinline`pdflatex polycv.dtx` 
+%   \item \lstinline`makeindex -s gglo.ist -o polycv.gls polycv.glo`
+%   \item \lstinline`makeindex -s gind.ist -o polycv.ind polycv.idx`
+%   \item \lstinline`pdflatex polycv.dtx` (several times)
+% \end{enumerate}
 %
 % \Finale
 \endinput

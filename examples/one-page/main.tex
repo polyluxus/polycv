@@ -1,7 +1,7 @@
-\documentclass[biblatex, signcv, 14pt, a4paper]{polycv}
+\documentclass[%draft, 
+  biblatex, signcv, 11pt, a4paper]{polycv}
 
 \usepackage{mwe}          % Only for this example
-\usepackage{filecontents} % Only for this example
 \errorcontextlines=20
 
 % Fonts declaration 
@@ -57,6 +57,7 @@
 
 % Language settings
 \usepackage[english]{babel}
+\usepackage{csquotes}
 
 % Helpful for the skills section
 \usepackage{multicol}
@@ -88,8 +89,8 @@
 \begin{polycvfirstpage}
   % Cite everything first. This works because the bibliography settings (above) sort chronologic.
   \nocite{*}%
-  % Define what goes into the sidebar
-  \begin{polycvsidebar}
+%%  % Define what goes into the sidebar
+  \begin{polycvsidebar}%
   \includegraphics[width=1.0\linewidth]{example-image-1x1}\\[2ex]
   
   \section{Personal Details}

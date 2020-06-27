@@ -1,14 +1,7 @@
-\documentclass[
-% draft,
-  xcolor=dvipsnames,
-  primary=Fuchsia,
-  biblatex,
-  signcv,
-  14pt,a4paper
-]{polycv}
+\documentclass[% draft,
+  xcolor=dvipsnames,  primary=Fuchsia,  biblatex,  signcv, a4paper]{polycv}
 
 \usepackage{mwe}          % Only for this example
-\usepackage{filecontents} % Only for this example
 \errorcontextlines=20
 
 % Fonts declaration 
@@ -18,11 +11,7 @@
 
 % bibliography
 \usepackage[backend=biber,%
-            style=numeric-comp,
-            style=chem-angew,
-            subentry=true,
-            sorting=ydnt,% sorted by year, descending
-]{biblatex}
+  style=numeric-comp, style=chem-angew, subentry=true, sorting=ydnt]{biblatex}
 \begin{filecontents}{\jobname.bib}
 @BOOK{example-book,
   author    = {Example Author},
@@ -60,20 +49,10 @@
 \addbibresource{\jobname.bib}
 
 \usepackage[english]{babel}
+\usepackage{csquotes}
 \usepackage{multicol}
 
-% Start customisation for CV
-
-% Customize lengths for polycv:
-% \setpolycvheaderheight{5cm}    % Default: 4.0 cm
-% \setpolycvfooterheight{2cm}    % Default: 0.5 cm
-% \setpolycvmargins{0.8cm}       % Default: 1.0 cm
-% \setpolycvhintcolumnwidth{3cm} % Default: 2.7 cm
-% \setpolycvhintcolumnsep{1cm}   % Default: 0.2 cm
-% \setpolycviconspace{0.6cm}     % Default: 0.8 cm
-% \setpolycventryraggedright     % Default: justified
-
-% Fill some content
+% Fill variables with some content
 \title{Curriculum Vitae}
 \author{Example Author}
 \position{Title / Position}
@@ -87,7 +66,12 @@
 \signatureimage{example-image-16x9}
 
 \begin{document}
-\begin{polycvletter}[\polycvaddress\\\polycvmobile\\\polycvemail]{Subject}{Company\newline Address}
+\begin{polycvletter}[%
+    \polycvaddress\\%
+    \polycvmobile\\%
+    \polycvemail]%
+    {Subject}%
+    {Company\\ Address}
   \opening{Dear Example,}
 
   \blindtext[1-3]

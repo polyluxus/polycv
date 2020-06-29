@@ -1,7 +1,5 @@
 # polycv - A latex class for writing curriculum vitaes
 
-*This is still a work in progress.*
-
 I previously used the package [koma-moderncvclassic](https://ctan.org/pkg/koma-moderncvclassic)
 to prepare my CV, and I was actually quite satisfied with the look of it.
 In a way this class borrows some design elements from it.
@@ -40,8 +38,32 @@ You will surely notice some of the design elements from the list above.
 
 <img src="examples/two-page-letter/main.page-1.png" alt-="CV" width="200"> <img src="examples/two-page-letter/main.page-2.png" alt-="CV (cont.)" width="200"> <img src="examples/two-page-letter/main.page-3.png" alt-="Cover Letter" width="200">
 
-In lieu of documentation at this point, if you want to use the class, 
-head over to the [examples](./examples) directory and try to understand these.
+## Usage
+
+For a detailed description, please refer to the documentation, which is located in
+[`doc/latex/polycv.pdf`](./doc/latex/polycv.pdf), or can alternatively be build from 
+the source files.
+Install the class file [`tex/latex/polycv.cls`](./tex/latex/polycv.cls) in a directory,
+which is searched by latex, or alternatively, build it from the source files.
+The [examples](./examples) directory contains a few template files.
+
 If anything is unclear, needs improvement, is missing,
 please submit an [issue](https://github.com/polyluxus/polycv/issues).
 Thank you.
+
+## Building the package
+
+To compile the document class, simply run `pdflatex` on the `polycv.ins` source file in
+[`source/latex`](./source/latex) and copy the resulting `polycv.cls` file to a 
+directory searched by latex.
+
+To compile the documentation, run `pdflatex` on  the `polycv.dtx` source file in the same
+directory. To build the index and changes, run the following two lines:
+```
+makeindex -s gglo.ist -o polycv.gls polycv.glo
+makeindex -s gind.ist -o polycv.ind polycv.idx
+```
+Run `pdflatex` on the source file, until no more warnings appear.
+
+Both derived files are included for convenience in their respective directories.
+

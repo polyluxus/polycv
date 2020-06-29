@@ -27,13 +27,9 @@ Additionally I liked the idea of having a cover letter template,
 which resembles most of the elements of the CV.
 
 I am now at a stage where I consider it functional,
-but only in a proof of principle kind of way.
-I'm still working on details, shuffling code around, 
-some of it is implemented in a rather hacky way, 
-and I would like to clean that up.  
-There also is no documentation whatsoever of it at the moment.
+and ready to use by other people than me.
 
-Here is one example of what I have achieved so far. 
+Here is one example of what is possible so far. 
 You will surely notice some of the design elements from the list above.
 
 <img src="examples/two-page-letter/main.page-1.png" alt-="CV" width="200"> <img src="examples/two-page-letter/main.page-2.png" alt-="CV (cont.)" width="200"> <img src="examples/two-page-letter/main.page-3.png" alt-="Cover Letter" width="200">

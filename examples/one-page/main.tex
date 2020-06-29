@@ -1,5 +1,5 @@
 \documentclass[%draft, 
-  biblatex, signcv, 11pt, a4paper]{polycv}
+  biblatex, signcv, sidebarwidth=5.5cm, 11pt, a4paper]{polycv}
 
 \usepackage{mwe}          % Only for this example
 \errorcontextlines=20
@@ -52,7 +52,7 @@
   year = {2019},
 }
 \end{filecontents}
-% Use above bibliograaphy
+% Use above bibliography
 \addbibresource{\jobname.bib}
 
 % Language settings
@@ -64,13 +64,24 @@
 
 % Custom setup for the CV
 
-\setpolycvhintcolumnwidth{3cm} % Default: 2.7 cm
-\setpolycviconspace{0.6cm}     % Default: 0.8 cm
+\setmargins{1.2cm}
+\setheaderheight{3cm}
+\setfooterheight{1cm}
+\sethintcolwidth{3cm}
+\seticonspace{0.6cm}
+
+\setprogbarheight{1ex}
+\setprogbarunits{7}
+
+\setsigleft
+
+\definecolor{mycol}{HTML}{377046}
+\setcolprimary{mycol}
 
 % Redifine language command to use squares, not the progress bar
 % Needs change in the command
-\renewcommand\polycvlanguage[2]{%
-  \polycvline{\polycvlevelssquared[0.7\linewidth]{#2}}{#1}}
+\renewcommand\cvlanguage[2]{%
+  \cvline{\levelbarsquares[0.7\linewidth]{#2}}{#1}}
 
 % Fill some contents variables
 \title{Curriculum Vitae}
@@ -83,7 +94,7 @@
 \mobile{+1 234 56 78 999}
 \orcid{0000-0001-0002-0003}
 \github{ex-ample}
-\signatureimage{example-image-16x9}
+\signaturefile{example-image-16x9}
 
 \begin{document}
 \begin{polycvfirstpage}
@@ -95,34 +106,34 @@
   
   \section{Personal Details}
   % Universally usable line:
-  \polycvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
-  \polycvlineaddress
-  \polycvlineemail
-  \polycvlinephone
-  \polycvlinemobile
-  \polycvlineorcid
-  \polycvlinegithub
-  \polycvitemline{\faTerminal}{bash, zsh, fish}
+  \cvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
+  \cvlineaddress
+  \cvlineemail
+  \cvlinephone
+  \cvlinemobile
+  \cvlineorcid
+  \cvlinegithub
+  \cvitemline{\faTerminal}{bash, zsh, fish}
   \null
   
   \section{Skills}
-  \polycvskill{\LaTeX}{0.8}
-  \polycvskill{Reading}{0.9}
-  \polycvskill{Writing}{0.7}
-  \polycvskill{Calculating}{0.3}
-  \polycvskill{Gaming}{0.95}
+  \cvskill{\LaTeX}{0.8}
+  \cvskill{Reading}{0.9}
+  \cvskill{Writing}{0.7}
+  \cvskill{Calculating}{0.3}
+  \cvskill{Gaming}{0.95}
   
   \end{polycvsidebar}%
   \section{Experience}
-% \polycventry{years}{degree/jobtitle}{institution/employer}{localization}{optional: grade/...}{optional: comment/job description}
-  \polycventry{2018 - 2019}
+% \cventry{years}{degree/jobtitle}{institution/employer}{localization}{optional: grade/...}{optional: comment/job description}
+  \cventry{2018 - 2019}
   {Writer}
   {Example Publisher}
   {Example Place}
   {}
   {First reading things, and then writing about those things.}
   
-  \polycventry{2017 - 2018}
+  \cventry{2017 - 2018}
   {Reader}
   {Example Company}
   {Example Place}
@@ -130,7 +141,7 @@
   {Reading things.}
   
   \section{Education}
-  \polycventry{2010 - 2017}
+  \cventry{2010 - 2017}
   {Student}
   {Example School}
   {Example Place}
@@ -138,16 +149,16 @@
   {Learning how to read and write.}
   
   \section{Languages}
-  \polycvlanguage{English (native)}{5}
-  \polycvlanguage{Leetspeak (B2)}{3}
+  \cvlanguage{English (native)}{5}
+  \cvlanguage{Leetspeak (B2)}{3}
   
   \section{Skills}
   \begin{multicols}{2}
-  \polycvskill{\LaTeX}{0.8}
-  \polycvskill{Reading}{0.9}
-  \polycvskill{Writing}{0.7}
-  \polycvskill{Calculating}{0.3}
-  \polycvskill{Gaming}{0.95}
+  \cvskill{\LaTeX}{0.8}
+  \cvskill{Reading}{0.9}
+  \cvskill{Writing}{0.7}
+  \cvskill{Calculating}{0.3}
+  \cvskill{Gaming}{0.95}
   \end{multicols}
   
   \defbibheading{bibliography}[Publications and Talks]{\section{#1}}

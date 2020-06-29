@@ -63,13 +63,13 @@
 \mobile{+1 234 56 78 999}
 \orcid{0000-0001-0002-0003}
 \github{ex-ample}
-\signatureimage{example-image-16x9}
+\signaturefile{example-image-16x9}
 
 \begin{document}
 \begin{polycvletter}[%
-    \polycvaddress\\%
-    \polycvmobile\\%
-    \polycvemail]%
+    \insertaddress\\%
+    \insertmobile\\%
+    \insertemail]%
     {Subject}%
     {Company\\ Address}
   \opening{Dear Example,}
@@ -89,37 +89,37 @@
   
   \section{Personal Details}
   % Universally usable line:
-  \polycvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
-  \polycvlineaddress
-  \polycvlineemail
-  \polycvlinephone
-  \polycvlinemobile
-  \polycvlineorcid
-  \polycvlinegithub
+  \cvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
+  \cvlineaddress
+  \cvlineemail
+  \cvlinephone
+  \cvlinemobile
+  \cvlineorcid
+  \cvlinegithub
   \null
   
   \section{Languages}
-  \polycvlanguage{English (native)}{1}
-  \polycvlanguage{Leetspeak (B2)}{0.7}
+  \cvlanguage{English (native)}{1}
+  \cvlanguage{Leetspeak (B2)}{0.7}
   
   \section{Skills}
-  \polycvskill{\LaTeX}{0.8}
-  \polycvskill{Reading}{0.9}
-  \polycvskill{Writing}{0.7}
-  \polycvskill{Calculating}{0.3}
-  \polycvskill{Gaming}{0.95}
+  \cvskill{\LaTeX}{0.8}
+  \cvskill{Reading}{0.9}
+  \cvskill{Writing}{0.7}
+  \cvskill{Calculating}{0.3}
+  \cvskill{Gaming}{0.95}
   
   \end{polycvsidebar}%
   \section{Experience}
-% \polycventry{years}{degree/jobtitle}{institution/employer}{localization}{optional: grade/...}{optional: comment/job description}
-  \polycventry{2018 - 2019}
+% \cventry{years}{degree/jobtitle}{institution/employer}{localization}{optional: grade/...}{optional: comment/job description}
+  \cventry{2018 - 2019}
   {Writer}
   {Example Publisher}
   {Example Place}
   {}
   {First reading things, and then writing about those things.}
   
-  \polycventry{2017 - 2018}
+  \cventry{2017 - 2018}
   {Reader}
   {Example Company}
   {Example Place}
@@ -127,7 +127,7 @@
   {Reading things.}
   
   \section{Education}
-  \polycventry{2010 - 2017}
+  \cventry{2010 - 2017}
   {Student}
   {Example School}
   {Example Place}
@@ -135,16 +135,16 @@
   {Learning how to read and write.}
   
   \section{Languages}
-  \polycvlanguage{English (native)}{1}
-  \polycvlanguage{Leetspeak (B2)}{0.7}
+  \cvlanguage{English (native)}{1}
+  \cvlanguage{Leetspeak (B2)}{0.7}
   
   \section{Skills}
   \begin{multicols}{2}
-  \polycvskill{\LaTeX}{0.8}
-  \polycvskill{Reading}{0.9}
-  \polycvskill{Writing}{0.7}
-  \polycvskill{Calculating}{0.3}
-  \polycvskill{Gaming}{0.95}
+  \cvskill{\LaTeX}{0.8}
+  \cvskill{Reading}{0.9}
+  \cvskill{Writing}{0.7}
+  \cvskill{Calculating}{0.3}
+  \cvskill{Gaming}{0.95}
   \end{multicols}
   
   \defbibheading{bibliography}[Publications and Talks]{\section{#1}}

@@ -1,19 +1,40 @@
-\NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{polycv}[2019/10/30 v0.1 Polyluxus CV class]
-
-%%%%% OPTION DEFINITIONS
-%
-%   Simple definitions for key-value pairs with kvoptions
-%   See J. Wright, C. Feuersänger, TUGBoat, Vol. 30 (2009), No. 1, p. 110-122
-%
+%%
+%% This is file `polycv.cls',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% polycv.dtx  (with options: `class')
+%% 
+%% This is a generated file.
+%% 
+%% Copyright (C) 2020 by Martin C Schwarzer <polyluxus@gmail.com>
+%% ---------------------------------------------------------------------------
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX
+%% version 2005/12/01 or later.
+%% 
+%% This work has the LPPL maintenance status `maintained'.
+%% 
+%% The Current Maintainer of this work is Martin C Schwarzer.
+%% 
+%% This work consists of the files polycv.dtx and polycv.ins
+%% and the derived filebase polycv.cls.
+%% 
+%% The code is available at <https://github.com/polyluxus/polycv>.
+%% 
+\NeedsTeXFormat{LaTeX2e}[1999/12/01]
+\ProvidesClass{polycv}
+    [2020/06/29 v1.0rc1 Curriculum Vitae Class]
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=polycv,
   prefix=polycv@
 }
-%
-%   Define preset margins for geometry (page setup)
-%
 \DeclareStringOption[1.0cm]{margins}
 \DeclareStringOption[3.0cm]{headerheight}
 \DeclareStringOption[0.5cm]{footerheight}
@@ -21,159 +42,91 @@
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
 \DeclareStringOption[0.8cm]{iconspace}
-\DeclareStringOption[1.5ex]{progressbarheight}
-%
-%   Define number of boxes for the levels command
-%
-\DeclareStringOption[5]{progressbarunits}
-%
-%   Define the colors for the highlights
-%
+\DeclareStringOption[1.5ex]{progbarheight}
+\DeclareStringOption[5]{progbarunits}
 \DeclareStringOption[blue]{primary}
 \DeclareStringOption[white]{secondary}
 \DeclareStringOption[orange]{highlight}
 \DeclareStringOption[black]{shade}
 \DeclareStringOption[10]{mixing}
-%
-%   Draft mode
-% 
 \DeclareBoolOption{draft}
 \DeclareComplementaryOption{final}{draft}
-%
-%   Define Biblatex Mode
-%
 \DeclareBoolOption{biblatex}
-%
-%   Option to pass to xcolor
-%
 \DeclareStringOption[dvipsnames]{xcolor}
-%
-%   Option to sign the CV
-%
 \DeclareBoolOption{signcv}
-%
-%   Option to set the indentation in the letter
-%
 \DeclareStringOption[1em]{letterindent}
-%
-%   Warn about options which will not be used/ passed on because of potential clashes
-%
 \DeclareVoidOption{twocolumn}{%
-  \ClassError{polycv}{Incompatible because of special page setup.}}
+  \ClassError{polycv}{%
+    Option 'twocolumn' is incompatible because of the special page setup.}}
 \DeclareVoidOption{titlepage}{%
-  \ClassWarning{polycv}{Incompatible with a title page.}}
-%
-%   Pass all other options to article
-%
+  \ClassWarning{polycv}{%
+    Option 'titlepage' is incompatible because of the special page setup.}}
 \DeclareDefaultOption{%
   \PassOptionsToClass{\CurrentOptionKey}{article}}
-%
-%   Process these options
-%   
 \ProcessKeyvalOptions{polycv}
-%
-%   Inherit standard class
-%
 \LoadClass{article}
-%
-%%%%%
-
-%%%%% PREREQUISITES
-%
-%  Necessary packages 
-%
-%  Package etoolbox is necessary for additional hooks like \AtEndPreamble
 \RequirePackage{etoolbox}
-%  Package calc is necessary to do mathematics with lengths
 \RequirePackage{calc}
-%  Provide Hyperlinks in templates
 \RequirePackage{hyperref}
-%  Color definitions
 \PassOptionsToPackage{\polycv@xcolor,hyperref}{xcolor}
 \RequirePackage{xcolor}
-%  Use tikz for headerbox, etc. (must be loaded after xcolor)
 \RequirePackage{tikz}
-%  Graphics
 \RequirePackage{graphicx}
-%  Better Spacing
 \RequirePackage[indent=0pt]{parskip}
-%  Page Layout
 \RequirePackage{geometry}
-%  Use fancy symbols
-\usepackage{fontawesome}
-%  Include a pdf (for appendix)
-\usepackage{pdfpages}
-%
-%%%%%
-
-%%%%% GLOBAL CHANGES
-%
-% Remove pagenumbers
-%
+\RequirePackage{fontawesome}
+\RequirePackage{pdfpages}
+  \AtEndPreamble{%
+    \ifpolycv@signcv%
+      \ClassInfo{polycv}{%
+        Option 'signcv' enabled; CV will be signed.}%
+    \fi
+    }%
 \pagestyle{empty}
-%
-%%%%%
-
-%%%%% COLORS
-%
-%  Set some default colours
-%
-\newcommand*{\setpolycvprimary}[1]{\renewcommand*{\polycv@primary}{#1}}
-\newcommand*{\setpolycvsecondary}[1]{\renewcommand*{\polycv@secondary}{#1}}
-\newcommand*{\setpolycvhighlight}[1]{\renewcommand*{\polycv@highlight}{#1}}
-\newcommand*{\setpolycvshade}[1]{\renewcommand*{\polycv@shade}{#1}}
-%  Disable changing colors for body
-\@onlypreamble\setpolycvprimary
-\@onlypreamble\setpolycvsecondary
-\@onlypreamble\setpolycvhighlight
-\@onlypreamble\setpolycvshade
+\newcommand*{\setcolprimary}[1]{%
+  \renewcommand*{\polycv@primary}{#1}}
+\newcommand*{\setcolsecondary}[1]%
+  {\renewcommand*{\polycv@secondary}{#1}}
+\newcommand*{\setcolhighlight}[1]%
+  {\renewcommand*{\polycv@highlight}{#1}}
+\newcommand*{\setcolshade}[1]%
+  {\renewcommand*{\polycv@shade}{#1}}
+\@onlypreamble\setcolprimary
+\@onlypreamble\setcolsecondary
+\@onlypreamble\setcolhighlight
+\@onlypreamble\setcolshade
 \AtEndPreamble{%
   \colorlet{polycvpagecolor}{\polycv@secondary}
   \colorlet{polycvheaderbackground}{\polycv@primary}
   \colorlet{polycvheadertext}{\polycv@secondary}
   \colorlet{polycvsectioncolor}{\polycv@primary}
-  \colorlet{polycvtextcolor}{\polycv@primary!\polycv@mixing!\polycv@shade}
+  \colorlet{polycvtextcolor}{%
+    \polycv@primary!\polycv@mixing!\polycv@shade}
   \colorlet{polycvhighlight}{\polycv@highlight}
   \colorlet{polycvsidebarbackground}{\polycv@secondary}
-  \colorlet{polycvprogressbarfilled}{\polycv@primary}
-  \colorlet{polycvprogressbarempty}{\polycv@primary!10!\polycv@secondary}
+  \colorlet{polycvprogbarfilled}{\polycv@primary}
+  \colorlet{polycvprogbarnofill}{%
+    \polycv@primary!10!\polycv@secondary}
 }
-\AfterPreamble{\color{polycvtextcolor}\pagecolor{polycvpagecolor}}
-%
-%%%%%
-
-%%%%% OPTION MACROS
-%
-%  Emulate and extend draft mode
+\AfterPreamble{%
+  \color{polycvtextcolor}\pagecolor{polycvpagecolor}}
 \ifpolycv@draft%
-  % Issue information for log
   \ClassInfo{polycv}{Option 'draft' is enabled}
-  % Set the overfull boxes identifier 
-  % [How to test whether report has been called with “draft” option](https://tex.stackexchange.com/a/240128/33413)
   \setlength\overfullrule{1em}
-  % Make the page visible
   \PassOptionsToPackage{showframe}{geometry}
   \AtEndPreamble{%
-    % Make the tikz boxes visible in draft mode
-    \colorlet{polycvsidebarbackground}{\polycv@primary!20!\polycv@secondary}%
+    \colorlet{polycvsidebarbackground}{%
+      \polycv@primary!20!\polycv@secondary}%
   }
 \fi
-
-%  Make biblatex use the same width as the date column
 \ifpolycv@biblatex%
   \ClassInfo{polycv}{Option 'biblatex' is enabled}
   \AtEndPreamble{%
     \setlength{\biblabelsep}{\polycvhintcolsep}%
-    \DeclareFieldFormat{labelnumberwidth}{\makebox[\polycvhintcol][r]{[#1]}}%
+    \DeclareFieldFormat{labelnumberwidth}{%
+      \makebox[\polycvhintcol][r]{[#1]}}%
   }%
 \fi
-%
-%%%%%
-
-%%%%% LENGTHS
-%
-% Define some lengths (and defaults) for the layout
-%
 \newlength{\polycvheaderheight}
 \setlength{\polycvheaderheight}{\polycv@headerheight}
 \newlength{\polycvfooterheight}
@@ -188,259 +141,242 @@
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
-\newlength{\polycvprogressbarheight}
-\setlength{\polycvprogressbarheight}{\polycv@progressbarheight}
+\newlength{\polycvprogbarheight}
+\setlength{\polycvprogbarheight}{\polycv@progbarheight}
 \newlength{\polycvletterindent}
 \setlength{\polycvletterindent}{\polycv@letterindent}
-
-% Commands to alter the lengths
-%
-\newcommand*{\setpolycvheaderheight}[1]{\setlength{\polycvheaderheight}{#1}}
-\newcommand*{\setpolycvfooterheight}[1]{\setlength{\polycvfooterheight}{#1}}
-\newcommand*{\setpolycvmargins}[1]{\setlength{\polycvmargins}{#1}}
-\newcommand*{\setpolycvhintcolumnwidth}[1]{\setlength{\polycvhintcol}{#1}}
-\newcommand*{\setpolycvhintcolumnsep}[1]{\setlength{\polycvhintcolsep}{#1}}
-\newcommand*{\setpolycviconspace}[1]{\setlength{\polycviconspace}{#1}}
-\newcommand*{\setpolycvprogressbarheight}[1]{\setlength{\polycvprogressbarheight}{#1}}
-% Disable for body
-\@onlypreamble\setpolycvheaderheight
-\@onlypreamble\setpolycvfooterheight
-\@onlypreamble\setpolycvmargins
-\@onlypreamble\setpolycvhintcolumnwidth
-\@onlypreamble\setpolycvhintcolumnsep
-\@onlypreamble\setpolycviconspace
-\@onlypreamble\setpolycvprogressbarheight
-
-% Additional lengths computed automatically
-%
+\newcommand*{\setheaderheight}[1]{%
+  \setlength{\polycvheaderheight}{#1}}
+\newcommand*{\setfooterheight}[1]{%
+  \setlength{\polycvfooterheight}{#1}}
+\newcommand*{\setmargins}[1]{%
+  \setlength{\polycvmargins}{#1}}
+\newcommand*{\sethintcolwidth}[1]{%
+  \setlength{\polycvhintcol}{#1}}
+\newcommand*{\sethintcolsep}[1]{%
+  \setlength{\polycvhintcolsep}{#1}}
+\newcommand*{\seticonspace}[1]{%
+  \setlength{\polycviconspace}{#1}}
+\newcommand*{\setprogbarheight}[1]{%
+  \setlength{\polycvprogbarheight}{#1}}
+\@onlypreamble\setheaderheight
+\@onlypreamble\setfooterheight
+\@onlypreamble\setmargins
+\@onlypreamble\sethintcolwidth
+\@onlypreamble\sethintcolsep
+\@onlypreamble\seticonspace
+\@onlypreamble\setprogbarheight
 \newlength{\polycvleftmargin}
 \newlength{\polycvtopmargin}
 \newlength{\polycvbottommargin}
 \AtEndPreamble{%
-  \setlength{\polycvleftmargin}{\polycvsidebarwidth+2\polycvmargins}
-  \setlength{\polycvtopmargin}{\polycvheaderheight+\polycvmargins}
-  \setlength{\polycvbottommargin}{\polycvfooterheight+\polycvmargins}
+  \setlength{\polycvleftmargin}{%
+    \polycvsidebarwidth+2\polycvmargins}
+  \setlength{\polycvtopmargin}{%
+    \polycvheaderheight+\polycvmargins}
+  \setlength{\polycvbottommargin}{%
+    \polycvfooterheight+\polycvmargins}
 }
-%
-%%%%%
-
-%%%%% STYLES
-%
-%  Define different fonts
-%
 \providecommand\polycv@headerfont{}
 \renewcommand{\polycv@headerfont}{\sffamily\bfseries}
-\providecommand\setpolycvheaderfont{}
-\renewcommand*{\setpolycvheaderfont}[1]{\renewcommand*{\polycv@headerfont}{#1}}
-\@onlypreamble\setpolycvheaderfont
-
-%  Define standard raggedness
-%
+\providecommand\setheaderfont{}
+\renewcommand*{\setheaderfont}[1]{%
+  \renewcommand*{\polycv@headerfont}{#1}}
+\@onlypreamble\setheaderfont
 \providecommand\polycv@entry@ragged{}
-\newcommand*{\setpolycventryraggedright}{\renewcommand{\polycv@entry@ragged}{\raggedright}}
-\newcommand*{\setpolycventryjustify}{\renewcommand{\polycv@entry@ragged}{}}
-\@onlypreamble\setpolycventryraggedright
-\@onlypreamble\setpolycventryjustify
-
-%  Define default alignment for the signature (may be used differently in CV and Letter)
-%
-\providecommand\polycv@signature@alignment{right}
-\newcommand*{\setpolycvsignatureright}{\renewcommand{\polycv@signature@alignment}{right}}
-\newcommand*{\setpolycvsignatureleft}{\renewcommand{\polycv@signature@alignment}{left}}
-\@onlypreamble\setpolycvsignatureright
-\@onlypreamble\setpolycvsignatureright
-
-%%%%%
-%
-%  Define special commands and environments
-%
-
-%  Control the number of items for the levells bar
-\newcommand*{\setpolycvprogressbarunits}[1]{\renewcommand*{\polycv@progressbarunits}{#1}}
-\@onlypreamble\setpolycvprogressbarunits
-
-%  Variables which make setting the template easier
-%  (author and title already exist)%
-\providecommand*\polycvauthor{}
-\renewcommand{\polycvauthor}{\@author}
-\providecommand\polycvtitle{}
-\renewcommand{\polycvtitle}{\@title}
-
-\providecommand*\polycvposition{}
+\newcommand*{\setentryragged}{%
+  \renewcommand{\polycv@entry@ragged}{\raggedright}}
+\newcommand*{\setentryjustified}{%
+  \renewcommand{\polycv@entry@ragged}{}}
+\@onlypreamble\setentryragged
+\@onlypreamble\setentryjustified
+\providecommand\polycv@sig@align{right}
+\newcommand*{\setsigright}{%
+  \renewcommand{\polycv@sig@align}{right}}
+\newcommand*{\setsigleft}{%
+  \renewcommand{\polycv@sig@align}{left}}
+\@onlypreamble\setsigright
+\@onlypreamble\setsigleft
+\newcommand*{\setprogbarunits}[1]{%
+  \renewcommand*{\polycv@progbarunits}{#1}}
+\@onlypreamble\setprogbarunits
+\providecommand*\insertauthor{}
+\renewcommand{\insertauthor}{\@author}
+\providecommand\inserttitle{}
+\renewcommand{\inserttitle}{\@title}
+\providecommand*\insertposition{}
 \providecommand*\position{}
-\renewcommand{\position}[1]{\renewcommand{\polycvposition}{#1}}
-% Dissable this command because it is needed before the header
+\renewcommand{\position}[1]{%
+  \renewcommand{\insertposition}{#1}}
 \@onlypreamble\position
-
-\providecommand\polycvitemline[3][\polycviconspace]{%
+\providecommand\cvitemline[3][\polycviconspace]{%
   \parbox[t]{#1}{\centering#2}%
   \parbox[t]{\linewidth-#1}{#3}\par\vspace{0.3\baselineskip}}
-
-\providecommand\polycvaddress{}
-\providecommand\polycvstreet{}
-\providecommand\polycvlocation{}
+\providecommand\insertaddress{}
+\providecommand\insertstreet{}
+\providecommand\insertlocation{}
 \providecommand\address{}
 \providecommand\street{}
 \providecommand\location{}
-\renewcommand{\address}[1]{\renewcommand{\polycvaddress}{#1}}
-\renewcommand{\street}[1]{\renewcommand{\polycvstreet}{#1}}
-\renewcommand{\location}[1]{\renewcommand{\polycvlocation}{#1}}
-\renewcommand{\polycvaddress}{\polycvstreet\\\polycvlocation}
-\providecommand{\polycvlineaddress}{\polycvitemline{\faMapMarker}{\polycvaddress}}
-
-\providecommand*\polycvemail{}
+\renewcommand{\address}[1]{%
+  \renewcommand{\insertaddress}{#1}}
+\renewcommand{\street}[1]{%
+  \renewcommand{\insertstreet}{#1}}
+\renewcommand{\location}[1]{%
+  \renewcommand{\insertlocation}{#1}}
+\renewcommand{\insertaddress}{\insertstreet\\\insertlocation}
+\providecommand{\cvlineaddress}{%
+  \cvitemline{\faMapMarker}{\insertaddress}}
+\providecommand*\insertemail{}
 \providecommand*\email{}
-\renewcommand{\email}[1]{\renewcommand{\polycvemail}{\href{mailto:#1}{#1}}}
-\providecommand{\polycvlineemail}{\polycvitemline{\faEnvelope}{\polycvemail}}
-
-\providecommand*\polycvphone{}
+\renewcommand{\email}[1]{%
+  \renewcommand{\insertemail}{\href{mailto:#1}{#1}}}
+\providecommand{\cvlineemail}{%
+  \cvitemline{\faEnvelope}{\insertemail}}
+\providecommand*\insertphone{}
 \providecommand*\phone{}
-\renewcommand{\phone}[1]{\renewcommand{\polycvphone}{#1}}
-\providecommand{\polycvlinephone}{\polycvitemline{\faPhone}{\polycvphone}}
-
-\providecommand*\polycvmobile{}
+\renewcommand{\phone}[1]{\renewcommand{\insertphone}{#1}}
+\providecommand{\cvlinephone}{%
+  \cvitemline{\faPhone}{\insertphone}}
+\providecommand*\insertmobile{}
 \providecommand*\mobile{}
-\renewcommand{\mobile}[1]{\renewcommand{\polycvmobile}{#1}}
-\providecommand{\polycvlinemobile}{\polycvitemline{\faMobile}{\polycvmobile}}
-
-\providecommand*\polycvgithub{}
+\renewcommand{\mobile}[1]{\renewcommand{\insertmobile}{#1}}
+\providecommand{\cvlinemobile}{%
+  \cvitemline{\faMobile}{\insertmobile}}
+\providecommand*\insertgithub{}
 \providecommand*\github{}
-\renewcommand{\github}[1]{\renewcommand{\polycvgithub}{\href{https://github.com/#1}{github.com/#1}}}
-\providecommand{\polycvlinegithub}{\polycvitemline{\faGithub}{\polycvgithub}}
-
-\providecommand*\polycvorcidicon{\raisebox{-0.2em}{\includegraphics[height=1.0em]{orcidicon}}}
-\providecommand*\polycvorcid{}
+\renewcommand{\github}[1]{\renewcommand{\insertgithub}{%
+  \href{https://github.com/#1}{github.com/#1}}}
+\providecommand{\cvlinegithub}{%
+  \cvitemline{\faGithub}{\insertgithub}}
+\providecommand*\orcidiconfilename{}
+\IfFileExists{orcidicon.pdf}{%
+  \renewcommand{\orcidiconfilename}{%
+    \raisebox{-0.2em}{%
+      \includegraphics[height=1.0em]{orcidicon.pdf}}}%
+}{%
+  \renewcommand{\orcidiconfilename}{%
+    \raisebox{-0.2em}{%
+      \resizebox{1em}{1em}{\textbf{ORCID}}}}%
+}
+\providecommand*\insertorcid{}
 \providecommand*\orcid{}
-\renewcommand{\orcid}[1]{\renewcommand{\polycvorcid}{\href{http://orcid.org/#1}{orcid.org/#1}}}
-\providecommand{\polycvlineorcid}{\polycvitemline{\polycvorcidicon}{\polycvorcid}}
-
-\providecommand\polycvsignatureimage{}
-\providecommand\signatureimage{}
-\renewcommand{\signatureimage}[1]{\renewcommand{\polycvsignatureimage}{#1}}
-
-%  Redefine sections (no numbers and with color)
-%
+\renewcommand{\orcid}[1]{\renewcommand{\insertorcid}{%
+  \href{http://orcid.org/#1}{orcid.org/#1}}}
+\providecommand{\cvlineorcid}{%
+  \cvitemline{\orcidiconfilename}{\insertorcid}}
+\providecommand\insertsigfilename{}
+\providecommand\signaturefile{}
+\renewcommand{\signaturefile}[1]{%
+  \renewcommand{\insertsigfilename}{#1}}
 \renewcommand{\section}[1]{%
+  \ignorespaces%
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}%
-    \Large%
-    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}\polycv@headerfont%
-    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
-  }\par\vspace{0.5\baselineskip}}
-
+    \Large\polycv@headerfont%
+    \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}%
+    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{%
+      #1%
+    }%
+  }\vspace{0.5\baselineskip}}
 \renewcommand{\subsection}[1]{%
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}%
-    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}\polycv@headerfont%
-    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{#1}% 
-  }\par\vspace{0.3\baselineskip}}
-
-%  Fancy header box (internal use only)
-%
+    \polycv@headerfont%
+    \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}%
+    \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{%
+      #1%
+    }%
+  }\vspace{0.3\baselineskip}}
 \newcommand{\polycv@header}[3][\polycvheaderheight]{%
-  \begin{tikzpicture}[remember picture,overlay]
+  \begin{tikzpicture}[remember picture,overlay]%
     \node [rectangle, %
            fill           = polycvheaderbackground, %
            anchor         = north, %
            minimum width  = \paperwidth, %
            minimum height = #1%
-          ] (headerbox) at (current page.north){};
+          ] (headerbox) at (current page.north){};%
     \node [anchor = mid] (cv-name) at (headerbox) {%
-      \Huge\polycv@headerfont\color{polycvheadertext}\textbf{#2}%
-    };
+      \Huge\polycv@headerfont\color{polycvheadertext}\textbf{%
+        #2
+      }%
+    };%
     \node [anchor = north] at (cv-name.south) {%
-      \Large\polycv@headerfont\color{polycvheadertext} #3%
-    };
+      \Large\polycv@headerfont\color{polycvheadertext}%
+      #3%
+    };%
   \end{tikzpicture}%
   \ignorespaces%
 }
-
-%  Fancy footer box (internal use only)
-%
 \newcommand{\polycv@footer}[2][\polycvfooterheight]{%
-  \begin{tikzpicture}[remember picture,overlay]
+  \begin{tikzpicture}[remember picture,overlay]%
     \node [rectangle, %
            fill           = polycvheaderbackground, %
            anchor         = south, %
            minimum width  = \paperwidth, %
            minimum height = #1%
-          ] (footerbox) at (current page.south){};
+          ] (footerbox) at (current page.south){};%
     \node [anchor = center] (pagenumber) at (footerbox) {%
       \polycv@headerfont\color{polycvheadertext}%
-      \if\relax\detokenize{#2}\relax
-      \else
-      - #2 -
-      \fi
-    };
+      \if\relax\detokenize{#2}\relax%
+      \else%
+      - #2 -%
+      \fi%
+    };%
   \end{tikzpicture}%
   \ignorespaces%
 }
-
-%  Fancy signature box (for internal use only)
-%
 \newcommand{\polycv@signature}[2][\polycvsidebarwidth]{%
-  \begin{tikzpicture}[remember picture, overlay]
-    \node [rectangle, 
+  \begin{tikzpicture}[remember picture, overlay]%
+    \node [rectangle, %
            anchor = south west, %
            text width = #1, %
-           align = \polycv@signature@alignment, %
+           align = \polycv@sig@align, %
            minimum height = 0.75#1, %
            yshift = \polycvbottommargin, %
-           xshift = \polycvmargins,
-           fill = polycvsidebarbackground %DRAFT
-          ] (polycvsignaturebox) at (current page.south west) {%
-      \includegraphics[width=#1]{#2}\\
-      \polycvauthor%
+           xshift = \polycvmargins, %
+           fill = polycvsidebarbackground %
+          ] (cv-signbox) at (current page.south west) {%
+      \includegraphics[width=#1]{#2}\\%
+      \insertauthor%
     };
   \end{tikzpicture}%
   \ignorespaces%
 }
-
-%  Define circle and square symbols
-%
-\newcommand{\polycv@square@nofill}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarempty] (0,0) rectangle (1,1);% 
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
+    \filldraw[polycvprogbarnofill] (0,0) rectangle (1,1);%
+    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
-
-\newcommand{\polycv@square@filled}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarfilled] (0,0) rectangle (1,1);% 
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
+    \filldraw[polycvprogbarfilled] (0,0) rectangle (1,1);%
+    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
-
-\newcommand{\polycv@circle@nofill}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarempty] (0.5,0.5) circle [radius=0.5];% 
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
+    \filldraw[polycvprogbarnofill] (0.5,0.5) circle [radius=0.5];%
+    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
-
-\newcommand{\polycv@circle@filled}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarfilled] (0.5,0.5) circle [radius=0.5];% 
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
+    \filldraw[polycvprogbarfilled] (0.5,0.5) circle [radius=0.5];%
+    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
-
-%  Define helper function to repeat symbols
-%
 \newcommand{\polycv@repeating}[2][5]{%
   \ifnum#1 > 0%
     \newcount\rep%
     \rep0%
     \loop\ifnum\rep < \number\numexpr#1-1\relax%
       #2\hfill%
-      \advance\rep by 1% 
+      \advance\rep by 1%
     \repeat%
     #2%
   \fi%
 }
-
-%  Define helper function for the level bar
-%
 \newcommand{\polycv@level@bar}[4][\polycvhintcol]{%
   \newcount\total@units%
-  \total@units\polycv@progressbarunits%
+  \total@units\polycv@progbarunits%
   \newcount\level%
   \ifnum#2 < \total@units \level#2 \else \level\total@units \fi%
   \newcount\elevel%
@@ -450,7 +386,7 @@
   \parbox{#1}{%
     \ifnum\level = 0%
       \polycv@repeating[\total@units]{\symbol@nofill}%
-    \else 
+    \else
       \ifnum\level = \total@units%
         \polycv@repeating[\total@units]{\symbol@filled}%
       \else
@@ -461,113 +397,51 @@
     \fi%
   }%
 }
-
-%  Define interfaces to the level bar
-%
-\newcommand{\polycvlevelssquared}[2][\polycvhintcol]{%
-  \polycv@level@bar[#1]{#2}{\polycv@square@filled}{\polycv@square@nofill}%
+\newcommand{\levelbarsquares}[2][\polycvhintcol]{%
+  \polycv@level@bar[#1]{#2}{%
+    \polycv@square@filled}{\polycv@square@nofill}%
 }
-\newcommand{\polycvlevelscircled}[2][\polycvhintcol]{%
-  \polycv@level@bar[#1]{#2}{\polycv@circle@filled}{\polycv@circle@nofill}%
+\newcommand{\levelbarcircles}[2][\polycvhintcol]{%
+  \polycv@level@bar[#1]{#2}{%
+    \polycv@circle@filled}{\polycv@circle@nofill}%
 }
-
-%  Define progressbar
-%  
-\newcommand{\polycvprogressbar}[2][\polycvhintcol]{
-  \begin{tikzpicture}[x=#1, y=\polycvprogressbarheight]%
-    \filldraw[polycvprogressbarfilled] (0, 0) rectangle (#2, 1) ;
-    \filldraw[polycvprogressbarempty] (#2, 0) rectangle (1, 1);
-    \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;
+\newcommand{\progressbar}[2][\polycvhintcol]{%
+  \hfill%
+  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
+    \filldraw[polycvprogbarfilled] (0, 0) rectangle (#2, 1) ;%
+    \filldraw[polycvprogbarnofill] (#2, 0) rectangle (1, 1);%
+    \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
-}
-
-%  Provide template for sidebar (for internal use only)
-%
-\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
-  \parbox{1.0\linewidth}{%
-    \hspace{#1}%
-    \parbox[b]{2\linewidth/3-4#1}{#2}%
-    \hspace{#1}%
-    \parbox[b]{\linewidth/3}{\flushright\polycvprogressbar{#3}}\par\vspace{0.2\baselineskip}}
-}
-
-%  Define environment for fancy sidebar box
-%
-\newenvironment{polycvsidebar}{%
-  \let\section\savesection%
-  \newcommand{\section}[1]{%
-  \parbox[b]{1\linewidth}{%
-    \color{polycvsectioncolor}\large\polycv@headerfont{##1}% 
-  }\par\vspace{0.5\baselineskip}}%
-  \let\polycvlanguage\savepolycvlanguage%
-  \newcommand{\polycvlanguage}[2]{\polycv@sidebar@skill{##1}{##2}}%
-  \let\polycvskill\savepolycvskill%
-  \newcommand{\polycvskill}[2]{\polycv@sidebar@skill{##1}{##2}}%
-  \begin{tikzpicture}[remember picture, overlay]
-    \node [anchor = north west, %
-           text width = \polycvsidebarwidth, %
-           xshift = \polycvmargins, %
-           yshift = -\polycvheaderheight-\polycvmargins,
-           fill = polycvsidebarbackground %DRAFT
-          ] (polycvsidebarbox) at (current page.north west) \bgroup
-}{%
-    \egroup;%
-  \end{tikzpicture}%
-  \let\savesection\section%
-  \let\savepolycvlanguage\polycvlanguage%
-  \let\savepolycvlanguage\polycvskill%
-  %  Sign the CV
-  \ifpolycv@signcv%
-    \ClassInfo{polycv}{Option 'signcv' enabled; CV will be signed.}
-    \polycv@signature{\polycvsignatureimage}%
-  \fi%
-  \ignorespaces%
-}
-
-%  Define commands for entries into the CV
-%
-%  One line entry
-%  Usage:
-%    \polycvline[width]{hint}{description}
-\providecommand\polycvline{}
-\renewcommand{\polycvline}[3][\polycvhintcol]{%
+}%
+\providecommand\cvline{}
+\renewcommand{\cvline}[3][\polycvhintcol]{%
   \par%
   \parbox[t]{#1}{\strut\raggedleft #2}%
   \hspace{\polycvhintcolsep}%
-  \parbox[t]{\linewidth-\polycvhintcolsep-#1}{\strut\polycv@entry@ragged #3}%
+  \parbox[t]{\linewidth-\polycvhintcolsep-#1}{%
+    \strut\polycv@entry@ragged #3}%
   \par\vspace{0.2\baselineskip}%
 }
-
-%  Block entry
-%  Usage (example):
-%    \polycventry[width]{WHEN}{WHAT  }{WHO      }{WHERE}{OPTIONAL  }{OPTIONAL        }
-%    \polycventry[width]{time}{degree}{institute}{where}{opt: grade}{opt: comment    }
-%    \polycventry[width]{time}{title }{employer }{where}{opt: .....}{opt: description}
-\providecommand\polycventry{}
-\renewcommand{\polycventry}[7][\polycvhintcol]{%
-\polycvline[#1]{#2}{%
-\textbf{#3}, \textit{#4}, #5%
-\if\relax\detokenize{#6}\relax
-\else
-, #6%
-\fi
-\if\relax\detokenize{#7}\relax
-.%
-\else
-.\newline\small #7 
-\fi
+\providecommand\cventry{}
+\renewcommand{\cventry}[7][\polycvhintcol]{%
+  \cvline[#1]{#2}{%
+    \textbf{#3}, \textit{#4}, #5%
+    \if\relax\detokenize{#6}\relax%
+    \else%
+    , #6%
+    \fi%
+    \if\relax\detokenize{#7}\relax%
+    .%
+    \else%
+    .\newline\small #7%
+    \fi%
+  }%
 }
-}
-
-%  Progressbar entries
-\providecommand\polycvskill[2]{%
-  \polycvline[\polycvhintcol]{\polycvprogressbar[0.5\linewidth]{#2}}{#1}}
-
-\providecommand\polycvlanguage[2]{%
-  \polycvskill{#1}{#2}}
-
-%  Define environment for the first page
-%
+\providecommand\cvskill[2]{%
+  \cvline[\polycvhintcol]{%
+    \progressbar[0.5\linewidth]{#2}}{#1}}
+\providecommand\cvlanguage[2]{%
+  \cvskill{#1}{#2}}
 \newenvironment{polycvfirstpage}{%
   \newgeometry{%
     left=\polycvleftmargin,
@@ -575,16 +449,12 @@
     right=\polycvmargins,
     bottom=\polycvbottommargin,
     nohead,nofoot}%
-  \polycv@header{\polycvauthor}{\polycvposition}%
+  \polycv@header{\insertauthor}{\insertposition}%
   \polycv@footer{}%
 }{%
   \restoregeometry%
   \ignorespaces%
 }
-
-%  Define environment for a 'regular' page
-%  (This may cause problems, when the content is overflowing.)
-%
 \newenvironment{polycvpage}{%
   \newgeometry{%
     top=\polycvtopmargin,%
@@ -598,16 +468,49 @@
   \restoregeometry%
   \ignorespaces%
 }
-
-%%%%% LETTER 
-%
-%  Define commands for the letter environment
-%
-
-%  New header to include address
-%
+\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
+  \parbox{1.0\linewidth}{%
+    \hspace{#1}%
+    \parbox[b]{2\linewidth/3-4#1}{#2}%
+    \hspace{#1}\hfill%
+    \parbox[b]{\linewidth/3}{%
+      \progressbar[\linewidth]{#3}%
+      }%
+    \vspace{0.2\baselineskip}}%
+}
+\newenvironment{polycvsidebar}{%
+  \let\section\save@section%
+  \newcommand{\section}[1]{%
+  \parbox[b]{1\linewidth}{%
+    \color{polycvsectioncolor}\large\polycv@headerfont{##1}%
+  }\par\vspace{0.5\baselineskip}}%
+  \let\cvlanguage\save@polycvlanguage%
+  \newcommand{\cvlanguage}[2]{%
+    \polycv@sidebar@skill{##1}{##2}}%
+  \let\cvskill\save@polycvskill%
+  \newcommand{\cvskill}[2]{%
+    \polycv@sidebar@skill{##1}{##2}}%
+  \begin{tikzpicture}[remember picture, overlay]%
+    \node [anchor = north west, %
+           text width = \polycvsidebarwidth, %
+           xshift = \polycvmargins, %
+           yshift = -\polycvheaderheight-\polycvmargins, %
+           fill = polycvsidebarbackground %
+          ] (polycvsidebarbox) at (current page.north west) %
+    \bgroup%
+}{%
+    \egroup;%
+  \end{tikzpicture}%
+  \let\save@section\section%
+  \let\save@polycvlanguage\cvlanguage%
+  \let\save@polycvlanguage\cvskill%
+  \ifpolycv@signcv%
+    \polycv@signature{\insertsigfilename}%
+  \fi%
+  \ignorespaces%
+}%
 \newcommand{\polycv@letter@from}[3][\polycvheaderheight]{%
-  \begin{tikzpicture}[remember picture,overlay]
+  \begin{tikzpicture}[remember picture, overlay]%
     \node [rectangle, %
            fill           = polycvheadertext, %
            anchor         = north, %
@@ -624,90 +527,69 @@
            text width = 5cm, %
            xshift     = -2\polycvmargins
           ] (polycv-letter-address) at (headerbox.east) {%
-      \polycv@headerfont\color{polycvheaderbackground}\parbox[t]{1.0\linewidth}{%
+      \polycv@headerfont\color{polycvheaderbackground}%
+      \parbox[t]{1.0\linewidth}{%
         \raggedleft%
         \textbf{\Large #2}\\%
-        \textit{\normalsize #3}%%
+        \textit{\normalsize #3}%
         }%
-    };
+    };%
   \end{tikzpicture}%
   \ignorespaces%
 }
-
-%  Recipient address
-%
 \newcommand{\polycv@letter@to}[1]{%
   \noindent\parbox[t][4cm][c]{0.4\linewidth}{\raggedright#1}\par%
   \vspace{1\baselineskip}%
 }
-
-%  Date format and definition
-%
 \newcommand{\polycv@letter@date}{%
   \noindent\parbox[t]{1.00\linewidth}{\raggedleft\today}\par%
 }
-
-%  Subject format and definition
-%
 \newcommand{\polycv@letter@subject}[1]{%
-  \noindent\parbox[t]{1.00\linewidth}{\raggedright\textbf{#1}}\par%
+  \noindent\parbox[t]{1.00\linewidth}{%
+    \raggedright\textbf{#1}}%
 }
-
-%  Opening and closing remarks
-%
 \providecommand\opening{}
 \renewcommand{\opening}[1]{\noindent{}#1\par}
 \providecommand\closing{}
 \renewcommand{\closing}[1]{\noindent{}#1\par}
-
-%  Postscript
-%
 \newcommand{\polycv@letter@psmark}{P.S.~}
-\providecommand\polycv@letter@ps{}%
 \providecommand\setpsmark{}
-\renewcommand*{\setpsmark}[1]{\renewcommand{\polycv@letter@psmark}{#1}}
+\renewcommand*{\setpsmark}[1]{%
+  \renewcommand{\polycv@letter@psmark}{#1}}
+\providecommand\polycv@letter@ps{}%
 \providecommand\ps{}
 \renewcommand{\ps}[1]{%
   \renewcommand{\polycv@letter@ps}{%
     \noindent\footnotesize\polycv@letter@psmark#1\par%
   }%
 }%
-
-%  Set up the environment
-%  (This will also cause problems for sufficiently long letters.)
-%
-\newenvironment{polycvletter}[3][\polycvaddress]{%
+\newenvironment{polycvletter}[3][\insertaddress]{%
   \newgeometry{%
     top=\polycvtopmargin,%
     left=2\polycvmargins,%
     right=2\polycvmargins,%
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
-  \polycv@letter@from{\polycvauthor}{#1}%
+  \polycv@letter@from{\insertauthor}{#1}%
   \polycv@letter@to{#3}%
   \polycv@letter@date%
   \polycv@letter@subject{#2}%
   \setlength{\parindent}{\polycvletterindent}%
 }{%
   \vspace{0.5\baselineskip}%
-  %\raggedright%
-  \noindent\includegraphics[width=5cm]{\polycvsignatureimage}\\%
-  \noindent\polycvauthor\par%
-  \if\relax\detokenize{\polycv@letter@ps}\relax
-  \else
+  \noindent\includegraphics[width=5cm]{\insertsigfilename}\\%
+  \noindent\insertauthor\par%
+  \if\relax\detokenize{\polycv@letter@ps}\relax%
+  \else%
   \polycv@letter@ps\par%
-  \fi
+  \fi%
   \polycv@footer{}%
-  \restoregeometry
+  \restoregeometry%
 }
-
-%%%%% APPENDIX
-%
-%  Command to include pdf (for certificates)
-%
-\providecommand*\polycvappendix{}
-\renewcommand*{\polycvappendix}[2][pages={1-}]{%
+\providecommand*\pdfappendix{}
+\renewcommand*{\pdfappendix}[2][pages={1-}]{%
   \nopagecolor%
-  \includepdf[#1]{#2}}
-%
-%%%%%
+  \includepdf[#1]{#2}}%
+\endinput
+%%
+%% End of file `polycv.cls'.

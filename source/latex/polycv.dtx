@@ -1073,8 +1073,8 @@
     \polycv@primary!\polycv@mixing!\polycv@shade}
   \colorlet{polycvhighlight}{\polycv@highlight}
   \colorlet{polycvsidebarbackground}{\polycv@secondary}
-  \colorlet{polycvprogressbarfilled}{\polycv@primary}
-  \colorlet{polycvprogressbarempty}{%
+  \colorlet{polycvprogbarfilled}{\polycv@primary}
+  \colorlet{polycvprogbarnofill}{%
     \polycv@primary!10!\polycv@secondary}
 }
 \AfterPreamble{%
@@ -1621,12 +1621,12 @@
 %    \begin{macrocode}
 \newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarempty] (0,0) rectangle (1,1);% 
+    \filldraw[polycvprogbarnofill] (0,0) rectangle (1,1);% 
     \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
 \newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarfilled] (0,0) rectangle (1,1);% 
+    \filldraw[polycvprogbarfilled] (0,0) rectangle (1,1);% 
     \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
 %    \end{macrocode}
@@ -1639,12 +1639,12 @@
 %    \begin{macrocode}
 \newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarempty] (0.5,0.5) circle [radius=0.5];% 
+    \filldraw[polycvprogbarnofill] (0.5,0.5) circle [radius=0.5];% 
     \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
   \end{tikzpicture}}
 \newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
-    \filldraw[polycvprogressbarfilled] (0.5,0.5) circle [radius=0.5];% 
+    \filldraw[polycvprogbarfilled] (0.5,0.5) circle [radius=0.5];% 
     \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
   \end{tikzpicture}}
 %    \end{macrocode}
@@ -1730,8 +1730,8 @@
 \newcommand{\progressbar}[2][\polycvhintcol]{%
   \hfill%
   \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
-    \filldraw[polycvprogressbarfilled] (0, 0) rectangle (#2, 1) ;%
-    \filldraw[polycvprogressbarempty] (#2, 0) rectangle (1, 1);%
+    \filldraw[polycvprogbarfilled] (0, 0) rectangle (#2, 1) ;%
+    \filldraw[polycvprogbarnofill] (#2, 0) rectangle (1, 1);%
     \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
 }%
@@ -2072,9 +2072,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% That is it.
-% \clearpage
-%
 % \section{Building \pkg{polycv} and its Documentation}
 % \label{sec:building}
 %
@@ -2090,6 +2087,7 @@
 %   \item \lstinline`makeindex -s gind.ist -o polycv.ind polycv.idx`
 %   \item \lstinline`pdflatex polycv.dtx` (several times)
 % \end{enumerate}
+% \clearpage
 %
 % \Finale
 \endinput

@@ -48,8 +48,25 @@
   backgroundcolor=\color{lightgray},%
   basicstyle=\footnotesize\ttfamily,%
   keywordstyle=\bfseries,%
+  keywordsprefix=polycv,%
   breaklines=true,%
-  morekeywords={part,chapter,subsection,subsubsection,paragraph,subparagraph},%
+  morekeywords={%
+    author, title, position, email, phone, mobile, github, orcid, address, location, street,
+    insertauthor, inserttitle, insertposition, insertemail, insertphone, insertmobile, 
+    insertgithub, insertorcid, insertaddress, insertlocation, insertstreet,
+    signaturefile, insertsigfilename, orcidiconfilename,
+    cvline, cvitemline, cventry, cvskill, cvlanguage, cvlineaddress, cvlineemail, 
+    cvlinemobile, cvlinephone, cvlineorcid, cvlinegithub,
+    progressbar, levelbarsquares, levelbarcircles,
+    setmargins, setheaderheight, setfooterheight, seticonspace, sethintcolwidth,
+    sethintcolsep, setcolprimary, setcolsecondary, setcolhighlight, setcolshade,
+    setprogbarheight, setprogbarunits, setheaderfont, setentryragged, setentryjustified,
+    setsigleft, setsigright,
+    opening, closing, ps,
+    pdfappendix,
+    section, subsection,
+    includegraphics, faTerminal, faStar
+  },%
   escapeinside={(*@}{@*)}%
 }
 \lstset{style=mytex}
@@ -105,18 +122,28 @@
 %
 % \GetFileInfo{polycv.dtx}
 %
-% \DoNotIndex{\newcommand,\newenvironment,\def,\edef,\let}
-% \DoNotIndex{\AfterPreamble, \AtEndPreamble}
-% \DoNotIndex{\#,\$,\%,\&,\@,\\,\{,\},\^,\_,\~,\ }
-% \DoNotIndex{\@ne, \@author, \@title}
-% \DoNotIndex{\begin,\end,\bgroup,\egroup,\begingroup,\endgroup,\advance}
-% \DoNotIndex{\catcode,\closein,\closeout,\if,\else,\fi,\empty,\detokenize}
-% \DoNotIndex{\baselineskip,\linewidth,\color,\colorlet,\hfill,\href,\hspace,\loop}
-% \DoNotIndex{\bfseries,\flushright,\small,\footnotesize,\Huge,\Large,\largei,\normalsize}
-% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo,\LoadClass}
+% \DoNotIndex{\providecommand,\newcommand,\renewcommand,\newenvironment,\def,\edef,\let,\par}
+% \DoNotIndex{\AfterPreamble, \AtEndPreamble, \ProcessKeyvalOptions, \SetupKeyvalOptions}
+% \DoNotIndex{\IfFileExists,}
+% \DoNotIndex{\#,\$,\%,\&,\@,\\,\{,\},\^,\_,\~,\ ,\newline,\noindent,\strut}
+% \DoNotIndex{\@ne, \@author, \@title, \today}
+% \DoNotIndex{\begin,\end,\bgroup,\egroup,\begingroup,\endgroup,\newcount,\advance}
+% \DoNotIndex{\catcode,\closein,\closeout,\if,\ifnum,\else,\fi,\empty,\detokenize}
+% \DoNotIndex{\baselineskip,\linewidth,\color,\colorlet,\hfill,\href,\hspace,\vspace,%
+%   \loop,\repeat,\relax,\rule}
+% \DoNotIndex{\ignorespaces,\makebox,\newlength,\setlength,\parbox,\parindent,%
+%   \raisebox,\resizebox}
+% \DoNotIndex{\number,\numexpr}
+% \DoNotIndex{\includegraphics,\includepdf,\pagecolor,\nopagecolor,\pagestyle,\overfullrule}
+% \DoNotIndex{\geometry,\newgeometry,\restoregeometry,\paperwidth}
+% \DoNotIndex{\bfseries,\sffamily,\raggedright,\raggedleft,\flushright,\centering,%
+%   \small,\footnotesize,\Huge,\Large,\large,\normalsize,\textbf,\textit}
+% \DoNotIndex{\ClassError,\ClassWarning,\ClassInfo,\LoadClass,\PassOptionsToClass,%
+%   \PassOptionsToPackage,\requirePackage}
 % \DoNotIndex{\CurrentOptionKey,\DeclareBoolOption,\DeclareComplementaryOption,%
 %   \DeclareDefaultOption,\DeclareFieldFormat,\DeclareStringOption,\DeclareVoidOption}
 % \DoNotIndex{\draw,\filldraw,\node}
+% \DoNotIndex{\biblabelsep}
 %
 % \title{The \pkg{polycv} class}
 % \author{Martin C Schwarzer\\\href{mailto:polyluxus@gmail.com}{polyluxus@gmail.com}}
@@ -251,7 +278,7 @@
     \closing{Sincerely,}
     \ps{more text}
   \end{polycvletter}
-  \polycvappendix{(*@\myarg{filename}@*)}
+  \pdfappendix{(*@\myarg{filename}@*)}
 \end{document}
 \end{lstlisting}
 % \iffalse
@@ -273,12 +300,13 @@
 % 
 % \DescribeOption{margins}
 % \DescribeDefault{1.0 cm}
-% The length of \lstinline`margin` is the baselength of most surrounding space. 
+% The length of \lstinline`margins` is the baselength of most surrounding space,
+% it defines and sets the length \lstinline`\polycvmargins`. 
 % It is used additionally to the header and footer lengths.
 % This setting also controls the space between the side bar and the main body on the 
 % first page of the CV environment.
-% \DescribeMacro{\setpolycvmargins} 
-% The command \lstinline`setpolycvmargins`\marg{length} is only available in the preable 
+% \DescribeMacro{\setmargins} 
+% The command \lstinline`setmargins`\marg{length} is only available in the preable 
 % and can be used to set the margin length after loading the class.
 % 
 % \DescribeOption{headerheight}
@@ -290,11 +318,11 @@
 % These lengths affect the whole document and can therfore only be set when loading the
 % class or within the preamble.
 % The will be the same for each of the environments used.
-% \DescribeMacro{\setpolycvheaderheight}
-% \DescribeMacro{\setpolycvfooterheight}
+% \DescribeMacro{\setheaderheight}
+% \DescribeMacro{\setfooterheight}
 % Instead of choosing the key/value option at loadtime, the commands
-% \lstinline`setpolycvheaderheight`\marg{length} and 
-% \lstinline`setpolycvfooterheight`\marg{length} can be issued to manipulate these values.
+% \lstinline`\setheaderheight`\marg{length} and 
+% \lstinline`\setfooterheight`\marg{length} can be issued to manipulate these values.
 %
 % \DescribeOption{sidebarwidth}
 % \DescribeDefault{5.0cm}
@@ -303,16 +331,16 @@
 % The width of this box is controlled with the option \lstinline`sidebarwidth`.
 % This must be defined before the sidebar is attempted to be set.
 % \watchout
-% \DescribeMacro{\setpolycvsidebarwidth}
+% \DescribeMacro{\setsidebarwidth}
 % There is currently no command analogous to the other lengths to set this in the preable,
 % it must be defined via the options.
 % 
 % \DescribeOption{iconspace}
 % \DescribeDefault{0.8cm}
-% Closely related is the option \texttt{iconspace}, which defines the width that is reserved
-% for the icon in a line in the side bar environment.
-% \DescribeMacro{\setpolycviconspace}
-% It can also be set via \cs{setpolycviconspace}\marg{length} in the preamble.
+% Closely related is the option \lstinline`iconspace`, which defines the width that is 
+% reserved for the icon in a line in the side bar environment.
+% \DescribeMacro{\seticonspace}
+% It can also be set via \lstinline`\seticonspace`\marg{length} in the preamble.
 %
 % \DescribeOption{hintcol}
 % \DescribeDefault{2.7cm}
@@ -320,118 +348,132 @@
 % \DescribeDefault{0.2cm}
 % In the main body, each entry will consist of two parts: 
 % First, a small column for a keyword, date, bar, which is called hint in this documentation.
-% The width of this column can be adjusted with the option \texttt{hintcol}.
+% The width of this column can be adjusted with the option \lstinline`hintcol`.
 % Second, a column for the description of this hint. This is just a parbox, and depends on 
 % the  command used. The width will be automaticall calculated from the available space.
 % These two columns are separated by a space.
-% The width of which can be set via the option \texttt{hintcolsep}.
-% \DescribeMacro{\setpolycvhintcolumnwidth}
-% \DescribeMacro{\setpolycvhintcolumnsep}
+% The width of which can be set via the option \lstinline`hintcolsep`.
+% \DescribeMacro{\sethintcolwidth}
+% \DescribeMacro{\sethintcolsep}
 % Alternatively they can be set in the preamble via 
-% \cs{setpolycvhintcolumnwidth}\marg{length} and
-% via \cs{setpolycvhintcolumnsep}\marg{length}, respectively.
+% \lstinline`\sethintcolwidth`\marg{length} and
+% via \lstinline`\sethintcolsep`\marg{length}, respectively.
 %
 % \DescribeOption{letterindent} 
 % \DescribeDefault{1em}
 % In the letter environment the indentation of the first line of a paragraph can be adjusted
-% with the \texttt{letterindent} option.
-% This is another length that can (currently) only be controlled with passing the option to the class.
+% with the \lstinline`letterindent` option.
+% This is another length that can (currently) only be controlled with passing the option 
+% to the class.
 % 
 % \subsubsection{Colors}
 % \DescribeOption{xcolor}\DescribeDefault{dvipsnames}
-% The class loads the \texttt{xcolor} package and passes by default the option \texttt{dvipsnames} to it.
-% This can be changed by using the \texttt{xcolor} option to pass other parameters to this package.
-% It is loaded internally before the \texttt{tikz} package to avoid option conflicts.
+% The class loads the \lstinline`xcolor` package and passes by default the 
+% option \lstinline`dvipsnames` to it.
+% This can be changed by using the \lstinline`xcolor` option to pass other parameters 
+% to this package.
+% It is loaded internally before the \lstinline`tikz` package to avoid option conflicts.
 % 
 % \DescribeOption{primary}\DescribeDefault{blue}
-% The main colour of the CV is called \texttt{primary} and can be set via this option.
-% It is used for all parts that will be highlighted, such as the header bar and the section headings.
+% The main colour of the CV is called \lstinline`primary` and can be set via this option.
+% It is used for all parts that will be highlighted, such as the header bar and the 
+% section headings.
 % \DescribeOption{shade} \DescribeDefault{black}
 % \DescribeOption{mixing} \DescribeDefault{10}
-% The textcolor is a composit color from the primary color and the \texttt{shade} color. 
+% The textcolor is a composit color from the primary color and the \lstinline`shade` color. 
 % By default this is defined as black, so the text will appear darker.
-% The amount of primary color mixed in depends on the a factor which can be set via the \texttt{mixing} option.
+% The amount of primary color mixed in depends on the a factor which can be set via 
+% the \lstinline`mixing` option.
 % 
 % \DescribeOption{secondary} \DescribeDefault{white}
-% The \texttt{secondary} color specifies the background color and is white by default.
+% The \lstinline`secondary` color specifies the background color and is white by default.
 %
 % \margintag{unused}
 % \DescribeOption{highlight} \DescribeDefault{orange} 
 % One last color is defined to highlight items. 
-% It can be set via the \texttt{highlight} option.
+% It can be set via the \lstinline`highlight` option.
 % This option currently has little effect as the color itself is not used within the template.
 % 
-% \DescribeMacro{\setpolycvprimary}
-% \DescribeMacro{\setpolycvsecondary}
-% \DescribeMacro{\setpolycvhighlight}
-% \DescribeMacro{\setpolycvshade}
-% To allow for custom colors to be specified, all colors ca also be specified via 
-% \cs{setpolycv...}\marg{color} commands.
-% Note that the mixing parameter must be set via the options and jhas no special macro.
+% \DescribeMacro{\setcolprimary}
+% \DescribeMacro{\setcolsecondary}
+% \DescribeMacro{\setcolhighlight}
+% \DescribeMacro{\setcolshade}
+% To allow for custom colors to be used, all colors ca also be set with the 
+% \lstinline`\setcol<...>`\marg{color} commands.
+% Note that the mixing parameter must be set via the options and has no special macro.
 %
 % \subsubsection{Progress and Level Bar Options}
 % 
-% \DescribeOption{progressbarheight}
+% \DescribeOption{progbarheight}
 % \DescribeDefault{1.5 ex}
 % Skills can be displayd as an CV entry and accompanied with a progress bar or a
 % level (bar) indicator. The width of this bar is by default either determined by the
 % environment in which it is used, or the width of the hint column.
-% The height of the bar can be controlled with the \texttt{progressbarheight} option.
-% \DescribeMacro{\setpolycvprogressbarheight}
-% It can also be set via \lstinline`\setpolycvprogressbarheight`\marg{length}.
-% \DescribeOption{progressbarunits}
+% The height of the bar can be controlled with the \lstinline`progbarheight` option.
+% \DescribeMacro{\setprogbarheight}
+% It can also be set via \lstinline`\setprogbarheight`\marg{length}.
+% \DescribeOption{progbarunits}
 % \DescribeDefault{5}
 % The level bar is devided into boxes or cicles. The number of these items can be set
-% via \texttt{progressbarunits} and defaults to five.
+% via \lstinline`progbarunits` and defaults to five.
+% \DescribeMacro{\setprogbarunits}
+% It can also be set via \lstinline`\setprogbarunits`\marg{number}.
 % 
 % \subsubsection{Miscellaneous Options}
 % \DescribeOption{draft, final}
-% The class also extends the \texttt{draft} option of the standard article class.
-% The otherwise invisible boxes, e.g. for the side bar, will be lightly shaded, so that they are visible.
-% The complementary option is \texttt{final}. 
-% Note that if the final option is found, the draft option will have no effect and will be ignored.
+% The class also extends the \lstinline`draft` option of the standard article class.
+% The otherwise invisible boxes, e.g. for the side bar, will be lightly shaded, 
+% so that they are visible.
+% The complementary option is \lstinline`final`. 
+% Note that if the final option is found, the draft option will have no effect and 
+% will be ignored.
 % 
 % \DescribeOption{biblatex} 
-% The \texttt{biblatex} option will inject some code into a bibliography environemnt, so that the alingment
-% of the hint column will be better. It is turned off by default.
-% If the biblatex package is not loaded (this class will not take care of this), it might lead to problems.
+% The \lstinline`biblatex` option will inject some code into a bibliography environemnt, 
+% so that the alingment of the hint column will be better. It is turned off by default.
+% If the biblatex package is not loaded (this class will not take care of this), 
+% it might lead to problems.
 % 
 % \DescribeOption{signcv} 
 % In some countries it is customary to sign the CV.
-% The option \texttt{signcv} can be used to enable this behavior.
-% If it is enabled, a box with a signature will be placed in the lower left corner of the first page,
-% below the sidebar contents. The box width is also controlled with the sidebar width option.
+% The option \lstinline`signcv` can be used to enable this behavior.
+% If it is enabled, a box with a signature will be placed in the lower left corner of the 
+% first page, below the sidebar contents.
+% The box width is also controlled with the sidebar width option.
 % An image with the signature is necessary (see below).
 %
 % \subsubsection{Void Article Options}
 % \DescribeOption{twocolumn}
 % \watchout
-% Since every page has a specific layout passing the \texttt{twocolumn} option to the inherited
-% article class will lead to problems. Therefore it has been disabled. 
+% Since every page has a specific layout passing the \lstinline`twocolumn` option to the 
+% inherited article class will lead to problems. Therefore it has been disabled. 
 %
 % \DescribeOption{titlepage}
 %\watchout
-% For the same reason as above, creating a title page doesn't make sense and will clash with other
-% settings of this class. Therefore the \texttt{titlepage} option has also been disabled.
+% For the same reason as above, creating a title page doesn't make sense and will clash 
+% with other settings of this class. 
+% Therefore the \lstinline`titlepage` option has also been disabled.
 % 
 % \section{Changing Fonts and Text Alignment}
-% \DescribeMacro{\setpolycvheaderfont} \DescribeDefault{\mybackslash{}sffamily\mybackslash{}bfseries}
+% \DescribeMacro{\setheaderfont}
+% \DescribeDefault{\mybackslash{}sffamily\mybackslash{}bfseries}
 % By default the font used for the header is made bold and serifs are turned off.
-% In order to change that layout, the command \lstinline`\setpolycvheaderfont`\marg{font specification}
-% can be used. this command should be used in the preamble.
+% In order to change that layout, the command 
+% \lstinline`\setheaderfont`\marg{font specification}
+% can be used. This command should be used in the preamble.
 %
-% \DescribeMacro{\setpolycventryraggedright}
-% \DescribeMacro{\setpolycventryjustify}
+% \DescribeMacro{\setentryragged}
+% \DescribeMacro{\setentryjustified}
 % The default layout of an entry in the CV is justified. 
-% This can be changed with \lstinline`\setpolycventryraggedright` to flush the contents to the left
-% and leave the right side ragged. 
-% For symmetry the command \lstinline`\setpolycventryjustify` can be used.
-% Both commands will set the internal variable used in the templates at the end of the preamble,
-% so they can only be used there.
+% This can be changed with \lstinline`\setentryragged` to flush the contents to the left
+% and leave the right side ragged (\lstinline`\raggedright`). 
+% For symmetry the command \lstinline`\setentryjustified` can be used to unset the aabove.
+% Both commands will set the internal variable used in the templates at the end of the 
+% preamble, so they can only be used there.
 %
-% \DescribeMacro{\setpolycvsignatureright}
-% \DescribeMacro{\setpolycvsignatureleft}
-% The commands \lstinline`\setpolycvsignatureright` and \lstinline`\setpolycvsignatureleft` determine
+% \DescribeMacro{\setsigright}
+% \DescribeMacro{\setsigleft}
+% The commands \lstinline`\setsigright` and \lstinline`\setsigleft` determine
 % whether the name below a signature field is right or left aligned.
 % This does not affect where the field itself is placed.
 % These commands can also only be used in the preamble.
@@ -440,38 +482,38 @@
 % Personal information can be stored in variables so that they become accessible to the defined templates. 
 %
 % \DescribeMacro{\author}
-% \DescribeMacro{\polycvauthor}
+% \DescribeMacro{\insertauthor}
 % The \lstinline`\author`\marg{author name} command remains unchanged and cannot be used outside of the preamble.
-% The contents of that field is copied to the \lstinline`\polycvauthor` variable and is accessible 
+% The contents of that field is copied to the \lstinline`\insertauthor` variable and is accessible 
 % throughout the document that way.
 %
 % \DescribeMacro{\title}
-% \DescribeMacro{\polycvtitle}
+% \DescribeMacro{\inserttitle}
 % Similarly to the above, the \lstinline`\title`\marg{title} remains unchanged, with the same limitations applied.
-% The contents can be accessed with the \lstinline`\polycvtitle` command.
+% The contents can be accessed with the \lstinline`\inserttitle` command.
 % There is currently no template using this command, but it is recommended to set it to somethin like
 % \emph{Curriculum Vitae} for the \PDF{} fields that might use it.
 %
 % \DescribeMacro{\position}
-% \DescribeMacro{\polycvposition}
+% \DescribeMacro{\insertposition}
 % The \lstinline`\position`\marg{position} macro is defined in a similar way to the above commands.
-% The \lstinline`\polycvposition` macro can be used to access the content. 
+% The \lstinline`\insertposition` macro can be used to access the content. 
 % It is used in the header box and can be set to contain, as the name suggest, the title of the current position.
 % A common usage might also be a one line description of one's profession.
 %
 % \DescribeMacro{\address}
-% \DescribeMacro{\polycvaddress}
+% \DescribeMacro{\insertaddress}
 % The address can either be specified by the direct invocation of \lstinline`\address`\marg{address} and
-% is accessible via the \lstinline`\polycvaddress` macro.
+% is accessible via the \lstinline`\insertaddress` macro.
 % It is used in the address template (see sectin~\ref{sec:templates-special}), 
 % as well as the header of the letter (see section~\ref{sec:letter-env}).
 % \DescribeMacro{\street}
 % \DescribeMacro{\location}
 % Alternatively it the macros \lstinline`\street`\marg{street} and \lstinline`\location`\marg{location} can be used
-% to set the values separately. The \lstinline`\polycvaddress` will then be contructed from these two values.
-% \DescribeMacro{\polycvstreet}
-% \DescribeMacro{\polycvlocation}
-% If set, they can be printed with the corresponding \lstinline`\polycvstreet` and \lstinline`\polycvlocation` macros.
+% to set the values separately. The \lstinline`\insertaddress` will then be contructed from these two values.
+% \DescribeMacro{\insertstreet}
+% \DescribeMacro{\insertlocation}
+% If set, they can be printed with the corresponding \lstinline`\insertstreet` and \lstinline`\insertlocation` macros.
 % \watchout
 % If the address is set directly the other values remain unchanged. 
 % It is therefore also possible to extend the functionality in the follwoing way:
@@ -481,40 +523,40 @@
 \begin{lstlisting}
 \street{123, Example Road}
 \location{New Town}
-\address{The Old Shack\\\polycvstreet\\\polcvlocation}
+\address{The Old Shack\\\insertstreet\\\insertlocation}
 \end{lstlisting}
 % \iffalse
 %</example>
 % \fi
 %
 % \DescribeMacro{\email}
-% \DescribeMacro{\polycvemail}
+% \DescribeMacro{\insertemail}
 % The command \lstinline`\email`\marg{email} will wrap the input in a hyperlink, which can
-% be accessed through the \lstinline`\polycvemail` command.
+% be accessed through the \lstinline`\insertemail` command.
 %
 % \DescribeMacro{\phone}
 % \DescribeMacro{\mobile}
-% \DescribeMacro{\polycvphone}
-% \DescribeMacro{\polycvmobile}
+% \DescribeMacro{\insertphone}
+% \DescribeMacro{\insertmobile}
 % Telephone numbers can be stored with \lstinline`\phone`\marg{number} and \lstinline`\mobile`\marg{number}
-% and accessed with the adjacent commands \lstinline`\polycvphone` and \lstinline`\polycvmobile`.
+% and accessed with the adjacent commands \lstinline`\insertphone` and \lstinline`\insertmobile`.
 % Currently the template only provides templates for these two telephone numbers.
 %
 % \DescribeMacro{\github}
-% \DescribeMacro{\polycvgithub}
+% \DescribeMacro{\insertgithub}
 % The macro \lstinline`\github`\marg{username} provides a convenient way to display the GitHub username,
 % while also wrapping it into a hyperlink to the associated profile.
 %
 % \DescribeMacro{\orcid}
-% \DescribeMacro{\polycvorcid}
+% \DescribeMacro{\insertorcid}
 % Likewise for an ORCID account, the \lstinline`\orcid`\marg{ID number} will wrap the displayed ID 
 % into a hyperlink to the respective profile.
 %
-% \DescribeMacro{\signatureimage}
-% \DescribeMacro{\polycvsignatureimage}
+% \DescribeMacro{\signaturefile}
+% \DescribeMacro{\insertsigfilename}
 % In order to sign the CV and the cover letter, a file name must be provided with the macro
-% \lstinline`\signatureimage`\marg{filename}. 
-% This file name is stored in \lstinline`\polycvsignatureimage` and is passed to the command 
+% \lstinline`\signaturefile`\marg{filename}. 
+% This file name is stored in \lstinline`\insertsigfilename` and is passed to the command 
 % \lstinline`includegraphics` in the corresponding templates.
 % \watchout
 % For the cover letter it is necessary to set this filename, otherwise it will (currently) lead to an error.
@@ -535,14 +577,14 @@
 % the same amount of space.
 % Both commands will use the primary color and the predefined header fonts.
 %
-% \DescribeMacro{\polycvline}
-% The \lstinline`\polycvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry line in the CV
+% \DescribeMacro{\cvline}
+% The \lstinline`\cvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry line in the CV
 % into two parts: a hint column with the reset hint, which can also be set with the optional argument,
 % and a description box spanning the remaining width of the line.
 % It can be used to set any type of centent as a line in the CV.
 %
-% \DescribeMacro{\polycvitemline}
-% The \lstinline`\polycvitemline`\oarg{width}\marg{icon}\marg{description} is similarly constructed as 
+% \DescribeMacro{\cvitemline}
+% The \lstinline`\cvitemline`\oarg{width}\marg{icon}\marg{description} is similarly constructed as 
 % the above command.
 % The general difference is that the hint coulmn is replaced with an icon column.
 % If the optional \myarg{length} parameter is not given, it falls back to the definition from the preamle.
@@ -550,18 +592,18 @@
 % This command is primarily intended for the sidebar, but it could be used somewhere else.
 % It is also used for the specialised templates (see section~\ref{sec:templates-special}).
 %
-% \DescribeMacro{\polycvprogressbar}
-% The \lstinline`\polycvprogressbar`\oarg{width}\marg{level fraction} typesets a progress bar.
+% \DescribeMacro{\progressbar}
+% The \lstinline`\progressbar`\oarg{width}\marg{level fraction} typesets a progress bar.
 % The height of this bar is defined via the class options or in the preamble.
 % The width of the bar can be set via the optional parameter \myarg{length}, however,
 % in most use cases it will be automatically calculated depending on where it is used.
 % The mandatory argument \myarg{level fraction} should be a number between 0 and 1.
 % There are some special templates, which use this command (see section~\ref{sec:templates-special}).
 %
-% \DescribeMacro{\polycvlevelssquared}
-% \DescribeMacro{\polycvlevelscircled}
-% The macros \lstinline`\polycvlevelssquared`\oarg{width}\marg{level} and 
-% \lstinline`\polycvlevelscircled`\oarg{width} \marg{level} are also progress indicators, 
+% \DescribeMacro{\levelbarsquares}
+% \DescribeMacro{\levelbarcircles}
+% The macros \lstinline`\levelbarsquares`\oarg{width}\marg{level} and 
+% \lstinline`\levelbarcircles`\oarg{width} \marg{level} are also progress indicators, 
 % which use squares or circles, respectively.
 % The number of items is set via the class options or in the preamble.
 % The mandatory argument \myarg{level} should be a number within 0 and the set limit.
@@ -572,11 +614,11 @@
 % \label{sec:templates-special}
 %
 %
-% \DescribeMacro{\polycventry}
-% The \lstinline`\polycventry` macro is a more specialised template of the \lstinline`\polycvline` macro.
+% \DescribeMacro{\cventry}
+% The \lstinline`\cventry` macro is a more specialised template of the \lstinline`\cvline` macro.
 % It requires six mandatory arguments, which of course can be empty. 
 % It is intended to be used in the following form:\\
-% \lstinline`\polycventry`\oarg{width}\marg{when}\marg{what}\marg{who}\marg{where}\marg{opt.}\marg{descr.}.\\
+% \lstinline`\cventry`\oarg{width}\marg{when}\marg{what}\marg{who}\marg{where}\marg{opt.}\marg{descr.}.\\
 % The entry spans the whole available width, the optional \myarg{width} controls the hint column.
 % The first argument \myarg{when} contains the hint, which can be a date for example.
 % The second argument \myarg{what} will be set in bold font and usually contains the title of the position,
@@ -591,8 +633,8 @@
 % If it contains text, it will be set on a new line and can be used as a more detailed description of the entry.
 % The font size is reduced to small for this paragraph.
 %
-% \DescribeMacro{\polycvskill}
-% The \lstinline`\polycvskill`\marg{description}\marg{level} is a template using \lstinline`\polycvline`, 
+% \DescribeMacro{\cvskill}
+% The \lstinline`\cvskill`\marg{description}\marg{level} is a template using \lstinline`\cvline`, 
 % defining a progress bar to \myarg{level} and a \myarg{description}.
 % If it is used in the main document part, the progress bar will be set into the hint column, and will 
 % take half of its width and is flushed to the right.
@@ -600,26 +642,26 @@
 % If it is used in the side bar, the description will start the line, followed by the progress bar.
 % The progress bar will then use a third of the whole line, and the description the rest exclluding son separator space.
 %
-% \DescribeMacro{\polycvlanguage}
-% The \lstinline`\polycvlanguage`\marg{language}\marg{level} is a wrapper to the above command.
+% \DescribeMacro{\cvlanguage}
+% The \lstinline`\cvlanguage`\marg{language}\marg{level} is a wrapper to the above command.
 % This was introduced, to allow for the possibility of customisation.
 % For example, it could be redefined to use a different indicator. \watchout[numeric format]
 % \iffalse
 %<*example>
 % \fi
 \begin{lstlisting}
-\renewcommand\polycvlanguage[2]{%
-    \polycvline{\polycvlevelssquared{#2}}{#1}}
+\renewcommand\cvlanguage[2]{%
+    \cvline{\levelbarsquares{#2}}{#1}}
 \end{lstlisting}
 % \iffalse
 %</example>
 % \fi
 %
-% \DescribeMacro{\polycvlineaddress}
-% \DescribeMacro{\polycvlineemail}
-% \DescribeMacro{\polycvlinephone}
-% \DescribeMacro{\polycvlinemobile}
-% The  special versions of the \lstinline`\polycvitemline` macro have a preset icon to it.
+% \DescribeMacro{\cvlineaddress}
+% \DescribeMacro{\cvlineemail}
+% \DescribeMacro{\cvlinephone}
+% \DescribeMacro{\cvlinemobile}
+% The  special versions of the \lstinline`\cvitemline` macro have a preset icon to it.
 % The address (\faMapMarker), email (\faEnvelope), phone (\faPhone), and mobile (\faMobile) templates
 % are predefined. 
 % These macros are primarily intended for the side bar environment.
@@ -629,21 +671,21 @@
 %<*example>
 % \fi
 \begin{lstlisting}
-\polycvitemline{\faTerminal}{bash, zsh, fish}
+\cvitemline{\faTerminal}{bash, zsh, fish}
 \end{lstlisting}
 % \iffalse
 %</example>
 % \fi
 %
-% \DescribeMacro{\polycvorcidicon}
+% \DescribeMacro{\orcidiconfilename}
 % Since there is no \LaTeX{} package available that includes an Orcid icon, 
 % it must be provided with an external file. 
-% The command \lstinline`\polycvorcidicon` will look for a file with the name \lstinline`orcidicon.pdf`
+% The command \lstinline`\orcidiconfilename` will look for a file with the name \lstinline`orcidicon.pdf`
 % and include this as a graphic. 
 % If such a file is not found, it will use a palceholder icon made of the letters.
 %
-% \DescribeMacro{\polycvlineorcid}
-% \DescribeMacro{\polycvlinegithub}
+% \DescribeMacro{\cvlineorcid}
+% \DescribeMacro{\cvlinegithub}
 % The orcid and GitHub macros will use their respective icons, similar to the above.
 % The contents of the variables defined in the preamble will go into the description column.
 %
@@ -673,23 +715,23 @@
   \includegraphics[width=1.0\linewidth]{example-image-1x1}\\[2ex]
   
   \section{Personal Details}
-  \polycvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
-  \polycvlineaddress
-  \polycvlineemail
+  \cvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
+  \cvlineaddress
+  \cvlineemail
   
   \section{Languages}
-  \polycvlanguage{English (native)}{1}
+  \cvlanguage{English (native)}{1}
   
   % etc.
   \end{polycvsidebar}%
   \section{Experience}
-  \polycventry{years}
+  \cventry{years}
     {jobtitle}{employer}{place}
     {optional: ...}
     {optional: job description}
 
   \section{Skills}
-  \polycvskill{\LaTeX}{0.8}
+  \cvskill{\LaTeX}{0.8}
   
   % etc.
 \end{polycvfirstpage}
@@ -713,7 +755,7 @@
 \begin{lstlisting}
 \begin{polycvpage}
   \section{Education}
-  \polycventry{years}
+  \cventry{years}
     {degree}{institution}{place}
     {optional: grade/...}
     {optional: comment/ description}
@@ -750,7 +792,7 @@
 % \fi
 %
 % At the end of the environment the signature, a file name provided in the preample
-% with \lstinline`\signatureimage{<image>}`, along with the author name will be set..
+% with \lstinline`\signaturefile{<image file>}`, along with the author name will be set.
 %
 % \DescribeMacro{\opening}
 % \DescribeMacro{\closing}
@@ -780,7 +822,7 @@
 \usepackage{mwe} % for this example
 \title{Curriculum Vitae}
 \author{Example Author}
-\signatureimage{example-image-16x9}
+\signaturefile{example-image-16x9}
 
 \begin{document}
 \begin{polycvletter}
@@ -802,16 +844,20 @@
 %
 % \subsection{Including external \PDF{} as Appendix}
 %
-% \DescribeMacro{\polycvappendix} \DescribeDefault{pages=\{1-\}}
+% \DescribeMacro{\pdfappendix} \DescribeDefault{pages=\{1-\}}
 % It is occasionally necessary to include certificates, letters of recommendation, 
 % or other external sources into an application. 
-% This class provides a wrapper to the \cs{includepdf} command from \lstinline`pdfpages`.
-% The difference to the original command is that before including the document, 
-% the wrapper unsets the page color. This is necesssaary, (even if it is defined as white.
+% This class provides a wrapper to the \lstinline`\includepdf` command from 
+% \lstinline`pdfpages`.
+% The difference to the original command (which still could be used) is that before 
+% including the document, the wrapper unsets the page color. 
+% This is necesssaary, even if it is defined as white, due to the way the page color 
+% is implemented.
 % You can include pages from a \PDF{} document to use it as appendix with the command
-% \cs{polycvappendix}\oarg{kwargs}\marg{filename}, where the optional argument accepts
+% \lstinline`\pdfappendix`\oarg{kwargs}\marg{filename}, where the optional argument accepts
 % arguments like \lstinline`pages=1-3` or \lstinline`angle=90`.
-% See the \href{https://ctan.org/pkg/pdfpages}{Documentation of the \lstinline`pdfpages` package}.
+% See the \href{https://ctan.org/pkg/pdfpages}{%
+%   Documentation of the \lstinline`pdfpages` package}.
 %
 % \StopEventually{}
 %
@@ -845,14 +891,14 @@
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
 \DeclareStringOption[0.8cm]{iconspace}
-\DeclareStringOption[1.5ex]{progressbarheight}
+\DeclareStringOption[1.5ex]{progbarheight}
 %    \end{macrocode}
 %
 % The progressbar, which contains of individual items, can be customised to include a certain
 % number of elements. Define the option for this number and set it to five as default.
 %
 %    \begin{macrocode}
-\DeclareStringOption[5]{progressbarunits}
+\DeclareStringOption[5]{progbarunits}
 %    \end{macrocode}
 %
 % Define the options for the colors which should be used throughout the document.
@@ -977,34 +1023,34 @@
 %
 % Apart from the switches as options, define some commands that can be used to set the colors for the document.
 %
-% \begin{macro}{\setpolycvprimary}
+% \begin{macro}{\setcolprimary}
 % The primary color used for headers.
 %    \begin{macrocode}
-\newcommand*{\setpolycvprimary}[1]{%
+\newcommand*{\setcolprimary}[1]{%
   \renewcommand*{\polycv@primary}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvsecondary}
+% \begin{macro}{\setcolsecondary}
 % The secondary color is the background color, i.e. the page color.
 %    \begin{macrocode}
-\newcommand*{\setpolycvsecondary}[1]%
+\newcommand*{\setcolsecondary}[1]%
   {\renewcommand*{\polycv@secondary}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvhighlight}
+% \begin{macro}{\setcolhighlight}
 % If text should be highlighted another color can be set.
 %    \begin{macrocode}
-\newcommand*{\setpolycvhighlight}[1]%
+\newcommand*{\setcolhighlight}[1]%
   {\renewcommand*{\polycv@highlight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvshade}
+% \begin{macro}{\setcolshade}
 % The color which is used for shading (damping) the primary color.
 %    \begin{macrocode}
-\newcommand*{\setpolycvshade}[1]%
+\newcommand*{\setcolshade}[1]%
   {\renewcommand*{\polycv@shade}{#1}}
 %    \end{macrocode}
 % \end{macro}
@@ -1014,10 +1060,10 @@
 % Then set the text color and the color for the page for the entire document.
 %
 %    \begin{macrocode}
-\@onlypreamble\setpolycvprimary
-\@onlypreamble\setpolycvsecondary
-\@onlypreamble\setpolycvhighlight
-\@onlypreamble\setpolycvshade
+\@onlypreamble\setcolprimary
+\@onlypreamble\setcolsecondary
+\@onlypreamble\setcolhighlight
+\@onlypreamble\setcolshade
 \AtEndPreamble{%
   \colorlet{polycvpagecolor}{\polycv@secondary}
   \colorlet{polycvheaderbackground}{\polycv@primary}
@@ -1088,79 +1134,79 @@
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
-\newlength{\polycvprogressbarheight}
-\setlength{\polycvprogressbarheight}{\polycv@progressbarheight}
+\newlength{\polycvprogbarheight}
+\setlength{\polycvprogbarheight}{\polycv@progbarheight}
 \newlength{\polycvletterindent}
 \setlength{\polycvletterindent}{\polycv@letterindent}
 %    \end{macrocode}
 %
 % The lengths can also be altered with the following commands.
-% \begin{macro}{\setpolycvheaderheight}
+% \begin{macro}{\setheaderheight}
 % Define the hight for the header box.
 %    \begin{macrocode}
-\newcommand*{\setpolycvheaderheight}[1]{%
+\newcommand*{\setheaderheight}[1]{%
   \setlength{\polycvheaderheight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvfooterheight}
+% \begin{macro}{\setfooterheight}
 % Define the height for the footer box.
 %    \begin{macrocode}
-\newcommand*{\setpolycvfooterheight}[1]{%
+\newcommand*{\setfooterheight}[1]{%
   \setlength{\polycvfooterheight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvmargins}
+% \begin{macro}{\setmargins}
 % Define the width of the margins.
 %    \begin{macrocode}
-\newcommand*{\setpolycvmargins}[1]{%
+\newcommand*{\setmargins}[1]{%
   \setlength{\polycvmargins}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvhintcolumnwidth}
+% \begin{macro}{\sethintcolwidth}
 % Define the hint column width (where dates and level, etc. are set).
 %    \begin{macrocode}
-\newcommand*{\setpolycvhintcolumnwidth}[1]{%
+\newcommand*{\sethintcolwidth}[1]{%
   \setlength{\polycvhintcol}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvhintcolumnsep}
+% \begin{macro}{\sethintcolsep}
 % Define the space between the hint column and the description column.
 %    \begin{macrocode}
-\newcommand*{\setpolycvhintcolumnsep}[1]{%
+\newcommand*{\sethintcolsep}[1]{%
   \setlength{\polycvhintcolsep}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycviconspace}
+% \begin{macro}{\seticonspace}
 % Define the space reserved for the items in the sidebar box.
 %    \begin{macrocode}
-\newcommand*{\setpolycviconspace}[1]{%
+\newcommand*{\seticonspace}[1]{%
   \setlength{\polycviconspace}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\setpolycvprogressbarheight}
+% \begin{macro}{\setprogbarheight}
 % Define the standard height of the progress bar. This will also apply to the levels bar.
 %    \begin{macrocode}
-\newcommand*{\setpolycvprogressbarheight}[1]{%
-  \setlength{\polycvprogressbarheight}{#1}}
+\newcommand*{\setprogbarheight}[1]{%
+  \setlength{\polycvprogbarheight}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
 % These commands need to be disabled for the body, 
 % so that automatically derived lengths will still be useable.
 %    \begin{macrocode}
-\@onlypreamble\setpolycvheaderheight
-\@onlypreamble\setpolycvfooterheight
-\@onlypreamble\setpolycvmargins
-\@onlypreamble\setpolycvhintcolumnwidth
-\@onlypreamble\setpolycvhintcolumnsep
-\@onlypreamble\setpolycviconspace
-\@onlypreamble\setpolycvprogressbarheight
+\@onlypreamble\setheaderheight
+\@onlypreamble\setfooterheight
+\@onlypreamble\setmargins
+\@onlypreamble\sethintcolwidth
+\@onlypreamble\sethintcolsep
+\@onlypreamble\seticonspace
+\@onlypreamble\setprogbarheight
 %    \end{macrocode}
 % 
 % Additional lengths, which are derived from the above,
@@ -1183,52 +1229,52 @@
 % \subsubsection{Fonts and Styles}
 %
 % \begin{macro}{\polycv@headerfont}
-% \begin{macro}{\setpolycvheaderfont}
+% \begin{macro}{\setheaderfont}
 % Define the font family for the header and make it bold (by default) and store
 % it in a variable. Provide access to this cariable via a set command.
 %    \begin{macrocode}
 \providecommand\polycv@headerfont{}
 \renewcommand{\polycv@headerfont}{\sffamily\bfseries}
-\providecommand\setpolycvheaderfont{}
-\renewcommand*{\setpolycvheaderfont}[1]{%
+\providecommand\setheaderfont{}
+\renewcommand*{\setheaderfont}[1]{%
   \renewcommand*{\polycv@headerfont}{#1}}
-\@onlypreamble\setpolycvheaderfont
+\@onlypreamble\setheaderfont
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 %
 % \begin{macro}{\polycv@entry@ragged}
-% \begin{macro}{\setpolycventryraggedright}
-% \begin{macro}{\setpolycventryjustify}
+% \begin{macro}{\setentryragged}
+% \begin{macro}{\setentryjustified}
 % Provide a variable to store how the output is set, i.e. the standard raggedness.
 % Provide commands to change the raggedness of the output. 
 % These need to be set in the preamble, so they are disabled for the body.
 %    \begin{macrocode}
 \providecommand\polycv@entry@ragged{}
-\newcommand*{\setpolycventryraggedright}{%
+\newcommand*{\setentryragged}{%
   \renewcommand{\polycv@entry@ragged}{\raggedright}}
-\newcommand*{\setpolycventryjustify}{%
+\newcommand*{\setentryjustified}{%
   \renewcommand{\polycv@entry@ragged}{}}
-\@onlypreamble\setpolycventryraggedright
-\@onlypreamble\setpolycventryjustify
+\@onlypreamble\setentryragged
+\@onlypreamble\setentryjustified
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycv@signature@alignment}
-% \begin{macro}{\setpolycvsignatureright}
-% \begin{macro}{\setpolycvsignatureleft}
+% \begin{macro}{\polycv@sig@align}
+% \begin{macro}{\setsigright}
+% \begin{macro}{\setsigleft}
 % Define the alignment for the signature, which is stored in a variable.
 %  Provide commands to change it, and disable them for the body.
 %    \begin{macrocode}
-\providecommand\polycv@signature@alignment{right}
-\newcommand*{\setpolycvsignatureright}{%
-  \renewcommand{\polycv@signature@alignment}{right}}
-\newcommand*{\setpolycvsignatureleft}{%
-  \renewcommand{\polycv@signature@alignment}{left}}
-\@onlypreamble\setpolycvsignatureright
-\@onlypreamble\setpolycvsignatureright
+\providecommand\polycv@sig@align{right}
+\newcommand*{\setsigright}{%
+  \renewcommand{\polycv@sig@align}{right}}
+\newcommand*{\setsigleft}{%
+  \renewcommand{\polycv@sig@align}{left}}
+\@onlypreamble\setsigright
+\@onlypreamble\setsigleft
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1238,12 +1284,12 @@
 %
 % Define special commands and environment.s
 %
-% \begin{macro}{\setpolycvprogressbarunits}
+% \begin{macro}{\setprogbarunits}
 % Control the number of items for the levels bar.
 %    \begin{macrocode}
-\newcommand*{\setpolycvprogressbarunits}[1]{%
-  \renewcommand*{\polycv@progressbarunits}{#1}}
-\@onlypreamble\setpolycvprogressbarunits
+\newcommand*{\setprogbarunits}[1]{%
+  \renewcommand*{\polycv@progbarunits}{#1}}
+\@onlypreamble\setprogbarunits
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1252,52 +1298,52 @@
 % This section defines the variables, which will store the personal information.
 % These are used in the template lines of the sidebar.
 %
-% \begin{macro}{\polycvauthor}
-% \begin{macro}{\polycvtitle}
+% \begin{macro}{\insertauthor}
+% \begin{macro}{\inserttitle}
 % The author and title commands already exist, so they only need to be stored.
 %    \begin{macrocode}
-\providecommand*\polycvauthor{}
-\renewcommand{\polycvauthor}{\@author}
-\providecommand\polycvtitle{}
-\renewcommand{\polycvtitle}{\@title}
+\providecommand*\insertauthor{}
+\renewcommand{\insertauthor}{\@author}
+\providecommand\inserttitle{}
+\renewcommand{\inserttitle}{\@title}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvposition}
+% \begin{macro}{\insertposition}
 % \begin{macro}{\position}
 % Store the position, which is used as the sub-heading in the title banner.
 % Disable this command because it is needed before the header is set.
 %    \begin{macrocode}
-\providecommand*\polycvposition{}
+\providecommand*\insertposition{}
 \providecommand*\position{}
 \renewcommand{\position}[1]{%
-  \renewcommand{\polycvposition}{#1}}
+  \renewcommand{\insertposition}{#1}}
 \@onlypreamble\position
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvitemline}
+% \begin{macro}{\cvitemline}
 % This defines a generic line consisting of two parboxes.
 % This command is primarily needed for the sidebar, but it could be used somewhere else.
 % The left parbox is used as a hint column and contains an icon,
 % the right the value of a variable.
 %    \begin{macrocode}
-\providecommand\polycvitemline[3][\polycviconspace]{%
+\providecommand\cvitemline[3][\polycviconspace]{%
   \parbox[t]{#1}{\centering#2}%
   \parbox[t]{\linewidth-#1}{#3}\par\vspace{0.3\baselineskip}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycvaddress}
-% \begin{macro}{\polycvstreet}
-% \begin{macro}{\polycvlocation}
+% \begin{macro}{\insertaddress}
+% \begin{macro}{\insertstreet}
+% \begin{macro}{\insertlocation}
 % Variables to store an address.  
 %    \begin{macrocode}
-\providecommand\polycvaddress{}
-\providecommand\polycvstreet{}
-\providecommand\polycvlocation{}
+\providecommand\insertaddress{}
+\providecommand\insertstreet{}
+\providecommand\insertlocation{}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1312,91 +1358,91 @@
 \providecommand\street{}
 \providecommand\location{}
 \renewcommand{\address}[1]{%
-  \renewcommand{\polycvaddress}{#1}}
+  \renewcommand{\insertaddress}{#1}}
 \renewcommand{\street}[1]{%
-  \renewcommand{\polycvstreet}{#1}}
+  \renewcommand{\insertstreet}{#1}}
 \renewcommand{\location}[1]{%
-  \renewcommand{\polycvlocation}{#1}}
+  \renewcommand{\insertlocation}{#1}}
 %    \end{macrocode}
 % Build the address for street and location.
 %    \begin{macrocode}
-\renewcommand{\polycvaddress}{\polycvstreet\\\polycvlocation}
+\renewcommand{\insertaddress}{\insertstreet\\\insertlocation}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvlineaddress}
+% \begin{macro}{\cvlineaddress}
 % Template to produce the address for the sidebar.
 %    \begin{macrocode}
-\providecommand{\polycvlineaddress}{%
-  \polycvitemline{\faMapMarker}{\polycvaddress}}
+\providecommand{\cvlineaddress}{%
+  \cvitemline{\faMapMarker}{\insertaddress}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycvemail}
+% \begin{macro}{\insertemail}
 % \begin{macro}{\email}
-% \begin{macro}{\polycvlineemail}
+% \begin{macro}{\cvlineemail}
 % Store and set email, template for the sidebar.
 %    \begin{macrocode}
-\providecommand*\polycvemail{}
+\providecommand*\insertemail{}
 \providecommand*\email{}
 \renewcommand{\email}[1]{%
-  \renewcommand{\polycvemail}{\href{mailto:#1}{#1}}}
-\providecommand{\polycvlineemail}{%
-  \polycvitemline{\faEnvelope}{\polycvemail}}
+  \renewcommand{\insertemail}{\href{mailto:#1}{#1}}}
+\providecommand{\cvlineemail}{%
+  \cvitemline{\faEnvelope}{\insertemail}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvphone}
+% \begin{macro}{\insertphone}
 % \begin{macro}{\phone}
-% \begin{macro}{\polycvlinephone}
+% \begin{macro}{\cvlinephone}
 % Store and set phone number, template for the sidebar.
 %    \begin{macrocode}
-\providecommand*\polycvphone{}
+\providecommand*\insertphone{}
 \providecommand*\phone{}
-\renewcommand{\phone}[1]{\renewcommand{\polycvphone}{#1}}
-\providecommand{\polycvlinephone}{%
-  \polycvitemline{\faPhone}{\polycvphone}}
+\renewcommand{\phone}[1]{\renewcommand{\insertphone}{#1}}
+\providecommand{\cvlinephone}{%
+  \cvitemline{\faPhone}{\insertphone}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvmobile}
+% \begin{macro}{\insertmobile}
 % \begin{macro}{\mobile}
-% \begin{macro}{\polycvlinemobile}
+% \begin{macro}{\cvlinemobile}
 % Store and set mobile number, template for the sidebar.
 %    \begin{macrocode}
-\providecommand*\polycvmobile{}
+\providecommand*\insertmobile{}
 \providecommand*\mobile{}
-\renewcommand{\mobile}[1]{\renewcommand{\polycvmobile}{#1}}
-\providecommand{\polycvlinemobile}{%
-  \polycvitemline{\faMobile}{\polycvmobile}}
+\renewcommand{\mobile}[1]{\renewcommand{\insertmobile}{#1}}
+\providecommand{\cvlinemobile}{%
+  \cvitemline{\faMobile}{\insertmobile}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvgithub}
+% \begin{macro}{\insertgithub}
 % \begin{macro}{\github}
-% \begin{macro}{\polycvlinegithub}
+% \begin{macro}{\cvlinegithub}
 % Store and set username for GitHub, template for the sidebar.
 %    \begin{macrocode}
-\providecommand*\polycvgithub{}
+\providecommand*\insertgithub{}
 \providecommand*\github{}
-\renewcommand{\github}[1]{\renewcommand{\polycvgithub}{%
+\renewcommand{\github}[1]{\renewcommand{\insertgithub}{%
   \href{https://github.com/#1}{github.com/#1}}}
-\providecommand{\polycvlinegithub}{%
-  \polycvitemline{\faGithub}{\polycvgithub}}
+\providecommand{\cvlinegithub}{%
+  \cvitemline{\faGithub}{\insertgithub}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvorcidicon}
+% \begin{macro}{\orcidiconfilename}
 % This defines the orcid icon either from the file \lstinline`orcidicon.pdf` 
 % if it is found by \LaTeX.
 % I am unaware of a \LaTeX package that defines this symbol.\footnote{%
@@ -1405,43 +1451,43 @@
 % (\url{https://tex.stackexchange.com/q/275578/33413})}
 % If such a file is  not found, it will place as small square of bold letters spelling orcid.
 %    \begin{macrocode}
-\providecommand*\polycvorcidicon{}
+\providecommand*\orcidiconfilename{}
 \IfFileExists{orcidicon.pdf}{%
-  \renewcommand{\polycvorcidicon}{%
+  \renewcommand{\orcidiconfilename}{%
     \raisebox{-0.2em}{%
       \includegraphics[height=1.0em]{orcidicon.pdf}}}%
 }{%
-  \renewcommand{\polycvorcidicon}{%
+  \renewcommand{\orcidiconfilename}{%
     \raisebox{-0.2em}{%
       \resizebox{1em}{1em}{\textbf{ORCID}}}}%
 }
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycvorcid}
+% \begin{macro}{\insertorcid}
 % \begin{macro}{\orcid}
-% \begin{macro}{\polycvlineorcid}
+% \begin{macro}{\cvlineorcid}
 % Store and set the orcid number, template for the sidebar.
 %    \begin{macrocode}
-\providecommand*\polycvorcid{}
+\providecommand*\insertorcid{}
 \providecommand*\orcid{}
-\renewcommand{\orcid}[1]{\renewcommand{\polycvorcid}{%
+\renewcommand{\orcid}[1]{\renewcommand{\insertorcid}{%
   \href{http://orcid.org/#1}{orcid.org/#1}}}
-\providecommand{\polycvlineorcid}{%
-  \polycvitemline{\polycvorcidicon}{\polycvorcid}}
+\providecommand{\cvlineorcid}{%
+  \cvitemline{\orcidiconfilename}{\insertorcid}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvsignatureimage}
-% \begin{macro}{\signatureimage}
+% \begin{macro}{\insertsigfilename}
+% \begin{macro}{\signaturefile}
 % Store the filename of an image used to produce the signature.
 %    \begin{macrocode}
-\providecommand\polycvsignatureimage{}
-\providecommand\signatureimage{}
-\renewcommand{\signatureimage}[1]{%
-  \renewcommand{\polycvsignatureimage}{#1}}
+\providecommand\insertsigfilename{}
+\providecommand\signaturefile{}
+\renewcommand{\signaturefile}[1]{%
+  \renewcommand{\insertsigfilename}{#1}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -1549,14 +1595,14 @@
     \node [rectangle, %
            anchor = south west, %
            text width = #1, %
-           align = \polycv@signature@alignment, %
+           align = \polycv@sig@align, %
            minimum height = 0.75#1, %
            yshift = \polycvbottommargin, %
            xshift = \polycvmargins, %
            fill = polycvsidebarbackground % 
           ] (cv-signbox) at (current page.south west) {%
       \includegraphics[width=#1]{#2}\\%
-      \polycvauthor%
+      \insertauthor%
     };
   \end{tikzpicture}%
   \ignorespaces%
@@ -1573,12 +1619,12 @@
 % which is defined via the options.
 %
 %    \begin{macrocode}
-\newcommand{\polycv@square@nofill}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogressbarempty] (0,0) rectangle (1,1);% 
     \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
-\newcommand{\polycv@square@filled}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogressbarfilled] (0,0) rectangle (1,1);% 
     \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
@@ -1591,12 +1637,12 @@
 % \begin{macro}{\polycv@circle@filled}
 % Analogous circle symbols.
 %    \begin{macrocode}
-\newcommand{\polycv@circle@nofill}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogressbarempty] (0.5,0.5) circle [radius=0.5];% 
     \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
   \end{tikzpicture}}
-\newcommand{\polycv@circle@filled}[1][\polycvprogressbarheight]{%
+\newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogressbarfilled] (0.5,0.5) circle [radius=0.5];% 
     \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
@@ -1634,7 +1680,7 @@
 %    \begin{macrocode}
 \newcommand{\polycv@level@bar}[4][\polycvhintcol]{%
   \newcount\total@units%
-  \total@units\polycv@progressbarunits%
+  \total@units\polycv@progbarunits%
   \newcount\level%
   \ifnum#2 < \total@units \level#2 \else \level\total@units \fi%
   \newcount\elevel%
@@ -1658,16 +1704,16 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycvlevelssquared}
-% \begin{macro}{\polycvlevelscircled}
+% \begin{macro}{\levelbarsquares}
+% \begin{macro}{\levelbarcircles}
 % Wrapper commands as user interfaces to the level bar.
 %
 %    \begin{macrocode}
-\newcommand{\polycvlevelssquared}[2][\polycvhintcol]{%
+\newcommand{\levelbarsquares}[2][\polycvhintcol]{%
   \polycv@level@bar[#1]{#2}{%
     \polycv@square@filled}{\polycv@square@nofill}%
 }
-\newcommand{\polycvlevelscircled}[2][\polycvhintcol]{%
+\newcommand{\levelbarcircles}[2][\polycvhintcol]{%
   \polycv@level@bar[#1]{#2}{%
     \polycv@circle@filled}{\polycv@circle@nofill}%
 }
@@ -1675,15 +1721,15 @@
 % \end{macro}
 % \end{macro}
 %
-% \begin{macro}{\polycvprogressbar}
+% \begin{macro}{\progressbar}
 % The progressbar is a simple tikz image consiting of three rectangles:
 % one denoting the level using the fill color, one using the empty color,
 % and an empty box encompasing all as a frame.
 %  
 %    \begin{macrocode}
-\newcommand{\polycvprogressbar}[2][\polycvhintcol]{%
+\newcommand{\progressbar}[2][\polycvhintcol]{%
   \hfill%
-  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogressbarheight]%
+  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
     \filldraw[polycvprogressbarfilled] (0, 0) rectangle (#2, 1) ;%
     \filldraw[polycvprogressbarempty] (#2, 0) rectangle (1, 1);%
     \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;%
@@ -1694,13 +1740,13 @@
 %
 % \subsubsection{Commands for the main Body}
 %
-% \begin{macro}{\polycvline}
+% \begin{macro}{\cvline}
 %  A generic command to typeset a line in the CV.
 %  It consists of two parboxes, the left being the hint column, and the right the description.
-%  One example usage is: \lstinline`\polycvline[width]{hint}{description}`.
+%  One example usage is: \lstinline`\cvline[width]{hint}{description}`.
 %    \begin{macrocode}
-\providecommand\polycvline{}
-\renewcommand{\polycvline}[3][\polycvhintcol]{%
+\providecommand\cvline{}
+\renewcommand{\cvline}[3][\polycvhintcol]{%
   \par%
   \parbox[t]{#1}{\strut\raggedleft #2}%
   \hspace{\polycvhintcolsep}%
@@ -1711,14 +1757,14 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycventry}
+% \begin{macro}{\cventry}
 % The entry defines a block. It uses the command above, but fills in more details 
 % in the description parbox of the template.
-% An example usage is: \lstinline`\polycventry[width]{when}{what}{who}{where}{optional}{optional}`.
+% An example usage is: \lstinline`\cventry[width]{when}{what}{who}{where}{optional}{optional}`.
 %    \begin{macrocode}
-\providecommand\polycventry{}
-\renewcommand{\polycventry}[7][\polycvhintcol]{%
-  \polycvline[#1]{#2}{%
+\providecommand\cventry{}
+\renewcommand{\cventry}[7][\polycvhintcol]{%
+  \cvline[#1]{#2}{%
     \textbf{#3}, \textit{#4}, #5%
     \if\relax\detokenize{#6}\relax%
     \else%
@@ -1734,20 +1780,20 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycvskill}
+% \begin{macro}{\cvskill}
 % This command uses a progressbar in the hint column.
 %    \begin{macrocode}
-\providecommand\polycvskill[2]{%
-  \polycvline[\polycvhintcol]{%
-    \polycvprogressbar[0.5\linewidth]{#2}}{#1}}
+\providecommand\cvskill[2]{%
+  \cvline[\polycvhintcol]{%
+    \progressbar[0.5\linewidth]{#2}}{#1}}
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\polycvlanguage}
+% \begin{macro}{\cvlanguage}
 % This is basically a wrapper to the above command.
 %    \begin{macrocode}
-\providecommand\polycvlanguage[2]{%
-  \polycvskill{#1}{#2}}
+\providecommand\cvlanguage[2]{%
+  \cvskill{#1}{#2}}
 %    \end{macrocode}
 % \end{macro}
 %
@@ -1763,7 +1809,7 @@
     right=\polycvmargins,
     bottom=\polycvbottommargin,
     nohead,nofoot}%
-  \polycv@header{\polycvauthor}{\polycvposition}%
+  \polycv@header{\insertauthor}{\insertposition}%
   \polycv@footer{}%
 }{%
   \restoregeometry%
@@ -1809,7 +1855,7 @@
     \parbox[b]{2\linewidth/3-4#1}{#2}%
     \hspace{#1}\hfill%
     \parbox[b]{\linewidth/3}{%
-      \polycvprogressbar[\linewidth]{#3}%
+      \progressbar[\linewidth]{#3}%
       }%
     \vspace{0.2\baselineskip}}%
 }
@@ -1825,16 +1871,16 @@
 %
 %    \begin{macrocode}
 \newenvironment{polycvsidebar}{%
-  \let\section\savesection%
+  \let\section\save@section%
   \newcommand{\section}[1]{%
   \parbox[b]{1\linewidth}{%
     \color{polycvsectioncolor}\large\polycv@headerfont{##1}% 
   }\par\vspace{0.5\baselineskip}}%
-  \let\polycvlanguage\savepolycvlanguage%
-  \newcommand{\polycvlanguage}[2]{%
+  \let\cvlanguage\save@polycvlanguage%
+  \newcommand{\cvlanguage}[2]{%
     \polycv@sidebar@skill{##1}{##2}}%
-  \let\polycvskill\savepolycvskill%
-  \newcommand{\polycvskill}[2]{%
+  \let\cvskill\save@polycvskill%
+  \newcommand{\cvskill}[2]{%
     \polycv@sidebar@skill{##1}{##2}}%
   \begin{tikzpicture}[remember picture, overlay]%
     \node [anchor = north west, %
@@ -1847,11 +1893,11 @@
 }{%
     \egroup;%
   \end{tikzpicture}%
-  \let\savesection\section%
-  \let\savepolycvlanguage\polycvlanguage%
-  \let\savepolycvlanguage\polycvskill%
+  \let\save@section\section%
+  \let\save@polycvlanguage\cvlanguage%
+  \let\save@polycvlanguage\cvskill%
   \ifpolycv@signcv%
-    \polycv@signature{\polycvsignatureimage}%
+    \polycv@signature{\insertsigfilename}%
   \fi%
   \ignorespaces%
 }%
@@ -1984,22 +2030,22 @@
 % At the end, the signature will be inserted, and below that - if present - the postscript remark.
 %
 %    \begin{macrocode}
-\newenvironment{polycvletter}[3][\polycvaddress]{%
+\newenvironment{polycvletter}[3][\insertaddress]{%
   \newgeometry{%
     top=\polycvtopmargin,%
     left=2\polycvmargins,%
     right=2\polycvmargins,%
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
-  \polycv@letter@from{\polycvauthor}{#1}%
+  \polycv@letter@from{\insertauthor}{#1}%
   \polycv@letter@to{#3}%
   \polycv@letter@date%
   \polycv@letter@subject{#2}%
   \setlength{\parindent}{\polycvletterindent}%
 }{%
   \vspace{0.5\baselineskip}%
-  \noindent\includegraphics[width=5cm]{\polycvsignatureimage}\\%
-  \noindent\polycvauthor\par%
+  \noindent\includegraphics[width=5cm]{\insertsigfilename}\\%
+  \noindent\insertauthor\par%
   \if\relax\detokenize{\polycv@letter@ps}\relax%
   \else%
   \polycv@letter@ps\par%
@@ -2012,15 +2058,15 @@
 %
 % \subsection{Appendix}
 %
-% \begin{macro}{\polycvappendix}
+% \begin{macro}{\pdfappendix}
 % The appendix command is an interface to include (parts of) a pdf, e.g. for certificates or recommendations.
 % The page colour is first reset to having none, otherwise it would overlay on top off the included pdf.
 % By default all pages will be included, but this can be overwritten to  specific range (and other options).
 % The command can be used multiple times.
 %
 %    \begin{macrocode}
-\providecommand*\polycvappendix{}
-\renewcommand*{\polycvappendix}[2][pages={1-}]{%
+\providecommand*\pdfappendix{}
+\renewcommand*{\pdfappendix}[2][pages={1-}]{%
   \nopagecolor%
   \includepdf[#1]{#2}}%
 %    \end{macrocode}

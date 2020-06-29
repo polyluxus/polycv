@@ -78,10 +78,10 @@
 ]{hyperref}
 \hypersetup{%
   pdfinfo={%
-    Title={The LaTeX class PolyCV},%
+    Title={The LaTeX document class PolyCV},%
     Author={Martin C Schwarzer},%
-    Subject={A Curriculum Vitae Class},%
-    keywords={LaTeX, CV, Letter, Curriculum Vitae}}}
+    Subject={A Curriculum Vitae Document Class},%
+    keywords={LaTeX, CV, Letter, Curriculum Vitae, Document Class, Documentation}}}
 
 \newcommand\mybackslash{\char`\\}
 \newcommand\myarg[1]{\(\langle\)\textit{#1}\(\rangle\)}
@@ -99,7 +99,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{0}
+% \CheckSum{882}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -152,7 +152,7 @@
 % \maketitle
 %
 % \begin{abstract}
-%   \pkg{Polycv} is a document class to typeset curriculum vitaes with \LaTeX.
+%   \pkg{Polycv} is a document class to typeset curriculum vitae with \LaTeX.
 %   It also provides a template for a cover letter consistent with the layout
 %   of the resume.
 % \end{abstract}
@@ -200,7 +200,7 @@
 % The repository is hosted at 
 % \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub repository}.
 % It will consist of one main branch, the release branch, possibly a release candidate
-% branch and a developement branch.
+% branch and a development branch.
 % If you would like to contribute changes, please submit a pull request to
 % the development branch. Once all changes have been pulled in, the commits will be squashed 
 % and pulled into the release candidate branch for final testing and adjustment.
@@ -224,10 +224,10 @@
 %   \item The \lstinline`calc` package allows to derive some lengths from others.
 %   \item The \lstinline`hyperref` package provides clickable cross-references,
 %     e.g. to references to the bibliography, or websites.
-%   \item Colorsupport comesss from \lstinline`xcolor`.
+%   \item Color support comes from \lstinline`xcolor`.
 %   \item Most of the graphical elements within this class are produced with 
-%     \lstinline`tikz`, such as the header and footer boxes, and the progressbar.
-%   \item To include a signature and profile pictures, \lstinline`graphicx` is lloaded.
+%     \lstinline`tikz`, such as the header and footer boxes, and the progress bar.
+%   \item To include a signature and profile pictures, \lstinline`graphicx` is loaded.
 %   \item For most of the document the indentation is disabled with the 
 %     \lstinline`parskip` package.
 %   \item The page layout is produced with the \lstinline`geometry` package.
@@ -294,19 +294,19 @@
 % 
 % \subsubsection{Page Layout}\label{sec:page-layout}
 %
-% The general page layout will be accomplished by the \lstinline`geopetry` package. 
+% The general page layout will be accomplished by the \lstinline`geometry` package. 
 % Depending on the environment currently in use, a few internal lengths are defined and used.
 % Most of these can only be set via the class options, or within the preamble.
 % 
 % \DescribeOption{margins}
 % \DescribeDefault{1.0 cm}
-% The length of \lstinline`margins` is the baselength of most surrounding space,
+% The length of \lstinline`margins` is the base length of most surrounding space,
 % it defines and sets the length \lstinline`\polycvmargins`. 
 % It is used additionally to the header and footer lengths.
 % This setting also controls the space between the side bar and the main body on the 
 % first page of the CV environment.
 % \DescribeMacro{\setmargins} 
-% The command \lstinline`setmargins`\marg{length} is only available in the preable 
+% The command \lstinline`setmargins`\marg{length} is only available in the premable 
 % and can be used to set the margin length after loading the class.
 % 
 % \DescribeOption{headerheight}
@@ -315,12 +315,12 @@
 % \DescribeDefault{0.5cm}
 % The options \lstinline`headerheight` and \lstinline`footerheight` control the height 
 % of the boxes for the header and the footer, respectively.
-% These lengths affect the whole document and can therfore only be set when loading the
+% These lengths affect the whole document and can therefore only be set when loading the
 % class or within the preamble.
 % The will be the same for each of the environments used.
 % \DescribeMacro{\setheaderheight}
 % \DescribeMacro{\setfooterheight}
-% Instead of choosing the key/value option at loadtime, the commands
+% Instead of choosing the key/value option at load time, the commands
 % \lstinline`\setheaderheight`\marg{length} and 
 % \lstinline`\setfooterheight`\marg{length} can be issued to manipulate these values.
 %
@@ -332,7 +332,7 @@
 % This must be defined before the sidebar is attempted to be set.
 % \watchout
 % \DescribeMacro{\setsidebarwidth}
-% There is currently no command analogous to the other lengths to set this in the preable,
+% There is currently no command analogous to the other lengths to set this in the preamble,
 % it must be defined via the options.
 % 
 % \DescribeOption{iconspace}
@@ -350,7 +350,7 @@
 % First, a small column for a keyword, date, bar, which is called hint in this documentation.
 % The width of this column can be adjusted with the option \lstinline`hintcol`.
 % Second, a column for the description of this hint. This is just a parbox, and depends on 
-% the  command used. The width will be automaticall calculated from the available space.
+% the  command used. The width will be automatically calculated from the available space.
 % These two columns are separated by a space.
 % The width of which can be set via the option \lstinline`hintcolsep`.
 % \DescribeMacro{\sethintcolwidth}
@@ -380,9 +380,9 @@
 % section headings.
 % \DescribeOption{shade} \DescribeDefault{black}
 % \DescribeOption{mixing} \DescribeDefault{10}
-% The textcolor is a composit color from the primary color and the \lstinline`shade` color. 
+% The text color is a composite color from the primary color and the \lstinline`shade` color. 
 % By default this is defined as black, so the text will appear darker.
-% The amount of primary color mixed in depends on the a factor which can be set via 
+% The amount of primary color mixed in depends on the factor which can be set via 
 % the \lstinline`mixing` option.
 % 
 % \DescribeOption{secondary} \DescribeDefault{white}
@@ -406,7 +406,7 @@
 % 
 % \DescribeOption{progbarheight}
 % \DescribeDefault{1.5 ex}
-% Skills can be displayd as an CV entry and accompanied with a progress bar or a
+% Skills can be displayed as an CV entry and accompanied with a progress bar or a
 % level (bar) indicator. The width of this bar is by default either determined by the
 % environment in which it is used, or the width of the hint column.
 % The height of the bar can be controlled with the \lstinline`progbarheight` option.
@@ -414,7 +414,7 @@
 % It can also be set via \lstinline`\setprogbarheight`\marg{length}.
 % \DescribeOption{progbarunits}
 % \DescribeDefault{5}
-% The level bar is devided into boxes or cicles. The number of these items can be set
+% The level bar is divided into boxes or circles. The number of these items can be set
 % via \lstinline`progbarunits` and defaults to five.
 % \DescribeMacro{\setprogbarunits}
 % It can also be set via \lstinline`\setprogbarunits`\marg{number}.
@@ -429,8 +429,8 @@
 % will be ignored.
 % 
 % \DescribeOption{biblatex} 
-% The \lstinline`biblatex` option will inject some code into a bibliography environemnt, 
-% so that the alingment of the hint column will be better. It is turned off by default.
+% The \lstinline`biblatex` option will inject some code into a bibliography environment, 
+% so that the alignment of the hint column will be better. It is turned off by default.
 % If the biblatex package is not loaded (this class will not take care of this), 
 % it might lead to problems.
 % 
@@ -467,7 +467,7 @@
 % The default layout of an entry in the CV is justified. 
 % This can be changed with \lstinline`\setentryragged` to flush the contents to the left
 % and leave the right side ragged (\lstinline`\raggedright`). 
-% For symmetry the command \lstinline`\setentryjustified` can be used to unset the aabove.
+% For symmetry the command \lstinline`\setentryjustified` can be used to unset the above.
 % Both commands will set the internal variable used in the templates at the end of the 
 % preamble, so they can only be used there.
 %
@@ -491,7 +491,7 @@
 % \DescribeMacro{\inserttitle}
 % Similarly to the above, the \lstinline`\title`\marg{title} remains unchanged, with the same limitations applied.
 % The contents can be accessed with the \lstinline`\inserttitle` command.
-% There is currently no template using this command, but it is recommended to set it to somethin like
+% There is currently no template using this command, but it is recommended to set it to something like
 % \emph{Curriculum Vitae} for the \PDF{} fields that might use it.
 %
 % \DescribeMacro{\position}
@@ -505,18 +505,18 @@
 % \DescribeMacro{\insertaddress}
 % The address can either be specified by the direct invocation of \lstinline`\address`\marg{address} and
 % is accessible via the \lstinline`\insertaddress` macro.
-% It is used in the address template (see sectin~\ref{sec:templates-special}), 
+% It is used in the address template (see section~\ref{sec:templates-special}), 
 % as well as the header of the letter (see section~\ref{sec:letter-env}).
 % \DescribeMacro{\street}
 % \DescribeMacro{\location}
 % Alternatively it the macros \lstinline`\street`\marg{street} and \lstinline`\location`\marg{location} can be used
-% to set the values separately. The \lstinline`\insertaddress` will then be contructed from these two values.
+% to set the values separately. The \lstinline`\insertaddress` will then be constructed from these two values.
 % \DescribeMacro{\insertstreet}
 % \DescribeMacro{\insertlocation}
 % If set, they can be printed with the corresponding \lstinline`\insertstreet` and \lstinline`\insertlocation` macros.
 % \watchout
 % If the address is set directly the other values remain unchanged. 
-% It is therefore also possible to extend the functionality in the follwoing way:
+% It is therefore also possible to extend the functionality in the following way:
 % \iffalse
 %<*example>
 % \fi
@@ -563,7 +563,7 @@
 %
 % \subsection{Templates}
 % \label{sec:templates}
-% The templates that are provided with this class should make typesetting the contents of the resumee
+% The templates that are provided with this class should make typesetting the contents of the resume
 % easier as they provide predefined spacing and markup.
 % 
 % \subsubsection{General Templates for the CV}
@@ -573,7 +573,7 @@
 % \DescribeMacro{\subsection}
 % The \lstinline`\section`\marg{text} and \lstinline`\subsection`\marg{text} commands are redefined 
 % to have no numbers.
-% For the former there will be a bar the length of the hint column, while for the latter there is jsut 
+% For the former there will be a bar the length of the hint column, while for the latter there is just 
 % the same amount of space.
 % Both commands will use the primary color and the predefined header fonts.
 %
@@ -581,13 +581,13 @@
 % The \lstinline`\cvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry line in the CV
 % into two parts: a hint column with the reset hint, which can also be set with the optional argument,
 % and a description box spanning the remaining width of the line.
-% It can be used to set any type of centent as a line in the CV.
+% It can be used to set any type of content as a line in the CV.
 %
 % \DescribeMacro{\cvitemline}
 % The \lstinline`\cvitemline`\oarg{width}\marg{icon}\marg{description} is similarly constructed as 
 % the above command.
-% The general difference is that the hint coulmn is replaced with an icon column.
-% If the optional \myarg{length} parameter is not given, it falls back to the definition from the preamle.
+% The general difference is that the hint column is replaced with an icon column.
+% If the optional \myarg{length} parameter is not given, it falls back to the definition from the preamble.
 % The line itself is defined consisting of two parboxes, spanning the whole width that is available.
 % This command is primarily intended for the sidebar, but it could be used somewhere else.
 % It is also used for the specialised templates (see section~\ref{sec:templates-special}).
@@ -640,7 +640,7 @@
 % take half of its width and is flushed to the right.
 % The description is flushed to the left in the main column.
 % If it is used in the side bar, the description will start the line, followed by the progress bar.
-% The progress bar will then use a third of the whole line, and the description the rest exclluding son separator space.
+% The progress bar will then use a third of the whole line, and the description the rest excluding son separator space.
 %
 % \DescribeMacro{\cvlanguage}
 % The \lstinline`\cvlanguage`\marg{language}\marg{level} is a wrapper to the above command.
@@ -682,27 +682,27 @@
 % it must be provided with an external file. 
 % The command \lstinline`\orcidiconfilename` will look for a file with the name \lstinline`orcidicon.pdf`
 % and include this as a graphic. 
-% If such a file is not found, it will use a palceholder icon made of the letters.
+% If such a file is not found, it will use a placeholder icon made of the letters.
 %
 % \DescribeMacro{\cvlineorcid}
 % \DescribeMacro{\cvlinegithub}
-% The orcid and GitHub macros will use their respective icons, similar to the above.
+% The Orcid and GitHub macros will use their respective icons, similar to the above.
 % The contents of the variables defined in the preamble will go into the description column.
 %
 % \subsection{The CV Environments}
 % \label{sec:cv-env}
 % \DescribeEnv{polycvfirstpage}
 % The class comes with two environments to set the CV contents.
-% The first page is special since it also contains a side bar with additional infomation.
+% The first page is special since it also contains a side bar with additional information.
 % The environment itself sets up the geometry of the page, and the header box including the
 % name and position.
-% It will allso set up the footer box to close the page.
+% It will also set up the footer box to close the page.
 % It should be used to set a single page only.
 %
 % \DescribeEnv{polycvsidebar}
 % The side bar is part of the first page environment and should be issued inside it.
 % It will produce a box with the specified content on the left side of the page. 
-% The main templates of this class will have different definintions inside this environment.
+% The main templates of this class will have different definitions inside this environment.
 %
 % The following code block contains an exemplary usage of the two environments.
 %
@@ -726,7 +726,7 @@
   \end{polycvsidebar}%
   \section{Experience}
   \cventry{years}
-    {jobtitle}{employer}{place}
+    {job title}{employer}{place}
     {optional: ...}
     {optional: job description}
 
@@ -742,12 +742,12 @@
 % 
 % \DescribeEnv{polycvpage}
 % The generic CV page environment is similar to the firstpage environment, 
-% but it doesn't include space for the ssside bar.
-% The margins aare adjusted to fill the whole available width.
+% but it doesn't include space for the side bar.
+% The margins are adjusted to fill the whole available width.
 % It is useful to typeset a second (or backside) page of the CV.
 % The header box of this page will be of the same size as for the first page, but remain empty.
 %
-% The following codeblock briefly summarises an exaamplle usage:
+% The following code block briefly summarises an example usage:
 %
 % \iffalse
 %<*example>
@@ -791,7 +791,7 @@
 %</example>
 % \fi
 %
-% At the end of the environment the signature, a file name provided in the preample
+% At the end of the environment the signature, a file name provided in the preamble
 % with \lstinline`\signaturefile{<image file>}`, along with the author name will be set.
 %
 % \DescribeMacro{\opening}
@@ -803,10 +803,10 @@
 % These commands will be set in place, i.e. you could include text before and after them.
 %
 % \DescribeMacro{\ps}
-% Occasionally you would like to inlcude a postscript note. 
+% Occasionally you would like to include a postscript note. 
 % The contents of such a note can be stored with \lstinline`\ps`\marg{note} and will be
 % produced below the signature of the letter.
-% The fontsize is also smaller than the one of the text.
+% The font size is also smaller than the one of the text.
 % This command can only be used once; a later occurrence will overwrite a previous one.
 %
 % \DescribeMacro{\setpsmark} \DescribeDefault{P.S.\~}
@@ -850,8 +850,8 @@
 % This class provides a wrapper to the \lstinline`\includepdf` command from 
 % \lstinline`pdfpages`.
 % The difference to the original command (which still could be used) is that before 
-% including the document, the wrapper unsets the page color. 
-% This is necesssaary, even if it is defined as white, due to the way the page color 
+% including the document, the wrapper will unset the page color. 
+% This is necessary, even if it is defined as white, due to the way the page color 
 % is implemented.
 % You can include pages from a \PDF{} document to use it as appendix with the command
 % \lstinline`\pdfappendix`\oarg{kwargs}\marg{filename}, where the optional argument accepts
@@ -870,7 +870,7 @@
 %
 % These simple definitions for key-value pairs as class options are done with kvoptions as
 % described in TUGBoat.\footnote{J. Wright, C. Feuersänger, TUGBoat, Vol. 30 (2009), No. 1, p. 110-122.}
-% Using the prefix \lstinline`polycv@` as an inbetween to distinguish values set from class options
+% Using the prefix \lstinline`polycv@` as an in-between to distinguish values set from class options
 % in the document.
 %
 %    \begin{macrocode}
@@ -894,7 +894,7 @@
 \DeclareStringOption[1.5ex]{progbarheight}
 %    \end{macrocode}
 %
-% The progressbar, which contains of individual items, can be customised to include a certain
+% The progress bar, which contains of individual items, can be customised to include a certain
 % number of elements. Define the option for this number and set it to five as default.
 %
 %    \begin{macrocode}
@@ -954,7 +954,7 @@
     Option 'titlepage' is incompatible because of the special page setup.}}
 %    \end{macrocode}
 %
-% Pass all other options to the satndart article class.
+% Pass all other options to the standard article class.
 %
 %    \begin{macrocode}
 \DeclareDefaultOption{%
@@ -980,7 +980,7 @@
 %   \item \texttt{xcolor} provides convenient color definitions, since hyperref is loaded, this option is set by default.
 %     Other options can be added with the class options switch.
 %     This package must be loaded before tikz, otherwise there will be an option clash.
-%   \item \texttt{tikz} is used for headerbox, symbols, etc.. (must be loaded after xcolor)
+%   \item \texttt{tikz} is used for header box, symbols, etc.. (must be loaded after xcolor)
 %   \item \texttt{graphicx} is used for the inclusion of graphics, e.g. signature and profile picture.
 %   \item \texttt{parskip} turns of indentation and improves spacing
 %   \item \texttt{geometry} is used for the page layout
@@ -1013,7 +1013,7 @@
     \fi
     }%
 %    \end{macrocode}
-% Set the page style to remove pagenumbers.
+% Set the page style to remove page numbers.
 %
 %    \begin{macrocode}
 \pagestyle{empty}
@@ -1231,7 +1231,7 @@
 % \begin{macro}{\polycv@headerfont}
 % \begin{macro}{\setheaderfont}
 % Define the font family for the header and make it bold (by default) and store
-% it in a variable. Provide access to this cariable via a set command.
+% it in a variable. Provide access to this variable via a set command.
 %    \begin{macrocode}
 \providecommand\polycv@headerfont{}
 \renewcommand{\polycv@headerfont}{\sffamily\bfseries}
@@ -1443,13 +1443,13 @@
 % \end{macro}
 %
 % \begin{macro}{\orcidiconfilename}
-% This defines the orcid icon either from the file \lstinline`orcidicon.pdf` 
+% This defines the Orcid icon either from the file \lstinline`orcidicon.pdf` 
 % if it is found by \LaTeX.
 % I am unaware of a \LaTeX package that defines this symbol.\footnote{%
 % For more details see:  
 % \textit{Is there a standard way to include ORCID in TeX / PDF?}
 % (\url{https://tex.stackexchange.com/q/275578/33413})}
-% If such a file is  not found, it will place as small square of bold letters spelling orcid.
+% If such a file is  not found, it will place as small square of bold letters spelling Orcid.
 %    \begin{macrocode}
 \providecommand*\orcidiconfilename{}
 \IfFileExists{orcidicon.pdf}{%
@@ -1467,7 +1467,7 @@
 % \begin{macro}{\insertorcid}
 % \begin{macro}{\orcid}
 % \begin{macro}{\cvlineorcid}
-% Store and set the orcid number, template for the sidebar.
+% Store and set the Orcid number, template for the sidebar.
 %    \begin{macrocode}
 \providecommand*\insertorcid{}
 \providecommand*\orcid{}
@@ -1556,7 +1556,7 @@
 %
 % \begin{macro}{\polycv@footer}
 % The footer box will be used internally only. 
-% It is a simple box produced with tikz, which can be used to ddisplay page numbers.
+% It is a simple box produced with tikz, which can be used to display page numbers.
 % If the argument to the macro is empty, nothing will be printed, 
 % otherwise dashes are used to surround the command.
 % It is typeset in the primary color of the template.
@@ -1615,7 +1615,7 @@
 % First a few simple filled and unfilled symbols are defined as tikz pictures.
 % \begin{macro}{\polycv@square@nofill}
 % \begin{macro}{\polycv@square@filled}
-% Square symbols, the height and width are set to the height of the progressbar, 
+% Square symbols, the height and width are set to the height of the progress bar, 
 % which is defined via the options.
 %
 %    \begin{macrocode}
@@ -1722,9 +1722,9 @@
 % \end{macro}
 %
 % \begin{macro}{\progressbar}
-% The progressbar is a simple tikz image consiting of three rectangles:
+% The progress bar is a simple tikz image consisting of three rectangles:
 % one denoting the level using the fill color, one using the empty color,
-% and an empty box encompasing all as a frame.
+% and an empty box encompassing all as a frame.
 %  
 %    \begin{macrocode}
 \newcommand{\progressbar}[2][\polycvhintcol]{%
@@ -1781,7 +1781,7 @@
 % \end{macro}
 %
 % \begin{macro}{\cvskill}
-% This command uses a progressbar in the hint column.
+% This command uses a progress bar in the hint column.
 %    \begin{macrocode}
 \providecommand\cvskill[2]{%
   \cvline[\polycvhintcol]{%
@@ -1846,7 +1846,7 @@
 % \begin{macro}{\polycv@sidebar@skill}
 % This template is used in the sidebar.
 % It consists of one parbox spanning the full width of the line,
-% encapsulating two more parboxes to set the progressbar and the description.
+% encapsulating two more parboxes to set the progress bar and the description.
 %
 %    \begin{macrocode}
 \providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
@@ -1867,7 +1867,7 @@
 % It first saves the original definition of the section command, then redefines it for a better fit.
 % It also redefines the skill and language commands for a better fit within the box.
 % At the end, it restores the original definitions.
-% If the option to sign the CV is active, another box will be inserted at the bottom off the paaage.
+% If the option to sign the CV is active, another box will be inserted at the bottom off the page.
 %
 %    \begin{macrocode}
 \newenvironment{polycvsidebar}{%
@@ -1910,7 +1910,7 @@
 %
 % \begin{macro}{\polycv@letter@from}
 % The header box is now substituted to include the address. 
-% The colourscheme is also adjusted to make the box lesss bulky.
+% The colour scheme is also adjusted to make the box less bulky.
 % Therefore the usual background colour and the text color will be used.
 %    \begin{macrocode}
 \newcommand{\polycv@letter@from}[3][\polycvheaderheight]{%

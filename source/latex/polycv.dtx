@@ -28,7 +28,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<class>\ProvidesClass{polycv}
 %<*class>
-    [2020/06/18 v1.0 Curriculum Vitae Class ]
+    [2020/06/29 v1.0rc1 Curriculum Vitae Class]
 %</class>
 %
 %<*driver>
@@ -118,15 +118,16 @@
 %   \DeclareDefaultOption,\DeclareFieldFormat,\DeclareStringOption,\DeclareVoidOption}
 % \DoNotIndex{\draw,\filldraw,\node}
 %
-% \providecommand*{\url}{\texttt}
 % \title{The \pkg{polycv} class}
-% \author{Martin C Schwarzer \\ \url{polyluxus@gmail.com}}
+% \author{Martin C Schwarzer\\\href{mailto:polyluxus@gmail.com}{polyluxus@gmail.com}}
 % \date{\fileversion~from \filedate}
 %
 % \maketitle
 %
 % \begin{abstract}
-%   A \LaTeX class for writing curriculum vitaes.
+%   \pkg{Polycv} is a document class to typeset curriculum vitaes with \LaTeX.
+%   It also provides a template for a cover letter consistent with the layout
+%   of the resume.
 % \end{abstract}
 %
 % \tableofcontents
@@ -166,21 +167,27 @@
 % If anything is unclear, needs improvement, is missing please submit an issue there
 % (\href{https://github.com/polyluxus/polycv/issues}{GitHub issues}). Thank you.
 %
-% \subsubsection{Contributing}
+% \subsection{Contributing}
 %
-% If you find this class useful and would like to contribute, you can submit a pull request to
-% the development branch of the \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub repository}.
-% Please note that the they will be squashed into one commit before mergeing them into the main 
-% branch of the repository.
+% If you find this class useful, you are very welcome to contribute to it.
+% The repository is hosted at 
+% \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub repository}.
+% It will consist of one main branch, the release branch, possibly a release candidate
+% branch and a developement branch.
+% If you would like to contribute changes, please submit a pull request to
+% the development branch. Once all changes have been pulled in, the commits will be squashed 
+% and pulled into the release candidate branch for final testing and adjustment.
+% As such, there will always be only one commit for one release.
 % 
 % \section{Installation}
 % 
-% This work consists of the files \texttt{polycv.dtx} and \texttt{polycv.ins}
-% and the derived filebase \texttt{polycv.cls}, which should be copied to a location
+% This work consists of the files \lstinline`polycv.dtx` and \lstinline`polycv.ins`
+% and the derived filebase \lstinline`polycv.cls`, which should be copied to a location
 % where latex will look for it.
-%
+% How to build the package and documentation from its source files is explained in
+% section~\ref{sec:building}.
 % The source code is hosted at \href{https://github.com/polyluxus/polycv}{\faGithub~GitHub},
-% where there are also the derived class and documentation files available.
+% where the derived class and documentation files are also available.
 % 
 % \subsection{Prerequisites}
 % In order for this class to function properly, the following packages must be installed:
@@ -191,10 +198,11 @@
 %   \item The \lstinline`hyperref` package provides clickable cross-references,
 %     e.g. to references to the bibliography, or websites.
 %   \item Colorsupport comesss from \lstinline`xcolor`.
-%   \item Most off the graphical elements within this class are produced with \lstinline`tikz`,
-%     such as the header and footer boxes, and the progressbar.
+%   \item Most of the graphical elements within this class are produced with 
+%     \lstinline`tikz`, such as the header and footer boxes, and the progressbar.
 %   \item To include a signature and profile pictures, \lstinline`graphicx` is lloaded.
-%   \item For most of the document the indentation is disabled with the \lstinline`parskip` package.
+%   \item For most of the document the indentation is disabled with the 
+%     \lstinline`parskip` package.
 %   \item The page layout is produced with the \lstinline`geometry` package.
 %   \item The \lstinline`fontawesome` is needed for icons, e.g. \faGithub, in the side bar.
 %   \item To include other reference letters as pdfs, \lstinline`pdfpages` is also loaded.
@@ -209,7 +217,7 @@
 %<*example>
 % \fi
 \begin{lstlisting}
-\documentclass[<options>]{polycv}
+\documentclass[(*@\myarg{options}@*)]{polycv}
   %
   % packages, 
   % define personal information,
@@ -232,16 +240,18 @@
     % Body of additional pages
     %
   \end{polycvpage}
-  \begin{polycvletter}[<Author Address>]{<Subject>}{<Recipient Address>}
-    % Letter content
+  \begin{polycvletter}%
+    [(*@\myarg{Author Address}@*)]%
+    {(*@\myarg{Subject}@*)}%
+    {(*@\myarg{Recipient Address}@*)}
     \opening{Dear Example,}
     %
-    % Text
+    % Letter content
     %
     \closing{Sincerely,}
     \ps{more text}
   \end{polycvletter}
-  \polycvappendix{<filename>}
+  \polycvappendix{(*@\myarg{filename}@*)}
 \end{document}
 \end{lstlisting}
 % \iffalse
@@ -257,40 +267,40 @@
 % 
 % \subsubsection{Page Layout}\label{sec:page-layout}
 %
-% The general page layout will be accomplished by the \texttt{geopetry} package. 
+% The general page layout will be accomplished by the \lstinline`geopetry` package. 
 % Depending on the environment currently in use, a few internal lengths are defined and used.
 % Most of these can only be set via the class options, or within the preamble.
 % 
 % \DescribeOption{margins}
 % \DescribeDefault{1.0 cm}
-% The length of \texttt{margin} is the baselength of most surrounding space. 
+% The length of \lstinline`margin` is the baselength of most surrounding space. 
 % It is used additionally to the header and footer lengths.
-% This setting also controls the space between the side bar and the main body on the first page 
-% of the CV environment.
+% This setting also controls the space between the side bar and the main body on the 
+% first page of the CV environment.
 % \DescribeMacro{\setpolycvmargins} 
-% The command \cs{setpolycvmargins}\marg{length} is only available in the preable and can 
-% be used to set the margin length after loading the class.
+% The command \lstinline`setpolycvmargins`\marg{length} is only available in the preable 
+% and can be used to set the margin length after loading the class.
 % 
 % \DescribeOption{headerheight}
 % \DescribeDefault{3.0cm}
 % \DescribeOption{footerheight}
 % \DescribeDefault{0.5cm}
-% The options \texttt{headerheight} and \texttt{footerheight} control the height of the
-% boxes for the header and the footer, respectively.
+% The options \lstinline`headerheight` and \lstinline`footerheight` control the height 
+% of the boxes for the header and the footer, respectively.
 % These lengths affect the whole document and can therfore only be set when loading the
 % class or within the preamble.
 % The will be the same for each of the environments used.
 % \DescribeMacro{\setpolycvheaderheight}
 % \DescribeMacro{\setpolycvfooterheight}
 % Instead of choosing the key/value option at loadtime, the commands
-% \cs{setpolycvheaderheight}\marg{length} and 
-% \cs{setpolycvfooterheight}\marg{length} can be issued to manipulate these values.
+% \lstinline`setpolycvheaderheight`\marg{length} and 
+% \lstinline`setpolycvfooterheight`\marg{length} can be issued to manipulate these values.
 %
 % \DescribeOption{sidebarwidth}
 % \DescribeDefault{5.0cm}
 % On the left side of first page of the CV a box is created, the side bar, which may hold 
 % personal information, a picture, skills, languages, hobbies, etc..
-% The width of this box is controlled with the option \texttt{sidebarwidth}.
+% The width of this box is controlled with the option \lstinline`sidebarwidth`.
 % This must be defined before the sidebar is attempted to be set.
 % \watchout
 % \DescribeMacro{\setpolycvsidebarwidth}
@@ -311,13 +321,14 @@
 % In the main body, each entry will consist of two parts: 
 % First, a small column for a keyword, date, bar, which is called hint in this documentation.
 % The width of this column can be adjusted with the option \texttt{hintcol}.
-% Second, a column for the description of this hint. This is just a parbox, and depends on the 
-% command used. The width will be automaticall calculated from the available space.
+% Second, a column for the description of this hint. This is just a parbox, and depends on 
+% the  command used. The width will be automaticall calculated from the available space.
 % These two columns are separated by a space.
 % The width of which can be set via the option \texttt{hintcolsep}.
 % \DescribeMacro{\setpolycvhintcolumnwidth}
 % \DescribeMacro{\setpolycvhintcolumnsep}
-% Alternatively they can be set in the preamble via \cs{setpolycvhintcolumnwidth}\marg{length} and
+% Alternatively they can be set in the preamble via 
+% \cs{setpolycvhintcolumnwidth}\marg{length} and
 % via \cs{setpolycvhintcolumnsep}\marg{length}, respectively.
 %
 % \DescribeOption{letterindent} 
@@ -2019,6 +2030,7 @@
 % \clearpage
 %
 % \section{Building \pkg{polycv} and its Documentation}
+% \label{sec:building}
 %
 % To compile the \pkg{polycv} package:
 % \begin{enumerate}

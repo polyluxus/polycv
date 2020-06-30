@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{polycv}
-    [2020/06/29 v1.0rc1 Curriculum Vitae Class]
+    [2020/06/30 v1.0rc2 Curriculum Vitae Class]
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=polycv,
@@ -67,6 +67,7 @@
 \LoadClass{article}
 \RequirePackage{etoolbox}
 \RequirePackage{calc}
+  \RequirePackage{xstring}
 \RequirePackage{hyperref}
 \PassOptionsToPackage{\polycv@xcolor,hyperref}{xcolor}
 \RequirePackage{xcolor}
@@ -272,19 +273,23 @@
 \renewcommand{\section}[1]{%
   \ignorespaces%
   \parbox[b]{1\linewidth}{%
+    \strut%
     \color{polycvsectioncolor}%
     \Large\polycv@headerfont%
     \rule{\polycvhintcol}{1ex}\hspace{\polycvhintcolsep}%
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{%
+      \strut%
       #1%
     }%
   }\vspace{0.5\baselineskip}}
 \renewcommand{\subsection}[1]{%
   \parbox[b]{1\linewidth}{%
+    \strut%
     \color{polycvsectioncolor}%
     \polycv@headerfont%
     \hspace{\polycvhintcol}\hspace{\polycvhintcolsep}%
     \parbox{1.0\linewidth-\polycvhintcol-\polycvhintcolsep}{%
+      \strut%
       #1%
     }%
   }\vspace{0.3\baselineskip}}
@@ -374,11 +379,34 @@
     #2%
   \fi%
 }
+\newlength\polycv@temp@len@a
+\newlength\polycv@temp@len@b
+\newlength\polycv@temp@len@res
+\def\polycv@multiply#1#2#3{%
+  \setlength\polycv@temp@len@a{#1\p@}%
+  \setlength\polycv@temp@len@res{#2\polycv@temp@len@a}%
+  \edef#3{\expandafter\strip@pt\polycv@temp@len@res}\ignorespaces}%
+\def\polycv@divide#1#2#3{%
+  \setlength\polycv@temp@len@a{#1\p@}%
+  \setlength\polycv@temp@len@b{#2\p@}%
+  \setlength\polycv@temp@len@res{%
+    \p@ * \ratio{\polycv@temp@len@a}{\polycv@temp@len@b}}%
+  \edef#3{\expandafter\strip@pt\polycv@temp@len@res}\ignorespaces}%
 \newcommand{\polycv@level@bar}[4][\polycvhintcol]{%
   \newcount\total@units%
   \total@units\polycv@progbarunits%
+  \newcount\temp@count%
+  \IfDecimal{#2}{%
+    \ifnum\integerpart = 0%
+    \polycv@multiply{#2}{\total@units}{\mult@res}%
+    \IfDecimal{\mult@res}{\temp@count\integerpart}{\temp@count\z@}%
+    \else%
+    \temp@count\integerpart%
+    \fi%
+  }{\temp@count\z@}%
   \newcount\level%
-  \ifnum#2 < \total@units \level#2 \else \level\total@units \fi%
+  \ifnum\temp@count < \total@units \level\temp@count%
+  \else \level\total@units \fi%
   \newcount\elevel%
   \elevel\numexpr\total@units-\level\relax%
   \def\symbol@filled{#3}%
@@ -406,11 +434,19 @@
     \polycv@circle@filled}{\polycv@circle@nofill}%
 }
 \newcommand{\progressbar}[2][\polycvhintcol]{%
+  \IfDecimal{#2}{%
+    \ifnum\integerpart=0\edef\level@coord{#2}%
+    \else\polycv@divide{#2}{\polycv@progbarunits}{\level@coord}\fi%
+    }{\edef\level@coord\z@}%
+  \ifnum1<\level@coord \edef\level@coord{1} \fi%
   \hfill%
   \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
-    \filldraw[polycvprogbarfilled] (0, 0) rectangle (#2, 1) ;%
-    \filldraw[polycvprogbarnofill] (#2, 0) rectangle (1, 1);%
-    \draw[polycvtextcolor, thick] (0, 0) rectangle (1, 1) ;%
+    \filldraw[polycvprogbarfilled]%
+      (0, 0) rectangle (\level@coord, 1) ;%
+    \filldraw[polycvprogbarnofill]%
+      (\level@coord, 0) rectangle (1, 1);%
+    \draw[polycvtextcolor, thick]%
+      (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
 }%
 \providecommand\cvline{}
@@ -482,6 +518,7 @@
   \let\section\save@section%
   \newcommand{\section}[1]{%
   \parbox[b]{1\linewidth}{%
+    \strut%
     \color{polycvsectioncolor}\large\polycv@headerfont{##1}%
   }\par\vspace{0.5\baselineskip}}%
   \let\cvlanguage\save@polycvlanguage%

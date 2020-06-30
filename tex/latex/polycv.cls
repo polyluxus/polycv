@@ -397,13 +397,17 @@
   \total@units\polycv@progbarunits%
   \newcount\temp@count%
   \IfDecimal{#2}{%
-    \ifnum\integerpart = 0%
-    \polycv@multiply{#2}{\total@units}{\mult@res}%
-    \IfDecimal{\mult@res}{\temp@count\integerpart}{\temp@count\z@}%
+    \ifdim #2\p@ < \z@ %
+      \edef\temp@count{0}%
     \else%
-    \temp@count\integerpart%
+      \ifnum\integerpart = 0%
+      \polycv@multiply{#2}{\total@units}{\mult@res}%
+      \IfDecimal{\mult@res}{\temp@count\integerpart}{\temp@count\z@}%
+      \else%
+      \temp@count\integerpart%
+      \fi%
     \fi%
-  }{\temp@count\z@}%
+  }{\temp@count\total@units}%
   \newcount\level%
   \ifnum\temp@count < \total@units \level\temp@count%
   \else \level\total@units \fi%
@@ -434,17 +438,31 @@
     \polycv@circle@filled}{\polycv@circle@nofill}%
 }
 \newcommand{\progressbar}[2][\polycvhintcol]{%
+  \newcount\total@units%
+  \total@units\polycv@progbarunits%
+  \newcount\temp@count%
   \IfDecimal{#2}{%
-    \ifnum\integerpart=0\edef\level@coord{#2}%
-    \else\polycv@divide{#2}{\polycv@progbarunits}{\level@coord}\fi%
-    }{\edef\level@coord\z@}%
-  \ifnum1<\level@coord \edef\level@coord{1} \fi%
+    \ifdim #2\p@ < \z@ %
+      \edef\level@coord{0}
+    \else%
+      \ifnum\integerpart = 0%
+        \edef\level@coord{#2}%
+      \else%
+        \ifnum\integerpart < \total@units%
+          \temp@count\integerpart%
+        \else%
+          \temp@count\total@units%
+        \fi%
+        \polycv@divide{\temp@count}{\total@units}{\level@coord}%
+      \fi%
+    \fi%
+  }{\edef\level@coord{1}}%
   \hfill%
   \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
-    \filldraw[polycvprogbarfilled]%
-      (0, 0) rectangle (\level@coord, 1) ;%
     \filldraw[polycvprogbarnofill]%
-      (\level@coord, 0) rectangle (1, 1);%
+      (0, 0) rectangle (1, 1) ;%
+    \filldraw[polycvprogbarfilled]%
+      (0, 0) rectangle (\level@coord, 1);%
     \draw[polycvtextcolor, thick]%
       (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%

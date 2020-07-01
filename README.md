@@ -1,4 +1,4 @@
-# polycv - A latex class for writing curriculum vitaes
+# polycv - A latex class for writing curriculum vitae
 
 I previously used the package [koma-moderncvclassic](https://ctan.org/pkg/koma-moderncvclassic)
 to prepare my CV, and I was actually quite satisfied with the look of it.

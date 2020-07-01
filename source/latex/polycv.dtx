@@ -28,7 +28,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<class>\ProvidesClass{polycv}
 %<*class>
-    [2020/06/30 v1.0rc2 Curriculum Vitae Class]
+    [2020/07/01 v1.0rc3 Curriculum Vitae Class]
 %</class>
 %
 %<*driver>
@@ -99,7 +99,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{968}
+% \CheckSum{991}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -118,7 +118,7 @@
 %   Right brace   \}     Tilde         \~}
 %
 %
-% \changes{v1.0}{2020/06/18}{Initial version}
+% \changes{v1.0}{2020/07/01}{Initial version}
 %
 % \GetFileInfo{polycv.dtx}
 %
@@ -571,24 +571,26 @@
 %
 % \DescribeMacro{\section}
 % \DescribeMacro{\subsection}
-% The \lstinline`\section`\marg{text} and \lstinline`\subsection`\marg{text} commands are redefined 
-% to have no numbers.
-% For the former there will be a bar the length of the hint column, while for the latter there is just 
-% the same amount of space.
+% The \lstinline`\section`\marg{text} and \lstinline`\subsection`\marg{text} commands are 
+% redefined  to have no numbers.
+% For the former there will be a bar the length of the hint column, while for the latter 
+% there is just the same amount of space.
 % Both commands will use the primary color and the predefined header fonts.
 %
 % \DescribeMacro{\cvline}
-% The \lstinline`\cvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry line in the CV
-% into two parts: a hint column with the reset hint, which can also be set with the optional argument,
-% and a description box spanning the remaining width of the line.
+% The \lstinline`\cvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry 
+% line in the CV into two parts: a hint column with the reset hint, which can also be set 
+% with the optional argument, and a description box spanning the remaining width of the line.
 % It can be used to set any type of content as a line in the CV.
 %
 % \DescribeMacro{\cvitemline}
-% The \lstinline`\cvitemline`\oarg{width}\marg{icon}\marg{description} is similarly constructed as 
-% the above command.
+% The \lstinline`\cvitemline`\oarg{width}\marg{icon}\marg{description} is similarly 
+% constructed as the above command.
 % The general difference is that the hint column is replaced with an icon column.
-% If the optional \myarg{length} parameter is not given, it falls back to the definition from the preamble.
-% The line itself is defined consisting of two parboxes, spanning the whole width that is available.
+% If the optional \myarg{length} parameter is not given, it falls back to the definition 
+% from the preamble.
+% The line itself is defined consisting of two parboxes, spanning the whole width that 
+% is available.
 % This command is primarily intended for the sidebar, but it could be used somewhere else.
 % It is also used for the specialised templates (see section~\ref{sec:templates-special}).
 %
@@ -597,9 +599,13 @@
 % The height of this bar is defined via the class options or in the preamble.
 % The width of the bar can be set via the optional parameter \myarg{width}, however,
 % in most use cases it will be automatically calculated depending on where it is used.
-% The mandatory argument \myarg{level} can be defined as a number between 0 and 1, 
-% and is then used directly, or as a number, which defines the numerator for the
-% fraction, where the number of units is the denominator.
+% The mandatory argument \myarg{level} can be defined as a number between 0 and smaller 
+% than 1 and is then used directly as a fraction.
+% Alternatively, if it is a number, it is taken as the numerator for the
+% fraction, where the number of progress bar units is the denominator.
+% If the input is not numeric, or larger than the number of progress bar units, 
+% the bar will be filled completely.
+% If the input is smaller than zero, the bar will be completely empty.
 % There are some special templates, which use this command 
 % (see section~\ref{sec:templates-special}).
 %
@@ -616,15 +622,35 @@
 %</example>
 % \fi
 % 
+% On the other hand, (for the default setup) the first command will fill the bar to 20\%,
+% but the second and third command will fill it completely.
+% \watchout[1 vs. full]
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\progressbar{1}     % filled 20% (1/5) for default
+\progressbar{6}     % filled 100% for default
+\progressbar{full}  % filled 100% (always)
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
+% 
 % \DescribeMacro{\levelbarsquares}
 % \DescribeMacro{\levelbarcircles}
 % The macros \lstinline`\levelbarsquares`\oarg{width}\marg{level} and 
 % \lstinline`\levelbarcircles`\oarg{width} \marg{level} are also progress indicators, 
 % which use squares or circles, respectively.
 % The total number of items is set via the class options or in the preamble.
-% The mandatory argument \myarg{level} should be a number within 0 and the set limit.
+% The mandatory argument \myarg{level} should be an integer within 0 and the set limit.
 % If the \myarg{level} has a fractional value smaller than 1, it will be scaled by
 % the limit of items in the bar, and then rounded down.
+% If the level is specified as a fractional number larger than one, only the integer part
+% will be considered.
+% If level exceeds the the upper bound of the predefined range, or is non-numeric, 
+% all items will be filled.
+% If the input is smaller than zero, all items will be empty.
 % The width can be given as the optional argument \myarg{width} and defaults to the 
 % width of the hint column.
 % There are currently no templates that use these commands, but they can be used to 
@@ -1743,7 +1769,7 @@
 % The level bar is also a helper function, which wraps around the repeating function.
 % It sets its contents as a parbox with the width of the hint column (\#1 by default).
 % It also needs a level to display (\#2), which is the number of filled elements (\#3).
-% It the computes from the options of total units the number of unfilled elements(\#4)
+% It the computes from the options of total units the number of unfilled elements (\#4)
 % to typeset.
 %
 % If the level to display is a decimal number smaller than 1, it will use it as a fraction
@@ -1755,13 +1781,17 @@
   \total@units\polycv@progbarunits%
   \newcount\temp@count%
   \IfDecimal{#2}{%
-    \ifnum\integerpart = 0%
-    \polycv@multiply{#2}{\total@units}{\mult@res}%
-    \IfDecimal{\mult@res}{\temp@count\integerpart}{\temp@count\z@}%
+    \ifdim #2\p@ < \z@ %
+      \edef\temp@count{0}%
     \else%
-    \temp@count\integerpart%
+      \ifnum\integerpart = 0%
+      \polycv@multiply{#2}{\total@units}{\mult@res}%
+      \IfDecimal{\mult@res}{\temp@count\integerpart}{\temp@count\z@}%
+      \else%
+      \temp@count\integerpart%
+      \fi%
     \fi%
-  }{\temp@count\z@}%
+  }{\temp@count\total@units}%
   \newcount\level%
   \ifnum\temp@count < \total@units \level\temp@count%
   \else \level\total@units \fi%
@@ -1807,20 +1837,37 @@
 % The progress bar is a simple tikz image consisting of three rectangles:
 % one denoting the level using the fill color, one using the empty color,
 % and an empty box encompassing all as a frame.
+% If the level \(l\) is \(0 \leq l < 1\), it will be used directly, all other
+% values will be converted to \(l/u\), where \(u\) is the number of progress bar units.
+% If the input is not a number, or larger than \(u\), the bar is set in full.
 %  
 %    \begin{macrocode}
 \newcommand{\progressbar}[2][\polycvhintcol]{%
+  \newcount\total@units%
+  \total@units\polycv@progbarunits%
+  \newcount\temp@count%
   \IfDecimal{#2}{%
-    \ifnum\integerpart=0\edef\level@coord{#2}%
-    \else\polycv@divide{#2}{\polycv@progbarunits}{\level@coord}\fi%
-    }{\edef\level@coord\z@}%
-  \ifnum1<\level@coord \edef\level@coord{1} \fi%
+    \ifdim #2\p@ < \z@ %
+      \edef\level@coord{0} 
+    \else%
+      \ifnum\integerpart = 0%
+        \edef\level@coord{#2}%
+      \else%
+        \ifnum\integerpart < \total@units%
+          \temp@count\integerpart%
+        \else%
+          \temp@count\total@units%
+        \fi%
+        \polycv@divide{\temp@count}{\total@units}{\level@coord}%
+      \fi%
+    \fi%
+  }{\edef\level@coord{1}}%
   \hfill%
   \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
-    \filldraw[polycvprogbarfilled]%
-      (0, 0) rectangle (\level@coord, 1) ;%
     \filldraw[polycvprogbarnofill]%
-      (\level@coord, 0) rectangle (1, 1);%
+      (0, 0) rectangle (1, 1) ;%
+    \filldraw[polycvprogbarfilled]%
+      (0, 0) rectangle (\level@coord, 1);%
     \draw[polycvtextcolor, thick]%
       (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%

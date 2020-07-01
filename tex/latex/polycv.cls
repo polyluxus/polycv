@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{polycv}
-    [2020/06/30 v1.0rc2 Curriculum Vitae Class]
+    [2020/07/01 v1.0rc3 Curriculum Vitae Class]
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=polycv,

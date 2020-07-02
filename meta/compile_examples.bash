@@ -13,6 +13,7 @@ for example in * ; do
     biber main
     pdflatex main 
     pdflatex main 
+    [[ -r "main.pdf" ]] && pdftoppm main.pdf main.page -png
     popd || exit 1
   fi
 done

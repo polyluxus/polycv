@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{polycv}
-    [2020/07/01 v1.0rc3 Curriculum Vitae Class]
+    [2020/07/09 v1.0dev Curriculum Vitae Class]
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=polycv,
@@ -601,7 +601,7 @@
 }
 \newcommand{\polycv@letter@subject}[1]{%
   \noindent\parbox[t]{1.00\linewidth}{%
-    \raggedright\textbf{#1}}%
+    \raggedright\textbf{#1}}\par%
 }
 \providecommand\opening{}
 \renewcommand{\opening}[1]{\noindent{}#1\par}
@@ -626,6 +626,7 @@
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
   \polycv@letter@from{\insertauthor}{#1}%
+  \polycv@footer{}%
   \polycv@letter@to{#3}%
   \polycv@letter@date%
   \polycv@letter@subject{#2}%
@@ -638,7 +639,6 @@
   \else%
   \polycv@letter@ps\par%
   \fi%
-  \polycv@footer{}%
   \restoregeometry%
 }
 \providecommand*\pdfappendix{}

@@ -28,7 +28,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<class>\ProvidesClass{polycv}
 %<*class>
-    [2020/07/01 v1.0rc3 Curriculum Vitae Class]
+    [2020/07/09 v1.0dev Curriculum Vitae Class]
 %</class>
 %
 %<*driver>
@@ -99,7 +99,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{991}
+% \CheckSum{992}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -118,7 +118,7 @@
 %   Right brace   \}     Tilde         \~}
 %
 %
-% \changes{v1.0}{2020/07/01}{Initial version}
+% \changes{v1.0}{2020/07/09}{Initial version}
 %
 % \GetFileInfo{polycv.dtx}
 %
@@ -2109,7 +2109,7 @@
 %    \begin{macrocode}
 \newcommand{\polycv@letter@subject}[1]{%
   \noindent\parbox[t]{1.00\linewidth}{%
-    \raggedright\textbf{#1}}%
+    \raggedright\textbf{#1}}\par%
 }
 %    \end{macrocode}
 % \end{macro}
@@ -2176,6 +2176,7 @@
     bottom=\polycvbottommargin,%
     nohead,nofoot}%
   \polycv@letter@from{\insertauthor}{#1}%
+  \polycv@footer{}%
   \polycv@letter@to{#3}%
   \polycv@letter@date%
   \polycv@letter@subject{#2}%
@@ -2188,7 +2189,6 @@
   \else%
   \polycv@letter@ps\par%
   \fi%
-  \polycv@footer{}%
   \restoregeometry%
 }
 %    \end{macrocode}

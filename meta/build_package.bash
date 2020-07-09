@@ -5,8 +5,9 @@ if [[ ${PWD##*/} != "latex" ]] ; then
   exit 2
 fi
 
-src_dtx="polycv.dtx"
-src_ins="polycv.ins"
+name="polycv"
+src_dtx="${name}.dtx"
+src_ins="${name}.ins"
 if [[ ! -r "$src_dtx" ]] ; then
   echo "Source file '$src_dtx' missing or not readable."
   exit 1
@@ -25,4 +26,14 @@ makeindex -s gglo.ist -o "${src_dtx%.*}.gls" "${src_dtx%.*}.glo"
 pdflatex "$src_dtx" 
 pdflatex "$src_dtx" 
 pdflatex "$src_dtx" 
+
+if [[ -r "$name.cls" && -r "../../tex/latex" ]] ; then
+  mv -v "$name.cls" "../../tex/latex/"
+fi
+if [[ -r "$name.pdf" && -r "../../doc/latex" ]] ; then
+  mv -v "$name.pdf" "../../doc/latex/"
+fi
+for suff in aux glo gls idx ind ilg log out toc ; do
+  [[ -e "${name}.${suff}" ]] && rm -v "${name}.${suff}"
+done
 

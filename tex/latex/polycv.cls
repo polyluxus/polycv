@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{polycv}
-    [2020/07/09 v1.0 Curriculum Vitae Class]
+    [2020/08/24 v1.1.dev Curriculum Vitae Class]
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=polycv,
@@ -41,6 +41,8 @@
 \DeclareStringOption[5.0cm]{sidebarwidth}
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
+\DeclareStringOption[1.6cm]{sidebarhint}
+\DeclareStringOption[0.2cm]{sidebarindent}
 \DeclareStringOption[0.8cm]{iconspace}
 \DeclareStringOption[1.5ex]{progbarheight}
 \DeclareStringOption[5]{progbarunits}
@@ -140,6 +142,10 @@
 \setlength{\polycvhintcol}{\polycv@hintcol}
 \newlength{\polycvhintcolsep}
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
+\newlength{\polycvsidebarhint}
+\setlength{\polycvsidebarhint}{\polycv@sidebarhint}
+\newlength{\polycvsidebarindent}
+\setlength{\polycvsidebarindent}{\polycv@sidebarindent}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
 \newlength{\polycvprogbarheight}
@@ -522,15 +528,22 @@
   \restoregeometry%
   \ignorespaces%
 }
-\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
+\providecommand\sbline{}
+\renewcommand{\sbline}[3][\polycvsidebarhint]{%
   \parbox{1.0\linewidth}{%
-    \hspace{#1}%
-    \parbox[b]{2\linewidth/3-4#1}{#2}%
-    \hspace{#1}\hfill%
-    \parbox[b]{\linewidth/3}{%
-      \progressbar[\linewidth]{#3}%
-      }%
-    \vspace{0.2\baselineskip}}%
+    \hspace{\polycvsidebarindent}%
+    \parbox[t]{\linewidth-2\polycvsidebarindent-#1}{%
+      \strut\polycv@entry@ragged #2}%
+    \hspace{\polycvsidebarindent}\hfill%
+    \parbox[t]{#1}{\strut\raggedleft #3}%
+    \vspace{0.2\baselineskip}%
+  }%
+}
+\providecommand\sidebarskill[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
+}
+\providecommand\sidebarlanguage[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
 }
 \newenvironment{polycvsidebar}{%
   \let\section\save@section%
@@ -541,10 +554,10 @@
   }\par\vspace{0.5\baselineskip}}%
   \let\cvlanguage\save@polycvlanguage%
   \newcommand{\cvlanguage}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarlanguage{##1}{##2}}%
   \let\cvskill\save@polycvskill%
   \newcommand{\cvskill}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarskill{##1}{##2}}%
   \begin{tikzpicture}[remember picture, overlay]%
     \node [anchor = north west, %
            text width = \polycvsidebarwidth, %

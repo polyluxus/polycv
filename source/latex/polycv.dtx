@@ -28,7 +28,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<class>\ProvidesClass{polycv}
 %<*class>
-    [2020/07/09 v1.0 Curriculum Vitae Class]
+    [2020/08/24 v1.1.dev Curriculum Vitae Class]
 %</class>
 %
 %<*driver>
@@ -99,7 +99,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{992}
+% \CheckSum{0} %%% 1022
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -119,6 +119,7 @@
 %
 %
 % \changes{v1.0}{2020/07/09}{Initial version}
+% \changes{v1.1.dev}{2020/08/24}{New macro for a line  sidebar}
 %
 % \GetFileInfo{polycv.dtx}
 %
@@ -579,7 +580,7 @@
 %
 % \DescribeMacro{\cvline}
 % The \lstinline`\cvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry 
-% line in the CV into two parts: a hint column with the reset hint, which can also be set 
+% line in the CV into two parts: a hint column with the preset width of hint, which can also be set 
 % with the optional argument, and a description box spanning the remaining width of the line.
 % It can be used to set any type of content as a line in the CV.
 %
@@ -587,7 +588,7 @@
 % The \lstinline`\cvitemline`\oarg{width}\marg{icon}\marg{description} is similarly 
 % constructed as the above command.
 % The general difference is that the hint column is replaced with an icon column.
-% If the optional \myarg{length} parameter is not given, it falls back to the definition 
+% If the optional \myarg{width} parameter is not given, it falls back to the definition 
 % from the preamble.
 % The line itself is defined consisting of two parboxes, spanning the whole width that 
 % is available.
@@ -941,6 +942,7 @@
 %    \end{macrocode}
 %
 % Define options and preset margins for the page setup via the geometry package.
+% \changes{v1.1.dev}{2020/08/24}{Options for lengths for indentation and hint column for the sidebar}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1.0cm]{margins}
@@ -949,6 +951,8 @@
 \DeclareStringOption[5.0cm]{sidebarwidth}
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
+\DeclareStringOption[1.6cm]{sidebarhint}
+\DeclareStringOption[0.2cm]{sidebarindent}
 \DeclareStringOption[0.8cm]{iconspace}
 \DeclareStringOption[1.5ex]{progbarheight}
 %    \end{macrocode}
@@ -1193,6 +1197,10 @@
 \setlength{\polycvhintcol}{\polycv@hintcol}
 \newlength{\polycvhintcolsep}
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
+\newlength{\polycvsidebarhint}
+\setlength{\polycvsidebarhint}{\polycv@sidebarhint}
+\newlength{\polycvsidebarindent}
+\setlength{\polycvsidebarindent}{\polycv@sidebarindent}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
 \newlength{\polycvprogbarheight}
@@ -1980,26 +1988,45 @@
 %
 % \subsubsection{Side Bar Definitions}
 %
-% \begin{macro}{\polycv@sidebar@skill}
-% This template is used in the sidebar.
-% It consists of one parbox spanning the full width of the line,
-% encapsulating two more parboxes to set the progress bar and the description.
-%
+% \begin{macro}{\sbline}
+% \changes{v1.1.dev}{2020/08/24}{Added sidebar line}
+%  A generic command to typeset a line in the sidebar as a single parbox.
+%  It consists of two parboxes, the right being the sidebar hint column, and the left the description.
+%  It is basically the reverse layout of the \lstinline`\cvline` macro.
+%  One example usage is: \lstinline`\sbline[width]{hint}{description}`.
+%  This macro essentially replaces the original internal macro \lstinline`\polycv@sidebar@skill`.
 %    \begin{macrocode}
-\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
+\providecommand\sbline{}
+\renewcommand{\sbline}[3][\polycvsidebarhint]{%
   \parbox{1.0\linewidth}{%
-    \hspace{#1}%
-    \parbox[b]{2\linewidth/3-4#1}{#2}%
-    \hspace{#1}\hfill%
-    \parbox[b]{\linewidth/3}{%
-      \progressbar[\linewidth]{#3}%
-      }%
-    \vspace{0.2\baselineskip}}%
+    \hspace{\polycvsidebarindent}%
+    \parbox[t]{\linewidth-2\polycvsidebarindent-#1}{%
+      \strut\polycv@entry@ragged #2}%
+    \hspace{\polycvsidebarindent}\hfill%
+    \parbox[t]{#1}{\strut\raggedleft #3}%
+    \vspace{0.2\baselineskip}%
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\sidebarskill}
+% \changes{v1.1.dev}{2020/08/24}{skill template for the sidebar}
+% \begin{macro}{\sidebarlanguage}
+% \changes{v1.1.dev}{2020/08/24}{language template for the sidebar}
+%    \begin{macrocode}
+\providecommand\sidebarskill[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
+}
+\providecommand\sidebarlanguage[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
 % \begin{environment}{polycvsidebar}
+% \changes{v1.1.dev}{2020/08/24}{switched to new language and skill templates}
 % This environment provides a box as a tikz picture for the sidebar.
 % It first saves the original definition of the section command, then redefines it for a better fit.
 % It also redefines the skill and language commands for a better fit within the box.
@@ -2016,10 +2043,10 @@
   }\par\vspace{0.5\baselineskip}}%
   \let\cvlanguage\save@polycvlanguage%
   \newcommand{\cvlanguage}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarlanguage{##1}{##2}}%
   \let\cvskill\save@polycvskill%
   \newcommand{\cvskill}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarskill{##1}{##2}}%
   \begin{tikzpicture}[remember picture, overlay]%
     \node [anchor = north west, %
            text width = \polycvsidebarwidth, %

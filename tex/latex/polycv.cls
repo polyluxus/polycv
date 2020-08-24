@@ -358,22 +358,22 @@
   \ignorespaces%
 }
 \newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill] (0,0) rectangle (1,1);%
     \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
 \newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarfilled] (0,0) rectangle (1,1);%
     \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
 \newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill] (0.5,0.5) circle [radius=0.5];%
     \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
 \newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarfilled] (0.5,0.5) circle [radius=0.5];%
     \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
@@ -468,8 +468,8 @@
   }{\edef\level@coord{1}}%
   \hfill%
   \begin{tikzpicture}[%
-      x=#1-2*\polycvprogbarlinewidth,%
-      y=\polycvprogbarheight-2*\polycvprogbarlinewidth]%
+      x=#1-\polycvprogbarlinewidth,%
+      y=\polycvprogbarheight-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill]%
       (0, 0) rectangle (1, 1) ;%
     \filldraw[polycvprogbarfilled]%

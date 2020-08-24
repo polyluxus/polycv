@@ -45,6 +45,7 @@
 \DeclareStringOption[0.2cm]{sidebarindent}
 \DeclareStringOption[0.8cm]{iconspace}
 \DeclareStringOption[1.5ex]{progbarheight}
+\DeclareStringOption[0.2mm]{progbarlinewidth}
 \DeclareStringOption[5]{progbarunits}
 \DeclareStringOption[blue]{primary}
 \DeclareStringOption[white]{secondary}
@@ -150,6 +151,8 @@
 \setlength{\polycviconspace}{\polycv@iconspace}
 \newlength{\polycvprogbarheight}
 \setlength{\polycvprogbarheight}{\polycv@progbarheight}
+\newlength{\polycvprogbarlinewidth}
+\setlength{\polycvprogbarlinewidth}{\polycv@progbarlinewidth}
 \newlength{\polycvletterindent}
 \setlength{\polycvletterindent}{\polycv@letterindent}
 \newcommand*{\setheaderheight}[1]{%
@@ -357,22 +360,22 @@
 \newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogbarnofill] (0,0) rectangle (1,1);%
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
 \newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogbarfilled] (0,0) rectangle (1,1);%
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
 \newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogbarnofill] (0.5,0.5) circle [radius=0.5];%
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
 \newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
   \begin{tikzpicture}[x=#1, y=#1]%
     \filldraw[polycvprogbarfilled] (0.5,0.5) circle [radius=0.5];%
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
 \newcommand{\polycv@repeating}[2][5]{%
   \ifnum#1 > 0%
@@ -464,12 +467,14 @@
     \fi%
   }{\edef\level@coord{1}}%
   \hfill%
-  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
+  \begin{tikzpicture}[%
+      x=#1-2*\polycvprogbarlinewidth,%
+      y=\polycvprogbarheight-2*\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill]%
       (0, 0) rectangle (1, 1) ;%
     \filldraw[polycvprogbarfilled]%
       (0, 0) rectangle (\level@coord, 1);%
-    \draw[polycvtextcolor, thick]%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth]%
       (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
 }%

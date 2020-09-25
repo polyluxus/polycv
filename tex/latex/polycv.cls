@@ -29,7 +29,7 @@
 %% 
 \NeedsTeXFormat{LaTeX2e}[1999/12/01]
 \ProvidesClass{polycv}
-    [2020/07/09 v1.0 Curriculum Vitae Class]
+    [2020/09/08 v1.1rc1 Curriculum Vitae Class]
 \RequirePackage{kvoptions}
 \SetupKeyvalOptions{
   family=polycv,
@@ -41,8 +41,11 @@
 \DeclareStringOption[5.0cm]{sidebarwidth}
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
+\DeclareStringOption[1.6cm]{sidebarhint}
+\DeclareStringOption[0.2cm]{sidebarindent}
 \DeclareStringOption[0.8cm]{iconspace}
 \DeclareStringOption[1.5ex]{progbarheight}
+\DeclareStringOption[0.2mm]{progbarlinewidth}
 \DeclareStringOption[5]{progbarunits}
 \DeclareStringOption[blue]{primary}
 \DeclareStringOption[white]{secondary}
@@ -140,10 +143,16 @@
 \setlength{\polycvhintcol}{\polycv@hintcol}
 \newlength{\polycvhintcolsep}
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
+\newlength{\polycvsidebarhint}
+\setlength{\polycvsidebarhint}{\polycv@sidebarhint}
+\newlength{\polycvsidebarindent}
+\setlength{\polycvsidebarindent}{\polycv@sidebarindent}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
 \newlength{\polycvprogbarheight}
 \setlength{\polycvprogbarheight}{\polycv@progbarheight}
+\newlength{\polycvprogbarlinewidth}
+\setlength{\polycvprogbarlinewidth}{\polycv@progbarlinewidth}
 \newlength{\polycvletterindent}
 \setlength{\polycvletterindent}{\polycv@letterindent}
 \newcommand*{\setheaderheight}[1]{%
@@ -349,24 +358,24 @@
   \ignorespaces%
 }
 \newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill] (0,0) rectangle (1,1);%
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
 \newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarfilled] (0,0) rectangle (1,1);%
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);%
   \end{tikzpicture}}
 \newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill] (0.5,0.5) circle [radius=0.5];%
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
 \newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarfilled] (0.5,0.5) circle [radius=0.5];%
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];%
   \end{tikzpicture}}
 \newcommand{\polycv@repeating}[2][5]{%
   \ifnum#1 > 0%
@@ -458,12 +467,14 @@
     \fi%
   }{\edef\level@coord{1}}%
   \hfill%
-  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
+  \begin{tikzpicture}[%
+      x=#1-\polycvprogbarlinewidth,%
+      y=\polycvprogbarheight-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill]%
       (0, 0) rectangle (1, 1) ;%
     \filldraw[polycvprogbarfilled]%
       (0, 0) rectangle (\level@coord, 1);%
-    \draw[polycvtextcolor, thick]%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth]%
       (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
 }%
@@ -522,15 +533,22 @@
   \restoregeometry%
   \ignorespaces%
 }
-\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
+\providecommand\sbline{}
+\renewcommand{\sbline}[3][\polycvsidebarhint]{%
   \parbox{1.0\linewidth}{%
-    \hspace{#1}%
-    \parbox[b]{2\linewidth/3-4#1}{#2}%
-    \hspace{#1}\hfill%
-    \parbox[b]{\linewidth/3}{%
-      \progressbar[\linewidth]{#3}%
-      }%
-    \vspace{0.2\baselineskip}}%
+    \hspace{\polycvsidebarindent}%
+    \parbox[t]{\linewidth-2\polycvsidebarindent-#1}{%
+      \strut\polycv@entry@ragged #2}%
+    \hspace{\polycvsidebarindent}\hfill%
+    \parbox[t]{#1}{\strut\raggedleft #3}%
+    \vspace{0.2\baselineskip}%
+  }%
+}
+\providecommand\sidebarskill[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
+}
+\providecommand\sidebarlanguage[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
 }
 \newenvironment{polycvsidebar}{%
   \let\section\save@section%
@@ -541,10 +559,10 @@
   }\par\vspace{0.5\baselineskip}}%
   \let\cvlanguage\save@polycvlanguage%
   \newcommand{\cvlanguage}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarlanguage{##1}{##2}}%
   \let\cvskill\save@polycvskill%
   \newcommand{\cvskill}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarskill{##1}{##2}}%
   \begin{tikzpicture}[remember picture, overlay]%
     \node [anchor = north west, %
            text width = \polycvsidebarwidth, %

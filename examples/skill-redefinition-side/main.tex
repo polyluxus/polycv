@@ -1,0 +1,81 @@
+\documentclass[draft, 
+  signcv, sidebarwidth=5.5cm, 11pt, a4paper]{polycv}
+
+\usepackage{mwe}          % Only for this example
+\errorcontextlines=20
+
+% Fonts declaration 
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{libertine}
+
+% Language settings
+\usepackage[english]{babel}
+\usepackage{csquotes}
+
+% Custom setup for the CV
+
+\definecolor{mycol}{HTML}{387147}
+\setcolprimary{mycol}
+
+% Redefine language command to use squares, not the progress bar
+% Needs change in the command
+\renewcommand\cvlanguage[2]{%
+  \cvline{\levelbarsquares[0.7\linewidth]{#2}}{#1}}
+
+\renewcommand\cvskill[2]{%
+  \cvline{\levelbarcircles[0.8\linewidth]{#2}}{#1}}
+
+% Redefine the skill setup in the sidebar
+\renewcommand{\sidebarskill}[2]{%
+  \sbline{#1}{\levelbarcircles[\linewidth]{#2}}}
+
+% Fill some contents variables
+\title{Curriculum Vitae}
+\author{Example Author}
+\position{Title / Position}
+\street{Street 123}
+\location{Town, Country}
+\email{me@mail.com}
+\phone{+1 234 56 78 900}
+\mobile{+1 234 56 78 999}
+\orcid{0000-0001-0002-0003}
+\github{ex-ample}
+\signaturefile{example-image-16x9}
+
+\begin{document}
+\begin{polycvfirstpage}
+  \begin{polycvsidebar}%
+  \includegraphics[width=1.0\linewidth]{example-image-1x1}\\[2ex]
+  
+  \section{Personal Details}
+  % Universally usable line:
+  \cvitemline{\faStar}{01. 01. 1984,\newline Birthplace, Country}
+  \cvlineaddress
+  \cvlineemail
+  \cvlinephone
+  \cvlinemobile
+  \cvlineorcid
+  \cvlinegithub
+  \cvitemline{\faTerminal}{bash, zsh, fish}
+  \null
+  \section{Redef. Skills}
+  \cvskill{\LaTeX}{0.8}
+  \cvskill{Reading}{0.9}
+  \cvskill{Writing}{0.7}
+  \cvskill{Calculating}{0.3}
+  \cvskill{Gaming}{0.95}
+  \end{polycvsidebar}%
+  \section{Languages}
+  \cvlanguage{English (native)}{5}
+  \cvlanguage{Leetspeak (B2)}{3}
+  
+  \section{Skills}
+  \cvskill{\LaTeX}{0.8}
+  \cvskill{Reading}{0.9}
+  \cvskill{Writing}{0.7}
+  \cvskill{Calculating}{0.3}
+  \cvskill{Gaming}{0.95}
+\end{polycvfirstpage}
+\end{document}
+

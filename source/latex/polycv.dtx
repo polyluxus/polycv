@@ -28,7 +28,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}[1999/12/01]
 %<class>\ProvidesClass{polycv}
 %<*class>
-    [2020/07/09 v1.0 Curriculum Vitae Class]
+    [2020/09/08 v1.1rc1 Curriculum Vitae Class]
 %</class>
 %
 %<*driver>
@@ -99,7 +99,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{992}
+% \CheckSum{1043}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -119,6 +119,7 @@
 %
 %
 % \changes{v1.0}{2020/07/09}{Initial version}
+% \changes{v1.1.dev}{2020/08/24}{New macro for a line  sidebar}
 %
 % \GetFileInfo{polycv.dtx}
 %
@@ -359,6 +360,20 @@
 % \lstinline`\sethintcolwidth`\marg{length} and
 % via \lstinline`\sethintcolsep`\marg{length}, respectively.
 %
+% \DescribeOption{sidebarhint}
+% \DescribeDefault{1.6cm}
+% \margintag{v1.1.dev}
+% The hint column width (for the command \lstinline`\sbline`) for the sidebar can be set
+% via the \lstinline`sidebarhint` option. One notable difference to the main frame is that 
+% the hint follows the description.
+%
+% \DescribeOption{sidebarindent}
+% \DescribeDefault{0.2cm}
+% \margintag{v1.1.dev}
+% In order to align better with the items in the sidebar, an indentation value can be specified.
+% This values will also be used to separate the description from the hint in the
+% \lstinline`\sbline` macro.
+%
 % \DescribeOption{letterindent} 
 % \DescribeDefault{1em}
 % In the letter environment the indentation of the first line of a paragraph can be adjusted
@@ -412,6 +427,15 @@
 % The height of the bar can be controlled with the \lstinline`progbarheight` option.
 % \DescribeMacro{\setprogbarheight}
 % It can also be set via \lstinline`\setprogbarheight`\marg{length}.
+% \DescribeOption{progbarlinewidth}
+% \DescribeDefault{0.2mm}
+% \margintag{v1.1.dev}
+% The line width with which the progressbar is drawn can be set with the 
+% \lstinline`progbarlienwidth` option. There is no corresponding set macro.
+% This linewidth will also be used by the level bar for the individual items.
+% Setting this value to zero does not mean not drawing the line; it'll only use the 
+% smallest possible value (depending on the platform) and is not recommended.
+% It is currently not possible to switch of the outline.
 % \DescribeOption{progbarunits}
 % \DescribeDefault{5}
 % The level bar is divided into boxes or circles. The number of these items can be set
@@ -579,7 +603,7 @@
 %
 % \DescribeMacro{\cvline}
 % The \lstinline`\cvline`\oarg{width}\marg{hint}\marg{description} macro divides an entry 
-% line in the CV into two parts: a hint column with the reset hint, which can also be set 
+% line in the CV into two parts: a hint column with the preset width of hint, which can also be set 
 % with the optional argument, and a description box spanning the remaining width of the line.
 % It can be used to set any type of content as a line in the CV.
 %
@@ -587,12 +611,19 @@
 % The \lstinline`\cvitemline`\oarg{width}\marg{icon}\marg{description} is similarly 
 % constructed as the above command.
 % The general difference is that the hint column is replaced with an icon column.
-% If the optional \myarg{length} parameter is not given, it falls back to the definition 
+% If the optional \myarg{width} parameter is not given, it falls back to the definition 
 % from the preamble.
 % The line itself is defined consisting of two parboxes, spanning the whole width that 
 % is available.
 % This command is primarily intended for the sidebar, but it could be used somewhere else.
 % It is also used for the specialised templates (see section~\ref{sec:templates-special}).
+% 
+% \DescribeMacro{\sbline}
+% The \lstinline`\sbline`\oarg{width}\marg{description}\marg{hint} macro is intended to be used in
+% the sidebar of the first page. It divides a line into two boxes. Oposite to the \lstinline`\cvline`
+% macro described above, the variable width description is set first, followed by the fixed width
+% hint. The first box is indented, and they are both separated by the same value, which can be controlled
+% via the options at load time.
 %
 % \DescribeMacro{\progressbar}
 % The \lstinline`\progressbar`\oarg{width}\marg{level} typesets a progress bar.
@@ -711,6 +742,24 @@
 \begin{lstlisting}
 \renewcommand\cvlanguage[2]{%
   \cvline{\levelbarsquares{#2}}{#1}}
+\end{lstlisting}
+% \iffalse
+%</example>
+% \fi
+% 
+% \DescribeMacro{\sidebarskill}
+% \DescribeMacro{\sidebarlanguage}
+% \margintag{v1.1.dev}
+% There are alternative versions for the languages and skills which use the \lstinline`\sbline` template.
+% This has been introduced to allow for easier modification of the sidebar progress indicators analogous
+% to what is described above for the main document.
+% The following example switches from the progress bar to squares:
+% \iffalse
+%<*example>
+% \fi
+\begin{lstlisting}
+\renewcommand\sbskill[2]{%
+  \sbline{#1}{\levelbarsquares{#2}}}
 \end{lstlisting}
 % \iffalse
 %</example>
@@ -941,6 +990,9 @@
 %    \end{macrocode}
 %
 % Define options and preset margins for the page setup via the geometry package.
+% \changes{v1.1.dev}{2020/08/24}{Option for length of hint column in the sidebar}
+% \changes{v1.1.dev}{2020/08/24}{Option for indentation in the sidebar}
+% \changes{v1.1.dev}{2020/08/24}{Option for linewidth of progress bar}
 %
 %    \begin{macrocode}
 \DeclareStringOption[1.0cm]{margins}
@@ -949,8 +1001,11 @@
 \DeclareStringOption[5.0cm]{sidebarwidth}
 \DeclareStringOption[2.7cm]{hintcol}
 \DeclareStringOption[0.2cm]{hintcolsep}
+\DeclareStringOption[1.6cm]{sidebarhint}
+\DeclareStringOption[0.2cm]{sidebarindent}
 \DeclareStringOption[0.8cm]{iconspace}
 \DeclareStringOption[1.5ex]{progbarheight}
+\DeclareStringOption[0.2mm]{progbarlinewidth}
 %    \end{macrocode}
 %
 % The progress bar, which contains of individual items, can be customised to include a certain
@@ -1193,10 +1248,16 @@
 \setlength{\polycvhintcol}{\polycv@hintcol}
 \newlength{\polycvhintcolsep}
 \setlength{\polycvhintcolsep}{\polycv@hintcolsep}
+\newlength{\polycvsidebarhint}
+\setlength{\polycvsidebarhint}{\polycv@sidebarhint}
+\newlength{\polycvsidebarindent}
+\setlength{\polycvsidebarindent}{\polycv@sidebarindent}
 \newlength{\polycviconspace}
 \setlength{\polycviconspace}{\polycv@iconspace}
 \newlength{\polycvprogbarheight}
 \setlength{\polycvprogbarheight}{\polycv@progbarheight}
+\newlength{\polycvprogbarlinewidth}
+\setlength{\polycvprogbarlinewidth}{\polycv@progbarlinewidth}
 \newlength{\polycvletterindent}
 \setlength{\polycvletterindent}{\polycv@letterindent}
 %    \end{macrocode}
@@ -1679,38 +1740,42 @@
 %
 % First a few simple filled and unfilled symbols are defined as tikz pictures.
 % \begin{macro}{\polycv@square@nofill}
+% \changes{v1.1.dev}{2020/08/24}{use linewidth option for progressbar}
 % \begin{macro}{\polycv@square@filled}
+% \changes{v1.1.dev}{2020/08/24}{use linewidth option for progressbar}
 % Square symbols, the height and width are set to the height of the progress bar, 
 % which is defined via the options.
 %
 %    \begin{macrocode}
 \newcommand{\polycv@square@nofill}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill] (0,0) rectangle (1,1);% 
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
 \newcommand{\polycv@square@filled}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarfilled] (0,0) rectangle (1,1);% 
-    \draw[polycvtextcolor, thick] (0,0) rectangle (1,1);% 
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0,0) rectangle (1,1);% 
   \end{tikzpicture}}
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 %
 % \begin{macro}{\polycv@circle@nofill}
+% \changes{v1.1.dev}{2020/08/24}{use linewidth option for progressbar}
 % \begin{macro}{\polycv@circle@filled}
+% \changes{v1.1.dev}{2020/08/24}{use linewidth option for progressbar}
 % Analogous circle symbols.
 %    \begin{macrocode}
 \newcommand{\polycv@circle@nofill}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill] (0.5,0.5) circle [radius=0.5];% 
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];% 
   \end{tikzpicture}}
 \newcommand{\polycv@circle@filled}[1][\polycvprogbarheight]{%
-  \begin{tikzpicture}[x=#1, y=#1]%
+  \begin{tikzpicture}[x=#1-\polycvprogbarlinewidth, y=#1-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarfilled] (0.5,0.5) circle [radius=0.5];% 
-    \draw[polycvtextcolor, thick] (0.5,0.5) circle [radius=0.5];% 
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth] (0.5,0.5) circle [radius=0.5];% 
   \end{tikzpicture}}
 %    \end{macrocode}
 % \end{macro}
@@ -1834,6 +1899,7 @@
 % \end{macro}
 %
 % \begin{macro}{\progressbar}
+% \changes{v1.1.dev}{2020/08/24}{use linewidth option for progressbar}
 % The progress bar is a simple tikz image consisting of three rectangles:
 % one denoting the level using the fill color, one using the empty color,
 % and an empty box encompassing all as a frame.
@@ -1863,12 +1929,14 @@
     \fi%
   }{\edef\level@coord{1}}%
   \hfill%
-  \begin{tikzpicture}[x=0.99*#1, y=\polycvprogbarheight]%
+  \begin{tikzpicture}[%
+      x=#1-\polycvprogbarlinewidth,%
+      y=\polycvprogbarheight-\polycvprogbarlinewidth]%
     \filldraw[polycvprogbarnofill]%
       (0, 0) rectangle (1, 1) ;%
     \filldraw[polycvprogbarfilled]%
       (0, 0) rectangle (\level@coord, 1);%
-    \draw[polycvtextcolor, thick]%
+    \draw[polycvtextcolor, line width=\polycvprogbarlinewidth]%
       (0, 0) rectangle (1, 1) ;%
   \end{tikzpicture}%
 }%
@@ -1980,26 +2048,45 @@
 %
 % \subsubsection{Side Bar Definitions}
 %
-% \begin{macro}{\polycv@sidebar@skill}
-% This template is used in the sidebar.
-% It consists of one parbox spanning the full width of the line,
-% encapsulating two more parboxes to set the progress bar and the description.
-%
+% \begin{macro}{\sbline}
+% \changes{v1.1.dev}{2020/08/24}{Added sidebar line}
+%  A generic command to typeset a line in the sidebar as a single parbox.
+%  It consists of two parboxes, the right being the sidebar hint column, and the left the description.
+%  It is basically the reverse layout of the \lstinline`\cvline` macro.
+%  One example usage is: \lstinline`\sbline[width]{description}{hint}`.
+%  This macro essentially replaces the original internal macro \lstinline`\polycv@sidebar@skill`.
 %    \begin{macrocode}
-\providecommand\polycv@sidebar@skill[3][\polycvhintcolsep]{%
+\providecommand\sbline{}
+\renewcommand{\sbline}[3][\polycvsidebarhint]{%
   \parbox{1.0\linewidth}{%
-    \hspace{#1}%
-    \parbox[b]{2\linewidth/3-4#1}{#2}%
-    \hspace{#1}\hfill%
-    \parbox[b]{\linewidth/3}{%
-      \progressbar[\linewidth]{#3}%
-      }%
-    \vspace{0.2\baselineskip}}%
+    \hspace{\polycvsidebarindent}%
+    \parbox[t]{\linewidth-2\polycvsidebarindent-#1}{%
+      \strut\polycv@entry@ragged #2}%
+    \hspace{\polycvsidebarindent}\hfill%
+    \parbox[t]{#1}{\strut\raggedleft #3}%
+    \vspace{0.2\baselineskip}%
+  }%
 }
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\sidebarskill}
+% \changes{v1.1.dev}{2020/08/24}{skill template for the sidebar}
+% \begin{macro}{\sidebarlanguage}
+% \changes{v1.1.dev}{2020/08/24}{language template for the sidebar}
+%    \begin{macrocode}
+\providecommand\sidebarskill[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
+}
+\providecommand\sidebarlanguage[3][\polycvsidebarhint]{%
+  \sbline[#1]{#2}{\progressbar[\linewidth]{#3}}%
+}
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
 % \begin{environment}{polycvsidebar}
+% \changes{v1.1.dev}{2020/08/24}{switched to new language and skill templates}
 % This environment provides a box as a tikz picture for the sidebar.
 % It first saves the original definition of the section command, then redefines it for a better fit.
 % It also redefines the skill and language commands for a better fit within the box.
@@ -2016,10 +2103,10 @@
   }\par\vspace{0.5\baselineskip}}%
   \let\cvlanguage\save@polycvlanguage%
   \newcommand{\cvlanguage}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarlanguage{##1}{##2}}%
   \let\cvskill\save@polycvskill%
   \newcommand{\cvskill}[2]{%
-    \polycv@sidebar@skill{##1}{##2}}%
+    \sidebarskill{##1}{##2}}%
   \begin{tikzpicture}[remember picture, overlay]%
     \node [anchor = north west, %
            text width = \polycvsidebarwidth, %
